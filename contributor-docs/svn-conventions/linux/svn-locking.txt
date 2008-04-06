@@ -1,0 +1,14 @@
+Open SS13 SVN Locking
+=====================
+
+Locking is an important feature in SVN, it stops two contributors working on the same file at the same time. You can lock at several levels, folder or file. The process is the same for both. Simply do:
+
+svn lock [path to file/folder] [path to ...]
+
+When you go to commit the thing you locked, YOU should release the lock. To release a lock, simply do:
+
+svn unlock [path to file/folder] [path to ...]
+
+Just a note: Be kind to your fellow contributor! Try to lock only the files you need to change, and release the locks as early as you can. If locks get stuck, contact me, I'll steal them.
+
+Stephen001

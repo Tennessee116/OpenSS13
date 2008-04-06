@@ -1,0 +1,65 @@
+// DM Environment file for SS13A.dme.
+// All manual changes should be made outside the BEGIN_ and END_ blocks.
+// New source code should be placed in .dm files: choose File/New --> Code File.
+
+// BEGIN_INTERNALS
+/*
+FILE: Code\areas.dm
+DIR: Code
+MAP_ICON_TYPE: 0
+AUTO_FILE_DIR: ON
+*/
+// END_INTERNALS
+// BEGIN_FILE_DIR
+#define FILE_DIR .
+#define FILE_DIR "Code"
+#define FILE_DIR "Icons"
+#define FILE_DIR "Interface"
+// END_FILE_DIR
+
+// BEGIN_PREFERENCES
+#define DEBUG
+// END_PREFERENCES
+
+// BEGIN_INCLUDE
+#include "ss13h.dmp"
+#include "Code\!atoms.dm"
+#include "Code\aaaDefines.dm"
+#include "Code\airtunnel.dm"
+#include "Code\areas.dm"
+#include "Code\atmo_control.dm"
+#include "Code\blob.dm"
+#include "Code\cell_process.dm"
+#include "Code\cellautomata.dm"
+#include "Code\chemical.dm"
+#include "Code\colour2html.dm"
+#include "Code\computer.dm"
+#include "Code\cryo.dm"
+#include "Code\datumvars.dm"
+#include "Code\demo.dm"
+#include "Code\demo2.dm"
+#include "Code\dna.dm"
+#include "Code\engine.dm"
+#include "Code\globals.dm"
+#include "Code\h_sandbox.dm"
+#include "Code\hexadecimal.dm"
+#include "Code\instructions.dm"
+#include "Code\inverthtml.dm"
+#include "Code\items.dm"
+#include "Code\mob.dm"
+#include "Code\modules.dm"
+#include "Code\newitems.dm"
+#include "Code\newobjects.dm"
+#include "Code\newpipe.dm"
+#include "Code\overview.dm"
+#include "Code\power.dm"
+#include "Code\shuttle.dm"
+#include "Code\ss13_algorithm2.dm"
+#include "Code\sun.dm"
+#include "Code\Test.dm"
+#include "Code\TextHandling.dm"
+#include "Code\vote.dm"
+#include "Code\weap_sat.dm"
+#include "Code\weapons.dm"
+// END_INCLUDE
+
