@@ -2867,13 +2867,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	var/speed = 10.0
 	var/capacity = null
 	flags = 320.0
-	anchored = 1.0
-/obj/machinery/recharger
-	name = "recharger"
-	icon = 'stationobjs.dmi'
-	icon_state = "recharger0"
-	var/obj/item/weapon/gun/energy/charging = null
-	anchored = 1.0
+	anchored = 1.0
 /obj/machinery/recon
 	name = "1-Person Reconaissance Pod"
 	icon = 'escapepod.dmi'

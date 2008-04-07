@@ -51,58 +51,13 @@
 	return
 
 /obj/proc/hear_talk(mob/M as mob, text)
-
-	return
-
-/obj/machinery/recharger/process()
-
-	if (src.charging && ! (stat & NOPOWER) )
-		if (src.charging.charges < 10)
-			src.charging.charges++
-			src.icon_state = "recharger1"
-			use_power(250)
-
-		else
-			src.icon_state = "recharger2"
-	else
-		src.icon_state = "recharger0"
-	return
-
-/obj/machinery/recharger/attack_paw(mob/user as mob)
-
-	if ((ticker && ticker.mode == "monkey"))
-		return src.attack_hand(user)
-	return
-
-/obj/machinery/recharger/attack_hand(mob/user as mob)
-
-	src.add_fingerprint(user)
-	if (src.charging)
-		src.charging.update_icon()
-		src.charging.loc = src.loc
-		src.charging = null
-	return
-
-/obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
-
-	if (src.charging)
-		return
-	if (istype(G, /obj/item/weapon/gun/energy))
-		user.drop_item()
-		G.loc = src
-		src.charging = G
-		return
 	return
 
 /obj/item/weapon/table_parts/attackby(obj/item/weapon/W as obj, mob/user as mob)
-
 	if (istype(W, /obj/item/weapon/wrench))
 		new /obj/item/weapon/sheet/metal( src.loc )
 		//SN src = null
 		del(src)
-		return
-		return
-	return
 
 /obj/item/weapon/table_parts/attack_self(mob/user as mob)
 

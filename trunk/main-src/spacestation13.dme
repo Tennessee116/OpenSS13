@@ -13,6 +13,7 @@ AUTO_FILE_DIR: ON
 // BEGIN_FILE_DIR
 #define FILE_DIR .
 #define FILE_DIR "Code"
+#define FILE_DIR "Code\Machinery"
 #define FILE_DIR "Icons"
 #define FILE_DIR "Interface"
 // END_FILE_DIR
@@ -61,5 +62,6 @@ AUTO_FILE_DIR: ON
 #include "Code\vote.dm"
 #include "Code\weap_sat.dm"
 #include "Code\weapons.dm"
+#include "Code\Machinery\recharger.dm"
 // END_INCLUDE
 
