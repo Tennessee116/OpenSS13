@@ -2083,18 +2083,26 @@
 	return
 
 /obj/closet/MouseDrop_T(atom/movable/O as mob|obj, mob/user as mob)
-
 	if ((user.restrained() || user.stat))
 		return
 	if ((!( istype(O, /atom/movable) ) || O.anchored || get_dist(user, src) > 1 || get_dist(user, O) > 1 || user.contents.Find(src)))
 		return
+	/*
+	 * Patch Submitted by shadowlord13, to fix Bug #1936685.
+	 */
+	if (user.loc==null) // just in case someone manages to get a closet into the blue light dimension, as unlikely as that seems
+		return
+	if (!istype(user.loc, /turf)) // are you in a container/closet/pod/etc?
+		return
+	/*
+	 * End Patch by shadowlord13
+	 */
 	step_towards(O, src.loc)
 	for(var/mob/M in viewers(user, null))
 		if ((M.client && !( M.blinded )))
 			M << text("\red [] stuffs [] into []!", user, O, src)
 		//Foreach goto(104)
 	src.add_fingerprint(user)
-	return
 
 /obj/closet/attack_paw(mob/user as mob)
 
