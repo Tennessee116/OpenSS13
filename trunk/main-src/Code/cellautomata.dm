@@ -565,8 +565,8 @@
 
 			config.allowvotemode = !config.allowvotemode
 
-			world << "<B>Player mode voting toggled to [config.allowvoterestart ? "On" : "Off"]</B>."
-			if(config.logadmin)	world.log << "ADMIN: Mode voting toggled to [config.allowvoterestart ? "On" : "Off"] by [usr.key]."
+			world << "<B>Player mode voting toggled to [config.allowvotemode ? "On" : "Off"]</B>."
+			if(config.logadmin)	world.log << "ADMIN: Mode voting toggled to [config.allowvotemode ? "On" : "Off"] by [usr.key]."
 			if(config.allowvotemode)
 				vote.nextvotetime = world.timeofday
 			update()
