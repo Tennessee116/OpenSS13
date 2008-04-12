@@ -66,6 +66,8 @@ prereq-checks:
 	else \
 		echo "[INFO] SVN found."; \
 	fi
+	@chmod 755 *.sh
+	@echo "[INFO] Corrected any script permissions issues."
 
 install: install-scripts install-crontab clean
 
