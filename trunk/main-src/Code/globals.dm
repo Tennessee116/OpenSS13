@@ -1,63 +1,66 @@
+/* Most recent changes (Since H9.5)
+
+	Started pipelaying system, /obj/item/weapon/pipe.
+
+	Added burning icon for labcoat
+	Fixed a minor airsystem bug for /obj/moves
+	Fixed admin toggle of mode-voting message (now reports state of allowvotemode correctly)
+	Engine ejection now carries over firelevel of turfs
+	Fixed bug with aux engine not working if started too quickly.
+
+	Converted pipelines to use list exclusively, rather than numbers (so that list can be modified)
+	Continues pipe laying - some checking of new lines now done, needs 2-pipe case
+
+	Finished pipe laying - needs checking for all cases
+
+	Updated autolathe to make pipe fittings
+
+	Changed maximum circulator rates to give a better range of working values.
+	Fixed firealarm triggering when unpowered.
+	Made a temporary fix to runtime errors when blob attacks pipes (until full pipe damage system implemented).
+
+	Code reorganization of obj/machinery continued.
+
+*/
+
+
+
 /*  To-do list
 
 	Bugs:
 	hearing inside closets/pods
 	check head protection when hit by tank etc.
 
-	//gas propagation on obj/move cells? plasma doesn't leak.
+	Double message at end of round.
 
-	//turf-proc to reveal hidden (invis) pipes/wire/etc. when turf.intact variable is changed.
-						 //(Check also build/remove for walls etc.)
+	gas progagation btwen obj/move & turfs - no flow
+	due to turf/updatecell not counting /obj/moves as sources
+	//firelevel lost when ejecting engine
+
 
 	bug with two single-length pipes overlaying - pipeline ends up with no members
 
-	//cable under wall/rwall when deconstructed - run levelupdate
-	//making rglass with toolbox in r-hand - spawn on ground instead?
-	//also single rod in hand, make it just use 1 of rod with 1 of glass
-
-	//gas in heater loop - can accept infinite amount into canister
-	//valves need power to switch, even manually
-	//heater connection
-
 	alarm continuing when power out?
-	//can't connect new cable to directconnect power machines
 
-	//cable - lay in dirn of mob facing when click on same turf
+
 
 	New:
 
-	//add/check all cameras & tags
+	recode obj/move stuff to use turfs exclusively?
 
-	//prison warden gets grey jumpsuit
-
-	//power/engine - make useful? Needs local power DU, check for all machines. Power reserve. Engine generator.
 	make regular glass melt in fire
 	Blood splatters, can sample DNA & analyze
 	also blood stains on clothing - attacker & defender
 
 	whole body anaylzer in medbay - shows damage areas in popup?
 
-	//special closet for captain - spare ID, special uniform?
-
 	try station map maximizing use of image rather than icon
 
 	useful world/Topic commands
-	//examine object flags
 
 	flow rate maximum for pipes - slowest of two connected notes
 
 	system for breaking / making pipes, handle deletion, pipeline spliting/rejoining etc.
-
-	?give nominal values to all gas.maximum since turf_take depends on them
-
-	//integrate vote system with admin system - allow admin to start vote even if disabled, etc.
-
-	//update canister icons to use overlays for status
-	//impliment other canister colours, e.g. air (O2+N2), new one for N2O
-
-	//add pipe/cable revealing detector a-la infra-sensor
-
-	//add fingerprints to wire/cable actions
 
 
 	add power-off mode for computers & other equipment (with reboot time)
@@ -65,11 +68,6 @@
 	make grilles conductive for shocks (again)
 
 	for prison warden/sec - baton allows precise targeting
-
-	//recharger for batteries
-
-	//secret - spawn wave of meteors
-	//limit rate of spawn (timer)
 
 	portable generator - hook to wire system
 
@@ -80,15 +78,9 @@
 
 
 	hats/caps
-	//labcoat
 	suit?
-	//voting while dead, voting defaults
-
-	//admin PM - able to reply - move to mob topic?
 
 	build/unbuild engine floor with rf sheet
-
-	finish compressor/turbine - think about control system, throttle, etc.
 
 	crowbar opens airlocks when no power
 
@@ -99,9 +91,23 @@ var
 
 	world_message = "Welcome to SS13!"
 	savefile_ver = "3"
-	SS13_version = "40.93.2H9.5"
+	SS13_version = "40.93.2H9.6"
 	changes = {"<FONT color='blue'><B>Changes from base version 40.93.2</B></FONT><BR>
 <HR>
+<p><B>Version 40.93.2H9.6</B>
+<ul>
+<li> Started pipelaying system, Pipe cutting/damage not yet complete.
+<li>Added burning icon for labcoat
+<li>Fixed a minor airsystem bug for /obj/moves
+<li>Fixed admin toggle of mode-voting message (now reports state of allowvotemode correctly)
+<li>Engine ejection now carries over firelevel of turfs
+<li>Fixed bug with aux engine not working if started too quickly.
+<li>Updated autolathe to make pipe fittings
+<li>Lowererd maximum circulator rates to give a better range of working values.
+<li>Fixed firealarm triggering when unpowered.
+<li>Made a temporary fix to runtime errors when blob attacks pipes (until full pipe damage system implemented).
+<li>Code reorganization of /obj/machinery continued.
+</ul>
 <p><B>Version 40.93.2H9.5</B>
 <ul>
 <li>Fixed a few bugs with reinforced windows.
@@ -309,7 +315,7 @@ var
 	list/monkeystart = list()
 	list/blobstart = list()
 	list/blobs = list()
-	list/cardinal = list( NORTH, SOUTH, EAST, WEST )
+	list/cardinal = list( NORTH, EAST, SOUTH, WEST )
 
 
 	datum/station_state/start_state = null

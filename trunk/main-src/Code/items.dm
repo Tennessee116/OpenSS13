@@ -4322,16 +4322,22 @@
 		else
 	return
 
-/obj/item/weapon/shard/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/item/weapon/shard/attackby(obj/item/weapon/W, mob/user)
 
 	..()
+
 	if (!( istype(W, /obj/item/weapon/weldingtool) ))
 		return
+
+	var/obj/item/weapon/weldingtool/WT = W
+	if(!WT.welding || WT.weldfuel<1)
+		return
+
+	WT.weldfuel--
 	new /obj/item/weapon/sheet/glass( user.loc )
-	//SN src = null
 	del(src)
 	return
-	return
+
 
 /obj/item/weapon/Bump(mob/M as mob)
 

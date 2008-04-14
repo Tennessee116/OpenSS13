@@ -30,6 +30,7 @@
 		user.machine = null
 		return 0
 	if ((get_dist(user, src) > 1 || user.machine != src || user.blinded || !( user.canmove ) || !( C.status )))
+		user.machine = null
 		return 0
 	else
 		src.current = C

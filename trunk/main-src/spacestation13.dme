@@ -4,8 +4,8 @@
 
 // BEGIN_INTERNALS
 /*
-FILE: Code\areas.dm
-DIR: Code
+FILE: Code\newobjects.dm
+DIR: Code Code\Machinery Code\Machinery\Atmoalter
 MAP_ICON_TYPE: 0
 AUTO_FILE_DIR: ON
 */
@@ -13,7 +13,8 @@ AUTO_FILE_DIR: ON
 // BEGIN_FILE_DIR
 #define FILE_DIR .
 #define FILE_DIR "Code"
-#define FILE_DIR "Code\Machinery"
+#define FILE_DIR "Code/Machinery"
+#define FILE_DIR "Code/Machinery/Atmoalter"
 #define FILE_DIR "Icons"
 #define FILE_DIR "Interface"
 // END_FILE_DIR
@@ -51,7 +52,6 @@ AUTO_FILE_DIR: ON
 #include "Code\modules.dm"
 #include "Code\newitems.dm"
 #include "Code\newobjects.dm"
-#include "Code\newpipe.dm"
 #include "Code\overview.dm"
 #include "Code\power.dm"
 #include "Code\shuttle.dm"
@@ -62,6 +62,34 @@ AUTO_FILE_DIR: ON
 #include "Code\vote.dm"
 #include "Code\weap_sat.dm"
 #include "Code\weapons.dm"
+#include "Code\Machinery\_machinery.dm"
+#include "Code\Machinery\_pipe_misc.dm"
+#include "Code\Machinery\alarm.dm"
+#include "Code\Machinery\at_indicator.dm"
+#include "Code\Machinery\autolathe.dm"
+#include "Code\Machinery\camera.dm"
+#include "Code\Machinery\cell_charger.dm"
+#include "Code\Machinery\circulator.dm"
+#include "Code\Machinery\connector.dm"
+#include "Code\Machinery\dispenser.dm"
+#include "Code\Machinery\door_control.dm"
+#include "Code\Machinery\firealarm.dm"
+#include "Code\Machinery\gas_sensor.dm"
+#include "Code\Machinery\igniter.dm"
+#include "Code\Machinery\injector.dm"
+#include "Code\Machinery\inlet.dm"
+#include "Code\Machinery\junction.dm"
+#include "Code\Machinery\light_switch.dm"
+#include "Code\Machinery\manifold.dm"
+#include "Code\Machinery\pipeline.dm"
+#include "Code\Machinery\pipes.dm"
 #include "Code\Machinery\recharger.dm"
+#include "Code\Machinery\sec_lock.dm"
+#include "Code\Machinery\valve.dm"
+#include "Code\Machinery\vent.dm"
+#include "Code\Machinery\Atmoalter\_atmoalter.dm"
+#include "Code\Machinery\Atmoalter\canister.dm"
+#include "Code\Machinery\Atmoalter\heater.dm"
+#include "Code\Machinery\Atmoalter\siphs.dm"
 // END_INCLUDE
 

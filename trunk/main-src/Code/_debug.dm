@@ -153,7 +153,7 @@
 
 				if(istype(M, /obj/machinery/pipes))
 					var/obj/machinery/pipes/P = M
-					O.overlays += numbericon("[P.plnum]    ", -20)
+					O.overlays += numbericon("[plines.Find(P.pl)]    ", -20)
 					M = P.pl
 
 
@@ -447,3 +447,28 @@
 	O.dir = pick(NORTH, SOUTH, EAST, WEST)
 	spawn( 0 )
 		O.Life()
+
+/proc/Plasma()
+
+	var/mplas = 0
+
+	for(var/obj/machinery/M in machines)
+		if(M.suffix=="dbgp")
+
+			var/obj/substance/gas/G = M.get_gas()
+			var/p = G.plasma
+
+			mplas += p
+
+			world.log << "[M]=[num2text(p, 10)]  \..."
+
+
+	var/tplas = 0
+
+	for(var/turf/station/engine/floor/T in world)
+		tplas += T.poison
+
+	world.log << "\nTotals: M=[num2text(mplas, 10)] T=[num2text(tplas, 10)], all = [num2text(mplas+tplas, 10)]"
+
+
+

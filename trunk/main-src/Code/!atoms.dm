@@ -31,7 +31,7 @@
 #define DRIVABLE 64			// fireable by mass driver
 #define ONBELT 128			// can be put in belt slot
 #define FPRINT 256			// takes a fingerprint
-#define WINDOW 512			// window or window/door
+#define WINDOW 512			// window or window/door (or injector)
 
 
 // channel numbers for power
@@ -628,9 +628,10 @@
 	name = "smoke"
 	icon = 'water.dmi'
 	icon_state = "smoke"
-	opacity = 1
-	var/amount = 6.0
+	opacity = 0
+	var/amount = 6
 	anchored = 0.0
+	weight = 100
 /obj/effects/sparks
 	name = "sparks"
 	icon = 'water.dmi'
@@ -649,6 +650,7 @@
 	var/life = 15.0
 	flags = 2.0
 	mouse_opacity = 0
+	weight = 1000
 /obj/equip_e
 	name = "equip e"
 	var/mob/source = null
@@ -1822,6 +1824,17 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 /obj/item/weapon/pill_canister/sleep
 	desc = "<B>Sleeping Pills</B>\nAdminister as required to calm person.\nCauses 10 minutes of drowsyness. MAY induce immediate sleep.\n<B>WARNING</B>: Neurodepressant! Do not overdose!\n<B>Warning</B>: Causes drowsiness!If drowsyness persists for over 15 minutes contact medical professional."
 	name = "Pill Canister- 'Sleeping Pills'"
+
+/obj/item/weapon/pipe
+	name = "pipe"
+	icon = 'pipe-item.dmi'
+	icon_state = "straight"
+	var/ptype = 0
+	flags = TABLEPASS|DRIVABLE|FPRINT
+	w_class = 4
+	s_istate = "pipe"
+	level = 2
+
 /obj/item/weapon/prox_sensor
 	name = "Proximity Sensor"
 	icon_state = "motion0"
@@ -2195,187 +2208,9 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	anchored = 1.0
 
 
-/obj/machinery
-	name = "machinery"
-	var/p_dir = 0
-	var/h_dir = 0		// used for heat-exchange
-	var/capmult = 0
-	var/stat = 0
 
-/obj/machinery/alarm
-	name = "alarm"
-	icon = 'stationobjs.dmi'
-	icon_state = "alarm:0"
-	anchored = 1.0
-/obj/machinery/alarm/indicator
-	name = "indicator"
-	icon = 'airtunnel.dmi'
-	icon_state = "indicator"
-/obj/machinery/at_indicator
-	name = "Air Tunnel Indicator"
-	icon = 'airtunnel.dmi'
-	icon_state = "reader00"
-	anchored = 1.0
-/obj/machinery/atmoalter
-	name = "atmoalter"
-	var/obj/substance/gas/gas = null
-	var/maximum
-	var/t_status
-	var/t_per
-	var/c_per
-	var/c_status
-	var/obj/item/weapon/tank/holding
-	var/max_valve = 1e6
-/obj/machinery/atmoalter/canister
-	name = "canister"
-	icon = 'canister.dmi'
-	density = 1
-	maximum = 1.3E8
-	var/color = "blue"
-	t_status = 3.0
-	t_per = 50.0
-	c_per = 50.0
-	c_status = 0.0
-	holding = null
-	var/health = 20.0
-	var/destroyed = null
-	flags = 320.0
-	weight = 1.0E7
-	var/filled = 1		//fractional fullness at spawn
-/obj/machinery/atmoalter/canister/anesthcanister
-	name = "Canister: \[N2O\]"
-	icon_state = "redws"
-	color = "redws"
-/obj/machinery/atmoalter/canister/n2canister
-	name = "Canister: \[N2\]"
-	icon_state = "red"
-	color = "red"
-/obj/machinery/atmoalter/canister/oxygencanister
-	name = "Canister: \[O2\]"
-	icon_state = "blue"
-/obj/machinery/atmoalter/canister/poisoncanister
-	name = "Canister \[Plasma (Bio)\]"
-	icon_state = "orange"
-	color = "orange"
-/obj/machinery/atmoalter/canister/co2canister
-	name = "Canister \[CO2\]"
-	icon_state = "black"
-	color = "black"
-/obj/machinery/atmoalter/canister/aircanister
-	name = "Canister \[Air\]"
-	icon_state = "grey"
-	color = "grey"
 
-/obj/machinery/atmoalter/heater
-	name = "heater"
-	icon = 'stationobjs.dmi'
-	icon_state = "heater1"
-	density = 1
-	maximum = 1.3E8
-	t_status = 3.0
-	var/h_status = 0.0
-	t_per = 50.0
-	var/h_tar = 20.0
-	c_per = 50.0
-	c_status = 0.0
-	holding = null
-	anchored = 1.0
-	var/heatrate = 1500000.0
-/obj/machinery/atmoalter/siphs
-	name = "siphs"
-	density = 1
-	var/alterable = 1.0
-	var/f_time = 1.0
-	var/location = null
-	maximum = 1.3E8
-	holding = null
-	t_status = 3.0
-	t_per = 50.0
-	c_per = 50.0
-	c_status = 0.0
-	weight = 1.0E7
-	anchored = 1.0
-	var/empty =  null
-/obj/machinery/atmoalter/siphs/fullairsiphon
-	name = "Air siphon"
-	icon = 'turfs.dmi'
-	icon_state = "siphon:0"
-/obj/machinery/atmoalter/siphs/fullairsiphon/air_vent
-	name = "Air regulator"
-	icon = 'aircontrol.dmi'
-	icon_state = "vent2"
-	t_status = 4.0
-	alterable = 0.0
-	density = 0	//*****
-/obj/machinery/atmoalter/siphs/fullairsiphon/port
-	name = "Portable Siphon"
-	icon = 'stationobjs.dmi'
-	flags = 320.0
-	anchored = 0.0
-/obj/machinery/atmoalter/siphs/scrubbers
-	name = "scrubbers"
-	icon = 'turfs2.dmi'
-	icon_state = "siphon:0"
-/obj/machinery/atmoalter/siphs/scrubbers/air_filter
-	name = "air filter"
-	icon = 'aircontrol.dmi'
-	icon_state = "vent2"
-	t_status = 4.0
-	alterable = 0.0
-	density = 0 //*****
 
-/obj/machinery/atmoalter/siphs/scrubbers/port
-	name = "Portable Siphon"
-	icon = 'stationobjs.dmi'
-	icon_state = "scrubber:0"
-	flags = 320.0
-	anchored = 0.0
-/obj/machinery/autolathe
-	name = "Autolathe"
-	icon = 'stationobjs.dmi'
-	icon_state = "autolathe"
-	var/m_amount = 0.0
-	var/g_amount = 0.0
-	var/operating = 0.0
-	var/opened = 0.0
-	var/temp = null
-	anchored = 1.0
-/obj/machinery/camera
-	name = "Security Camera"
-	icon = 'stationobjs.dmi'
-	icon_state = "camera"
-	var/network = "SS13"
-	var/c_tag = null
-	var/status = 1.0
-	anchored = 1.0
-	var/invuln = null
-
-/obj/machinery/circulator
-	name = "circulator/heat exchanger"
-	desc = "A gas circulator pump and heat exchanger."
-	icon = 'pipes.dmi'
-	icon_state = "circ1-off"
-	p_dir = 3		// N & S
-	var/side = 1 // 1=left 2=right
-	var/status = 0
-	var/rate = 1000000
-	var/obj/substance/gas/gas1 = null
-	var/obj/substance/gas/ngas1 = null
-	var/obj/substance/gas/gas2 = null
-	var/obj/substance/gas/ngas2 = null
-
-	var/capacity = 6000000.0
-	var/obj/machinery/node1 = null
-	var/obj/machinery/node2 = null
-
-	var/obj/machinery/vnode1
-	var/obj/machinery/vnode2
-
-	anchored = 1.0
-	density = 1
-	capmult = 1
-
-	//var/obj/machinery/power/teg/master = null
 
 /obj/machinery/computer
 	name = "computer"
@@ -2523,55 +2358,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	var/locked = null
 	var/id = null
 
-/obj/machinery/connector
-	name = "connector"
-	icon = 'pipes.dmi'
-	desc = "A connector for gas canisters."
-	icon_state = "connector"
-	anchored = 1.0
-	p_dir = 2
-	var/obj/machinery/node = null
-	var/obj/machinery/atmoalter/connected = null
 
-	var/obj/machinery/vnode = null
-
-	var/obj/substance/gas/gas = null
-	var/obj/substance/gas/ngas = null
-
-	//var/obj/substance/gas/agas
-
-	var/capacity = 6000000.0
-	capmult = 2
-	var/flag = 0
-
-/obj/machinery/inlet
-	name = "inlet"
-	icon = 'pipes.dmi'
-	icon_state = "inlet"
-	desc = "A gas pipe inlet."
-	anchored = 1
-	p_dir = 2
-	var/obj/machinery/node
-	var/obj/machinery/vnode
-	var/obj/substance/gas/gas
-	var/obj/substance/gas/ngas
-	var/capacity = 6000000
-	capmult = 2
-
-
-/obj/machinery/vent
-	name = "vent"
-	icon = 'pipes.dmi'
-	icon_state = "vent"
-	desc = "A gas pipe outlet vent."
-	anchored = 1
-	p_dir = 2
-	var/obj/machinery/node
-	var/obj/machinery/vnode
-	var/obj/substance/gas/gas
-	var/obj/substance/gas/ngas
-	var/capacity = 6000000
-	capmult = 2
 
 
 /obj/machinery/cryo_cell
@@ -2592,15 +2379,6 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 
 	var/obj/machinery/vnode = null
 
-/obj/machinery/dispenser
-	desc = "A simple yet bulky one-way storage device for gas tanks. Holds 10 plasma and 10 oxygen tanks."
-	name = "Tank Storage Unit"
-	icon = 'turfs2.dmi'
-	icon_state = "dispenser"
-	density = 1
-	var/o2tanks = 10.0
-	var/pltanks = 10.0
-	anchored = 1.0
 /obj/machinery/dna_scanner
 	name = "DNA Scanner/Implanter"
 	icon = 'Cryogenic2.dmi'
@@ -2654,15 +2432,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	visible = 0.0
 	flags = 512.0
 	opacity = 0
-/obj/machinery/firealarm
-	name = "firealarm"
-	icon = 'items.dmi'
-	icon_state = "firealarm"
-	var/detecting = 1.0
-	var/working = 1.0
-	var/time = 10.0
-	var/timing = 0.0
-	anchored = 1.0
+
 /obj/machinery/freezer
 	name = "freezer"
 	icon = 'Cryogenic2.dmi'
@@ -2683,13 +2453,6 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	anchored = 1.0
 	capmult = 1
 
-/obj/machinery/gas_sensor
-	name = "gas sensor"
-	icon = 'stationobjs.dmi'
-	icon_state = "gsensor"
-	desc = "A remote sensor for atmospheric gas composition."
-	var/id
-	anchored = 1
 
 /obj/machinery/hologram_proj
 	name = "Hologram Projector"
@@ -2697,19 +2460,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	icon_state = "hologram0"
 	var/atom/projection = null
 	anchored = 1.0
-/obj/machinery/igniter
-	name = "igniter"
-	icon = 'stationobjs.dmi'
-	icon_state = "igniter1"
-	var/on = 1.0
-	anchored = 1.0
-/obj/machinery/injector
-	name = "injector"
-	icon = 'stationobjs.dmi'
-	icon_state = "injector"
-	density = 1
-	anchored = 1.0
-	flags = 512.0
+
 /obj/machinery/mass_driver
 	name = "mass driver"
 	icon = 'stationobjs.dmi'
@@ -2740,123 +2491,12 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	var/safety = 1.0
 	var/obj/item/weapon/disk/nuclear/auth = null
 	flags = 320.0
-/obj/machinery/valve
-	name = "valve"
-	icon = 'pipes.dmi'
-	icon_state = "valve0"
-	desc = "A gas valve."
-	var/obj/substance/gas/gas1 = null
-	var/obj/substance/gas/ngas1 = null
-	var/obj/substance/gas/gas2 = null
-	var/obj/substance/gas/ngas2 = null
-	var/capacity = 6000000.0
-	var/obj/machinery/node1 = null
-	var/obj/machinery/node2 = null
-	var/obj/machinery/vnode1 = null
-	var/obj/machinery/vnode2 = null
-	var/id = "v1"
-	var/open = 0
-	anchored = 1.0
-	capmult = 2
-
-/obj/machinery/manifold
-	name = "manifold"
-	icon = 'pipes.dmi'
-	icon_state = "manifold"
-	desc = "A three-port gas manifold."
-	anchored = 1
-	dir = 2
-	p_dir = 14
-	var/n1dir
-	var/n2dir
-
-	var/obj/substance/gas/gas = null
-	var/obj/substance/gas/ngas = null
-	var/capacity = 6000000.0
-	var/obj/machinery/node1 = null
-	var/obj/machinery/node2 = null
-	var/obj/machinery/node3 = null
-
-	var/obj/machinery/vnode1
-	var/obj/machinery/vnode2
-	var/obj/machinery/vnode3
-
-
-	capmult = 3
-
-
-/obj/machinery/junction
-	name = "junction"
-	icon = 'junct-pipe.dmi'
-	icon_state = "junction"
-	desc = "A junction between regular and heat-exchanger pipework."
-	var/capacity = 6000000
-	anchored = 1
-	dir = 2
-	p_dir = 3
-
-	var/obj/substance/gas/gas = null
-	var/obj/substance/gas/ngas = null
-	var/obj/machinery/node1 = null
-	var/obj/machinery/node2 = null
-
-	var/obj/machinery/vnode1
-	var/obj/machinery/vnode2
-
-	capmult = 2
-
-
-/obj/machinery/pipes
-	name = "pipes"
-	icon = 'reg_pipe.dmi'
-	icon_state = "12"
-	var/capacity = 6000000.0
-	var/obj/machinery/node1 = null
-	var/obj/machinery/node2 = null
-	anchored = 1.0
-	var/termination = 0
-	var/insulation = NORMPIPERATE
-	var/plnum = 0
-	var/obj/machinery/pipeline/pl
 
 
 
-/obj/machinery/pipeline				// virtual pipeline consisting of multiple /obj/machinery/pipes
-
-	name = "pipeline"
-	var/list/nodes = list()
-	var/numnodes = 0
-	var/obj/substance/gas/gas = null
-	var/obj/substance/gas/ngas = null
-
-	var/obj/machinery/vnode1
-	var/obj/machinery/vnode2
-
-	invisibility = 101
-	capmult = 0
-	var/flow = 0
 
 
-/obj/machinery/pipes/flexipipe
-	desc = "Flexible hose-like piping."
-	name = "flexipipe"
-	icon = 'wire.dmi'
-	capacity = 10.0
-	p_dir = 12.0
-/obj/machinery/pipes/high_capacity
-	desc = "A large bore pipe with high capacity."
-	name = "high capacity"
-	icon = 'hi_pipe.dmi'
-	density = 1
-	capacity = 1.8E7
-/obj/machinery/pipes/regular
-	desc = "A stretch of pipe."
-	name = "normal pipe"
-/obj/machinery/pipes/heat_exch
-	icon = 'heat_pipe.dmi'
-	name = "heat exchange pipe"
-	desc = "A bundle of small pipes designed for maximum heat transfer."
-	insulation = HEATPIPERATE
+
 
 /obj/machinery/pod
 	name = "Escape Pod"
@@ -2867,7 +2507,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	var/speed = 10.0
 	var/capacity = null
 	flags = 320.0
-	anchored = 1.0
+	anchored = 1.0
 /obj/machinery/recon
 	name = "1-Person Reconaissance Pod"
 	icon = 'escapepod.dmi'
@@ -2901,26 +2541,9 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	var/temp = null
 	var/obj/machinery/dna_scanner/connected = null
 	anchored = 1.0
-/obj/machinery/sec_lock
-	name = "Security Pad"
-	icon = 'stationobjs.dmi'
-	icon_state = "sec_lock"
-	var/obj/item/weapon/card/id/scan = null
-	var/a_type = 0.0
-	var/obj/machinery/door/d1 = null
-	var/obj/machinery/door/d2 = null
-	anchored = 1.0
-	var/access = "5500"
-	var/allowed = "Prison Security/Prison Warden/Security Officer/Head of Personnel/Captain"
 
 //*****RM
-/obj/machinery/door_control
-	name = "Remote Door Control"
-	icon = 'stationobjs.dmi'
-	icon_state = "doorctrl0"
-	desc = "A remote control switch for a door."
-	var/id = null
-	anchored = 1.0
+
 //*****
 
 /obj/machinery/shuttle
@@ -3138,25 +2761,6 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	var/lastgen
 
 
-
-/obj/machinery/cell_charger
-	name = "cell charger"
-	desc = "A charging unit for power cells."
-	icon = 'power.dmi'
-	icon_state = "ccharger0"
-	var/obj/item/weapon/cell/charging = null
-	var/chargelevel = -1
-	anchored = 1
-
-/obj/machinery/light_switch
-	desc = "A light switch"
-	name = null
-	icon = 'power.dmi'
-	icon_state = "light1"
-	anchored = 1.0
-	var/on = 1
-	var/area/area = null
-	var/otherarea = null
 
 /obj/cable
 	level = 1

@@ -1,63 +1,3 @@
-// the light switch
-// can have multiple per area
-// can also operate on non-loc area through "otherarea" var
-
-/obj/machinery/light_switch/New()
-	..()
-	spawn(5)
-		src.area = src.loc.loc
-
-		if(otherarea)
-			src.area = locate(text2path("/area/[otherarea]"))
-
-		if(!name)
-			name = "light switch ([area.name])"
-
-		src.on = src.area.lightswitch
-		updateicon()
-
-
-
-/obj/machinery/light_switch/proc/updateicon()
-	if(stat & NOPOWER)
-		icon_state = "light-p"
-	else
-		if(on)
-			icon_state = "light1"
-		else
-			icon_state = "light0"
-
-/obj/machinery/light_switch/examine()
-	set src in oview(1)
-	if(usr && !usr.stat)
-		usr << "A light switch. It is [on? "on" : "off"]."
-
-
-/obj/machinery/light_switch/attack_paw(mob/user)
-	src.attack_hand(user)
-
-/obj/machinery/light_switch/attack_hand(mob/user)
-
-	on = !on
-
-	area.lightswitch = on
-	updateicon()
-
-	for(var/obj/machinery/light_switch/L in area)
-		L.on = on
-		L.updateicon()
-
-	area.updateicon()
-
-/obj/machinery/light_switch/power_change()
-
-	if(!otherarea)
-		if(powered(LIGHT))
-			stat &= ~NOPOWER
-		else
-			stat |= NOPOWER
-
-		updateicon()
 
 // the power cell
 // charge from 0 to 100%
@@ -771,7 +711,7 @@
 
 		overlays += image('power.dmi', "teg-oc[c1on][c2on]")
 
-#define GENRATE 0.0017			// generator output coefficient from Q
+#define GENRATE 0.0015			// generator output coefficient from Q
 
 /obj/machinery/power/generator/process()
 
@@ -969,36 +909,6 @@
 	updateicon()
 
 
-// returns true if the area has power on given channel (or doesn't require power).
-// defaults to equipment channel
-
-/obj/machinery/proc/powered(var/chan = EQUIP)
-	var/area/A = src.loc.loc		// make sure it's in an area
-	if(!A || !isarea(A))
-		return 0					// if not, then not powered
-
-	return A.powered(chan)	// return power status of the area
-
-// increment the power usage stats for an area
-
-/obj/machinery/proc/use_power(var/amount, var/chan=EQUIP) // defaults to Equipment channel
-	var/area/A = src.loc.loc		// make sure it's in an area
-	if(!A || !isarea(A))
-		return
-
-	A.use_power(amount, chan)
-
-
-/obj/machinery/proc/power_change()		// called whenever the power settings of the containing area change
-										// by default, check equipment channel & set flag
-										// can override if needed
-	if(powered())
-		stat &= ~NOPOWER
-	else
-
-		stat |= NOPOWER
-	return
-
 
 // attach a wire to a power machine - leads from the turf you are standing on
 
@@ -1077,8 +987,11 @@
 
 /obj/cable/proc/updateicon()
 	if(invisibility)
+		//icon_state = "[d1]-[d2]"
+		//icon -= rgb(0,0,0,128)
 		icon_state = "[d1]-[d2]-f"
 	else
+		//icon = initial(icon)
 		icon_state = "[d1]-[d2]"
 
 
@@ -1902,7 +1815,7 @@
 
 		else
 			if(chargemode)
-				if(chargecount > rand(3,6))
+				if(chargecount > rand(3,10))
 					charging = 1
 					chargecount = 0
 
@@ -2496,7 +2409,6 @@
 		return
 
 	lastgen = ((compressor.rpm / TURBGENQ)**TURBGENG) *TURBGENQ
-
 	add_avail(lastgen)
 
 	if(compressor.gas.temperature > (T20C+50))
@@ -2506,9 +2418,11 @@
 		if(!compressor.starter || newrpm > 1000)
 			compressor.rpmtarget = newrpm
 
-		 var/oamount = min(compressor.gas.tot_gas(), compressor.rpm/35000*compressor.capacity)
-		 compressor.gas.turf_add(outturf, oamount)
-		 outturf.firelevel = outturf.poison
+	var/oamount = min(compressor.gas.tot_gas(), compressor.rpm/32000*compressor.capacity)
+
+	compressor.gas.turf_add(outturf, oamount)
+
+	outturf.firelevel = outturf.poison
 
 	if(lastgen > 100)
 		overlays += image('pipes.dmi', "turb-o", FLY_LAYER)
@@ -2543,7 +2457,9 @@
 
 	t += "Turbine: [round(compressor.rpm)] RPM<BR>"
 
-	t += "Starter: [ compressor.starter ? "<A href='?src=\ref[src];str=1'>Off</A> <B>On</B>" : "<B>Off</B> <A href='?src=\ref[src];str=1'>On</A>"]"
+	t += "Starter: [ compressor.starter ? "<A href='?src=\ref[src];str=1'>Off</A> <B>On</B>" : "<B>Off</B> <A href='?src=\ref[src];str=1'>On</A>"]<BR>"
+
+	//t += "Gas: [compressor.gas.tostring()]<BR>"
 
 	t += "</PRE><HR><A href='?src=\ref[src];close=1'>Close</A>"
 

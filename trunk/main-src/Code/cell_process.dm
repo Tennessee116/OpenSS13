@@ -148,7 +148,7 @@
 
 		//*****
 		Label_299:
-		if ((locate(/obj/move, T) && T in L))
+		if ((locate(/obj/move, T) && (T in L)))
 			L -= T
 			var/obj/move/O = locate(/obj/move, T)
 			if (O.updatecell)

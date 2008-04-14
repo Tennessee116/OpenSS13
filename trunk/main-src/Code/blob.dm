@@ -48,7 +48,7 @@
 	var/p = health * (U.n2/11376000 + U.oxygen/1008000 + U.co2/200)
 
 	if(!istype(U, /turf/space))
-		p+=3
+		p+=2
 
 	if(!prob(p))
 		return

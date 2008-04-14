@@ -1089,7 +1089,7 @@
 
 	flow_to_turf(gas, ngas, T)
 
-
+/*
 /obj/machinery/freezer/orient_pipe(P as obj)
 
 	if (!( src.line_out ))
@@ -1098,7 +1098,7 @@
 		return 0
 	return 1
 	return
-
+*/
 /obj/machinery/freezer/New()
 
 	..()
@@ -1399,7 +1399,7 @@
 		src.verbs -= x
 	src.icon_state = "broken"
 	src.density = 0
-
+/*
 /obj/machinery/cryo_cell/orient_pipe(P as obj)
 
 	if (!( src.line_in ))
@@ -1408,7 +1408,7 @@
 		return 0
 	return 1
 	return
-
+*/
 /obj/machinery/cryo_cell/allow_drop()
 
 	return 0

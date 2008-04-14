@@ -618,6 +618,14 @@ heat is conserved between exchanges
 	return 2*co2 + 1.5*n2 + oxygen + 0.5*sl_gas + 1.2*plasma
 
 
+/obj/substance/gas/proc/tostring()
+	return "Tot: [src.tot_gas()] ; [oxygen]/[n2]/#[plasma]/[co2]/[sl_gas] ; Temp:[temperature]"
+
+
+/turf/proc/tostring()
+	var/obj/substance/gas/G = src.get_gas()
+	return G.tostring()
+
 /datum/chemical/pathogen/proc/process(source as obj)
 
 	return
