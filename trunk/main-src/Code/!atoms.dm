@@ -2601,47 +2601,6 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 
 
 
-/obj/machinery/power/generator
-	name = "generator"
-	desc = "A high efficiency thermoelectric generator."
-	icon_state = "teg"
-	anchored = 1
-	density = 1
-
-	var/obj/machinery/circulator/circ1
-	var/obj/machinery/circulator/circ2
-
-	var/c1on = 0
-	var/c2on = 0
-	var/c1rate = 10
-	var/c2rate = 10
-	var/lastgen = 0
-	var/lastgenlev = -1
-
-
-
-#define SMESMAXCHARGELEVEL 60000
-#define SMESMAXOUTPUT 60000
-
-/obj/machinery/power/smes
-	name = "power storage unit"
-	desc = "A high-capacity superconducting magnetic energy storage (SMES) unit."
-	icon_state = "smes"
-	density = 1
-	anchored = 1
-	var/output = 30000
-	var/lastout = 0
-	var/loaddemand = 0
-	var/capacity = 5e6
-	var/charge = 1e6
-	var/charging = 0
-	var/chargemode = 0
-	var/chargecount = 0
-	var/chargelevel = 30000
-	var/online = 1
-	var/n_tag = null
-	var/obj/machinery/power/terminal/terminal = null
-
 
 
 /obj/machinery/power/portable_gen
@@ -2652,32 +2611,6 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	netnum = -1
 	directwired = 0
 
-/obj/machinery/compressor
-	name = "compressor"
-	desc = "The compressor stage of a gas turbine generator."
-	icon = 'pipes.dmi'
-	icon_state = "compressor"
-	anchored = 1
-	density = 1
-	var/obj/machinery/power/turbine/turbine
-	var/obj/substance/gas/gas
-	var/turf/inturf
-	var/starter = 0
-	var/rpm = 0
-	var/rpmtarget = 0
-	var/capacity = 1e6
-
-/obj/machinery/power/turbine
-	name = "gas turbine generator"
-	desc = "A gas turbine used to for backup power generation."
-	icon = 'pipes.dmi'
-	icon_state = "turbine"
-	anchored = 1
-	density = 1
-	var/obj/machinery/compressor/compressor
-	directwired = 1
-	var/turf/outturf
-	var/lastgen
 
 
 

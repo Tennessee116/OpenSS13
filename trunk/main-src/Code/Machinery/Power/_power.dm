@@ -77,7 +77,7 @@ obj/machinery/power
 		var/list/res = list()
 		var/cdir
 
-		for(var/turf/T in orange(1, src))
+		for(var/turf/T in orange(1, src.loc))
 
 			cdir = get_dir(T, src)
 
