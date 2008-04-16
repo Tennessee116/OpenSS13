@@ -4,8 +4,8 @@
 
 // BEGIN_INTERNALS
 /*
-FILE: Code\newobjects.dm
-DIR: Code Code\Machinery Code\Machinery\Atmoalter
+FILE: Code\!atoms.dm
+DIR: Code Code\Machinery\Atmoalter Code\Machinery\Power
 MAP_ICON_TYPE: 0
 AUTO_FILE_DIR: ON
 */
@@ -15,6 +15,7 @@ AUTO_FILE_DIR: ON
 #define FILE_DIR "Code"
 #define FILE_DIR "Code/Machinery"
 #define FILE_DIR "Code/Machinery/Atmoalter"
+#define FILE_DIR "Code/Machinery/Power"
 #define FILE_DIR "Icons"
 #define FILE_DIR "Interface"
 // END_FILE_DIR
@@ -91,5 +92,11 @@ AUTO_FILE_DIR: ON
 #include "Code\Machinery\Atmoalter\canister.dm"
 #include "Code\Machinery\Atmoalter\heater.dm"
 #include "Code\Machinery\Atmoalter\siphs.dm"
+#include "Code\Machinery\Power\_power.dm"
+#include "Code\Machinery\Power\apc.dm"
+#include "Code\Machinery\Power\monitor.dm"
+#include "Code\Machinery\Power\solar.dm"
+#include "Code\Machinery\Power\solar_control.dm"
+#include "Code\Machinery\Power\terminal.dm"
 // END_INCLUDE
 

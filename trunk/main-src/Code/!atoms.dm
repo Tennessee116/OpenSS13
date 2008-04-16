@@ -2598,53 +2598,8 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	icon = 'wire.dmi'
 
 
-/obj/machinery/power
-	name = null
-	icon = 'power.dmi'
-	anchored = 1.0
-	var/datum/powernet/powernet = null
-	var/netnum = 0
-	var/directwired = 1		// by default, power machines are connected by a cable in a neighbouring turf
-							// if set to 0, requires a 0-X cable on this turf
 
-/obj/machinery/power/apc
-	name = "area power controller"
 
-	icon_state = "apc0"
-	anchored = 1
-	var/area/area
-	var/obj/item/weapon/cell/cell
-	var/start_charge = 90				// initial cell charge %
-	var/cell_type = 1					// 0=no cell, 1=regular, 2=high-cap (x5)
-	var/opened = 0
-	var/lighting = 3
-	var/equipment = 3
-	var/environ = 3
-	var/operating = 1
-	var/charging = 0
-	var/chargemode = 1
-	var/chargecount = 0
-	var/locked = 1
-	var/coverlocked = 1
-	var/tdir = null
-	var/obj/machinery/power/terminal/terminal = null
-	var/lastused_light = 0
-	var/lastused_equip = 0
-	var/lastused_environ = 0
-	var/lastused_total = 0
-	var/main_status = 0
-	netnum = -1		// set so that APCs aren't found as powernet nodes
-	var/access = "4000/0002/0030"
-	var/allowed = "Systems"
-
-/obj/machinery/power/terminal
-	name = "terminal"
-	icon_state = "term"
-	desc = "An underfloor wiring terminal for power equipment"
-	level = 1
-	var/obj/machinery/power/master = null
-	anchored = 1
-	directwired = 0		// must have a cable on same turf connecting to terminal
 
 /obj/machinery/power/generator
 	name = "generator"
@@ -2663,12 +2618,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	var/lastgen = 0
 	var/lastgenlev = -1
 
-/obj/machinery/power/monitor
-	name = "power monitoring computer"
-	icon = 'stationobjs.dmi'
-	icon_state = "power_computer"
-	density = 1
-	anchored = 1
+
 
 #define SMESMAXCHARGELEVEL 60000
 #define SMESMAXOUTPUT 60000
@@ -2692,38 +2642,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	var/n_tag = null
 	var/obj/machinery/power/terminal/terminal = null
 
-/obj/machinery/power/solar
-	name = "solar panel"
-	desc = "A solar electrical generator."
-	icon = 'power.dmi'
-	icon_state = "sp_base"
-	anchored = 1
-	density = 1
-	directwired = 1
-	var/id = 1
-	var/obscured = 0
-	var/sunfrac = 0
-	var/adir = SOUTH
-	var/ndir = SOUTH
-	var/turn_angle = 0
-	var/obj/machinery/power/solar_control/control
 
-/obj/machinery/power/solar_control
-	name = "solar panel control"
-	desc = "A controller for solar panel arrays."
-	icon = 'enginecomputer.dmi'
-	icon_state = "solar_con"
-	anchored = 1
-	density = 1
-	directwired = 1
-	var/id = 1
-	var/cdir = 0
-	var/gen = 0
-	var/lastgen = 0
-	var/track = 0			// on/off
-	var/trackrate = 600		// 300-900 seconds
-	var/trackdir = 1		// 0 =CCW, 1=CW
-	var/nexttime = 0
 
 /obj/machinery/power/portable_gen
 	name = "portable generator"
