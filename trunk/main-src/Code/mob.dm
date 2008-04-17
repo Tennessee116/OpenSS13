@@ -6711,6 +6711,8 @@
 				M << text("<B>[]</B> []: []", src, (src.stat > 1 ? "\[<I>dead</I> \]" : ""), message)
 			//Foreach goto(50)
 		return
+	if (src.stat >= 1)
+		return
 	if ((copytext(message, 1, 2) == "*" && !( src.stat )))
 		src.emote(copytext(message, 2, length(message) + 1))
 		return
