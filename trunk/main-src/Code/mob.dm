@@ -3596,6 +3596,10 @@
 
 	//stat(null, "([x], [y], [z])")
 
+#ifdef SDEBUG
+	stat("CPU",world.cpu)
+#endif
+
 	stat(null, text("Intent: []", src.a_intent))
 	stat(null, text("Move Mode: []", src.m_intent))
 

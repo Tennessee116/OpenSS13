@@ -1,4 +1,23 @@
-/* Most recent changes (Since H9.5)
+/* Most recent changes (Since H9.6)
+
+	Contining reorg of obj/machinery code
+	Changed how solar panel directions are displayed, to fix the rotation display bug.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	 (Since H9.5)
 
 	Started pipelaying system, /obj/item/weapon/pipe.
 

@@ -34,7 +34,7 @@ obj/machinery/power/solar_control
 			if(powernet)
 				for(var/obj/machinery/power/solar/S in powernet.nodes)
 					if(S.id == id)
-						cdir = S.adir		// find the contorlled solar panels and set the current direction to match
+						cdir = S.dir		// find the contorlled solar panels and set the current direction to match
 						updateicon()		// also update the icon overlay
 
 
@@ -222,7 +222,7 @@ obj/machinery/power/solar_control
 				if(S.id == id)
 					S.control = src
 
-					var/delta = dir2angle(S.adir) - dir2angle(cdir)
+					var/delta = dir2angle(S.dir) - dir2angle(cdir)
 
 					delta = (delta+360)%360
 

@@ -2387,51 +2387,8 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	var/locked = 0.0
 	var/mob/occupant = null
 	anchored = 1.0
-/obj/machinery/door
-	name = "door"
-	icon = 'doors.dmi'
-	icon_state = "door1"
-	opacity = 1
-	density = 1
-	var/visible = 1.0
-	var/access = "0000"
-	var/allowed = null
-	//var/r_access
-	//var/r_lab
-	//var/r_engine
-	//var/r_air
 
-	var/p_open = 0.0
-	var/operating = null
-	anchored = 1.0
-/obj/machinery/door/airlock
-	name = "airlock"
-	icon = 'Door1.dmi'
-	var/blocked = null
-	var/powered = 1.0
-	var/locked = 0.0
-	var/wires = 511.0
-/obj/machinery/door/false_wall
-	name = "wall"
-	icon = 'Doorf.dmi'
-/obj/machinery/door/firedoor
-	name = "firedoor"
-	icon = 'Door1.dmi'
-	icon_state = "door0"
-	var/blocked = null
-	opacity = 0
-	density = 0
-/obj/machinery/door/poddoor
-	name = "poddoor"
-	icon = 'Door1.dmi'
-	icon_state = "pdoor1"
-	var/id = 1.0
-/obj/machinery/door/window
-	name = "interior door"
-	icon = 'windoor.dmi'
-	visible = 0.0
-	flags = 512.0
-	opacity = 0
+
 
 /obj/machinery/freezer
 	name = "freezer"
@@ -2469,13 +2426,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	var/code = 1.0
 	var/id = 1.0
 	anchored = 1.0
-/obj/machinery/meter
-	name = "meter"
-	icon = 'pipes.dmi'
-	icon_state = "meterX"
-	var/obj/machinery/pipes/target = null
-	anchored = 1.0
-	var/average = 0
+
 /obj/machinery/nuclearbomb
 	desc = "Uh oh."
 	name = "Nuclear Fission Explosive"

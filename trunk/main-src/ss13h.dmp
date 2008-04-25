@@ -1,7 +1,7 @@
 "aa" = (/turf/space,/area)
 "ab" = (/obj/grille,/turf/station/floor,/area)
 "ac" = (/obj/item/weapon/tank/oxygentank,/turf/space,/area)
-"ad" = (/obj/machinery/power/solar{id = 2; adir = 1},/turf/station/floor,/area)
+"ad" = (/obj/machinery/power/solar{id = 2},/turf/station/floor,/area)
 "ae" = (/obj/cable{icon_state = "1-2"; d1 = 1; d2 = 2},/turf/station/floor{icon_state = "Floor1"; intact = 0},/area)
 "af" = (/obj/cable{icon_state = "1-4"; d1 = 1; d2 = 4},/turf/station/floor{icon_state = "Floor1"; intact = 0},/area)
 "ag" = (/obj/cable,/obj/cable{icon_state = "0-8"; d2 = 8},/obj/cable{icon_state = "0-4"; d2 = 4},/turf/station/floor{icon_state = "Floor1"; intact = 0},/area)

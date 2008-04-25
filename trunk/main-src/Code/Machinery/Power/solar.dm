@@ -14,12 +14,13 @@ obj/machinery/power/solar
 	anchored = 1
 	density = 1
 	directwired = 1
+	dir = SOUTH						// the current direction of the solar panel
 	var
 		id = 1						// solar_control must have matching id (and be on same powernet) to control this machine
 		obscured = 0				// true if the panel is in shadow (thus does not generate power)
 		sunfrac = 0					// fraction (0.0-1.0) of the maximum exposure of the solar panel to the sun
 									// calculated from the relative angle of the sun and the panel
-		adir = SOUTH				// the current direction of the solar panel
+
 		ndir = SOUTH				// the new set direction of the panel
 		turn_angle = 0				// the angle to turn through to get to the set angle; -45 or +45
 		obj/machinery/power/solar_control/control		// the controller for this panel
@@ -42,13 +43,14 @@ obj/machinery/power/solar
 
 	// Updates the icon for the solar panel
 	// The object icon is just the base, with the panel itself being an 8-direction overlay
+	// As the object direction is changed, the overlay direction will echo it
 
 	proc/updateicon()
 		src.overlays = null
 		if(stat & BROKEN)
 			overlays += image('power.dmi', "solar_panel-b", FLY_LAYER)
 		else
-			overlays += image('power.dmi', "solar_panel", FLY_LAYER, adir)
+			overlays += image('power.dmi', "solar_panel", FLY_LAYER)
 
 
 	// Calculate the fraction of power produced by the panel
@@ -61,7 +63,7 @@ obj/machinery/power/solar
 			sunfrac = 0
 			return
 
-		var/p_angle = dir2angle(adir) - sun.angle
+		var/p_angle = dir2angle(dir) - sun.angle
 
 		if(abs(p_angle) > 90)			// if facing more than 90deg from sun, zero output
 			sunfrac = 0
@@ -85,11 +87,11 @@ obj/machinery/power/solar
 					control.gen += sgen			// notify the controller of how much was generated
 
 
-		if(adir == ndir)						// if current angle == set angle, stop turning
+		if(dir == ndir)						// if current angle == set angle, stop turning
 			turn_angle = 0
 		else									// otherwise turn
 			spawn(rand(0,10))					// slight random delay is to stop all panels turning in lockstep
-				adir = turn(adir, turn_angle)
+				dir = turn(dir, turn_angle)
 				updateicon()
 				updatefrac()					// update the panel icon and the fractional power production for the new angle
 
