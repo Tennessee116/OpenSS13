@@ -1807,39 +1807,29 @@
 		src.loc.buildlinks()
 		del(src)
 
-/obj/window/CheckPass(atom/movable/O as mob|obj, target as turf)
-
+/obj/window/CheckPass(atom/movable/O, target as turf)
 	if (istype(O, /obj/beam))
 		return 1
+	/* Does SOUTHWEST do something hacky for windows, like defines a full 1 square window? --Stephen001 */
 	if (src.dir == SOUTHWEST)
 		return 0
-	else
-		if (get_dir(target, O.loc) == src.dir)
-			return 0
+	else if (get_dir(target, O.loc) == src.dir)
+		return 0
 	return 1
-	return
 
-/obj/window/CheckExit(atom/movable/O as mob|obj, target as turf)
-
+/obj/window/CheckExit(atom/movable/O, target as turf)
 	if (istype(O, /obj/beam))
 		return 1
 	if (get_dir(O.loc, target) == src.dir)
 		return 0
 	return 1
-	return
 
 /obj/window/meteorhit()
-
-	//*****RM
-	//world << "glass at [x],[y],[z] Mhit"
 	src.health = 0
 	new /obj/item/weapon/shard( src.loc )
 	if(reinf) new /obj/item/weapon/rods( src.loc)
 	src.density = 0
 	src.loc.buildlinks()
-
-
-	////SN src = null
 	del(src)
 	return
 
