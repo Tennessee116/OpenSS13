@@ -5591,48 +5591,36 @@
 	return
 
 /atom/DblClick()
-
-
-	//world << "[src].DblClick() : [src.type]"
-
-
 	..()
 	var/obj/item/weapon/W = usr.equipped()
 	if ((W == src && usr.stat == 0))
-		spawn( 0 )
-			W.attack_self(usr)
-			//world << "[W].attack_self([usr])"
-			return
+		spawn(0) W.attack_self(usr)
 		return
-	//world << "1"
-	if ((!( usr.canmove ) || usr.stat != 0))
+	if (!(usr.canmove) || usr.stat != 0)
 		return
-
-
-	if ((!( src in usr.contents ) && (((!( isturf(src) ) && (!( isturf(src.loc) ) && (src.loc && !( isturf(src.loc.loc) )))) || !( isturf(usr.loc) )) && (src.loc != usr.loc && (!( istype(src, /obj/screen) ) && !( usr.contents.Find(src.loc) ))))))
+	/* This line broke my mental parser. --Stephen001 */
+	if ((!(src in usr.contents) && (((!(isturf(src)) && (!(isturf(src.loc)) && (src.loc && !(isturf(src.loc.loc))))) || !(isturf(usr.loc))) && (src.loc != usr.loc && (!(istype(src, /obj/screen)) && !(usr.contents.Find(src.loc)))))))
 		return
-	//world << "2"
+	/* Surely src.loc == usr is redundant? --Stephen001 */
 	var/t5 = (get_dist(src, usr) <= 1 || src.loc == usr)
 	if ((istype(src, /obj/item/weapon/organ) && src in usr.contents))
-		var/mob/human/H = usr
 		usr << "Betchya think you're really smart trying to remove your own body parts aren't ya!"
-		if (istype(H, /mob/human))
-			if (!( (src == H.l_store || src == H.r_store) ))
+		if (istype(usr, /mob/human))
+			if (!(src == usr.l_store || src == usr.r_store))
 				return
 		else
 			return
-
-	//world << "3"
-	if (((t5 || (W && (W.flags & 16))) && !( istype(src, /obj/screen) )))
+	/* Seems like a pretty important expression. Dare I fathom what it checks? --Stephen001 */
+	if (((t5 || (W && (W.flags & 16))) && !(istype(src, /obj/screen))))
 		if (usr.next_move < world.time)
 			usr.next_move = world.time + 10
 		else
 			return
 		if ((src.loc && (get_dist(src, usr) < 2 || src.loc == usr.loc)))
 			var/direct = get_dir(usr, src)
-			var/obj/item/weapon/dummy/D = new /obj/item/weapon/dummy( usr.loc )
+			var/obj/item/weapon/dummy/D = new /obj/item/weapon/dummy(usr.loc)
 			var/ok = 0
-			if ( (direct - 1) & direct)
+			if ((direct - 1) & direct)
 				var/turf/T
 				switch(direct)
 					if(5.0)
@@ -5700,15 +5688,14 @@
 						ok = 1
 						if (usr.loc != src.loc)
 							for(var/atom/A as mob|obj|turf|area in usr.loc)
-								if ((!( A.CheckExit(usr, src.loc) ) && A != usr))
+								/* Bug #1937196 might be inside CheckExit --Stephen001 */
+								if ((!A.CheckExit(usr, src.loc)) && A != usr)
 									ok = 0
-								//Foreach goto(1111)
-			//D = null
 			del(D)
-			if (!( ok ))
+			if (!(ok))
 				return 0
 
-		if (!( usr.restrained() ))
+		if (!usr.restrained())
 			if (W)
 				if (t5)
 					src.attackby(W, usr)
@@ -5740,7 +5727,6 @@
 						W.afterattack(src, usr)
 				else
 					if (istype(usr, /mob/human))
-						//world << "[src].attack_hand([usr.hand])"
 						src.attack_hand(usr, usr.hand)
 					else
 						if (istype(usr, /mob/monkey))

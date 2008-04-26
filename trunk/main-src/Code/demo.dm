@@ -1,33 +1,20 @@
-
-
-
-
 /obj/item/weapon/clothing/burn(fi_amount)
-
 	if (fi_amount > src.s_fire)
-		spawn( 0 )
-			var/t = src.icon_state
-			src.icon_state = ""
-			src.icon = 'b_items.dmi'
-			flick(text("[]", t), src)
-			spawn( 14 )
-				//SN src = null
-				del(src)
-				return
-				return
-			return
+		spawn(0)
+			var/t 			= src.icon_state
+			src.icon_state 	= ""
+			src.icon 		= 'b_items.dmi'
+			flick("[t]", src)
+			spawn(14) del(src)
 		return 0
 	return 1
-	return
 
 /obj/item/weapon/clothing/gloves/examine()
 	set src in usr
-
 	..()
 	return
 
 /obj/item/weapon/clothing/shoes/orange/attack_self(mob/user as mob)
-
 	if (src.chained)
 		src.chained = null
 		new /obj/item/weapon/handcuffs( user.loc )
@@ -35,9 +22,7 @@
 	return
 
 /obj/item/weapon/clothing/shoes/orange/attackby(H as obj, loc)
-
 	if ((istype(H, /obj/item/weapon/handcuffs) && !( src.chained )))
-		//H = null
 		del(H)
 		src.chained = 1
 		src.icon_state = "o_shoes1"
@@ -2573,12 +2558,9 @@
 	return
 
 /turf/station/floor/attack_paw(mob/user as mob)
-
 	return src.attack_hand(user)
-	return
 
 /turf/station/floor/attack_hand(mob/user as mob)
-
 	if ((!( user.canmove ) || user.restrained() || !( user.pulling )))
 		return
 	if (user.pulling.anchored)
@@ -2596,14 +2578,13 @@
 	return
 
 /turf/station/floor/attackby(obj/item/weapon/C as obj, mob/user as mob)
-
 	if (istype(C, /obj/item/weapon/crowbar))
 		if (src.health > 100)
 			src.health = 100
 			src.burnt = 1
 			src.intact = 0
 			levelupdate()
-			new /obj/item/weapon/tile( src )
+			new /obj/item/weapon/tile(src)
 			src.icon_state = text("Floor[]", (src.burnt ? "1" : ""))
 	else if (istype(C, /obj/item/weapon/tile))
 		if (src.health <= 100)
@@ -2618,14 +2599,10 @@
 			var/obj/item/weapon/tile/T = C
 			T.amount--
 			if (T.amount < 1)
-				//T = null
 				del(T)
 	else if (istype(C, /obj/item/weapon/cable_coil) )
 		var/obj/item/weapon/cable_coil/coil = C
 		coil.turf_place(src, user)
-
-	//else if (istype(C, /obj/item/weapon/sheet/r_metal))
-
 	return
 
 /turf/station/floor/unburn()
