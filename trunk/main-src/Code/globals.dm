@@ -3,17 +3,8 @@
 	Contining reorg of obj/machinery code
 	Changed how solar panel directions are displayed, to fix the rotation display bug.
 
-
-
-
-
-
-
-
-
-
-
-
+	Added remote APC control the power_monitor
+	Fixed a bug where APCs would continue to draw power for cell charging even when the breaker was off.
 
 
 

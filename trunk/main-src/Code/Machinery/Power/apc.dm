@@ -342,6 +342,8 @@ obj/machinery/power/apc
 			area.power_light = 0
 			area.power_equip = 0
 			area.power_environ = 0
+			chargecount = 0				// H9.6 FIX: If breaker is off, stop charging
+			charging = 0
 
 		area.power_change()
 
