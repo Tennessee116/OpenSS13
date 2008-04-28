@@ -5604,19 +5604,22 @@
 	/* Surely src.loc == usr is redundant? --Stephen001 */
 	var/t5 = (get_dist(src, usr) <= 1 || src.loc == usr)
 	if ((istype(src, /obj/item/weapon/organ) && src in usr.contents))
+		var/mob/human/H = usr
 		usr << "Betchya think you're really smart trying to remove your own body parts aren't ya!"
 		if (istype(usr, /mob/human))
-			if (!(src == usr.l_store || src == usr.r_store))
+			if (!(src == H.l_store || src == H.r_store))
 				return
 		else
 			return
+	/* Suggested fix by shadowlord13 for Bug #1952091. --Stephen001 */
+	var/turf/turfLoc = (istype(src, /turf) ? src : src.loc)
 	/* Seems like a pretty important expression. Dare I fathom what it checks? --Stephen001 */
 	if (((t5 || (W && (W.flags & 16))) && !(istype(src, /obj/screen))))
 		if (usr.next_move < world.time)
 			usr.next_move = world.time + 10
 		else
 			return
-		if ((src.loc && (get_dist(src, usr) < 2 || src.loc == usr.loc)))
+		if ((turfLoc && (get_dist(src, usr) < 2 || turfLoc == usr.loc)))
 			var/direct = get_dir(usr, src)
 			var/obj/item/weapon/dummy/D = new /obj/item/weapon/dummy(usr.loc)
 			var/ok = 0
@@ -5627,56 +5630,56 @@
 						T = get_step(usr, NORTH)
 						if (T.Enter(D, src))
 							D.loc = T
-							T = src.loc
+							T = turfLoc
 							if (T.Enter(D, src))
 								ok = 1
 						else
 							T = get_step(usr, EAST)
 							if (T.Enter(D, src))
 								D.loc = T
-								T = src.loc
+								T = turfLoc
 								if (T.Enter(D, src))
 									ok = 1
 					if(6.0)
 						T = get_step(usr, SOUTH)
 						if (T.Enter(D, src))
 							D.loc = T
-							T = src.loc
+							T = turfLoc
 							if (T.Enter(D, src))
 								ok = 1
 						else
 							T = get_step(usr, EAST)
 							if (T.Enter(D, src))
 								D.loc = T
-								T = src.loc
+								T = turfLoc
 								if (T.Enter(D, src))
 									ok = 1
 					if(9.0)
 						T = get_step(usr, NORTH)
 						if (T.Enter(D, src))
 							D.loc = T
-							T = src.loc
+							T = turfLoc
 							if (T.Enter(D, src))
 								ok = 1
 						else
 							T = get_step(usr, WEST)
 							if (T.Enter(D, src))
 								D.loc = T
-								T = src.loc
+								T = turfLoc
 								if (T.Enter(D, src))
 									ok = 1
 					if(10.0)
 						T = get_step(usr, SOUTH)
 						if (T.Enter(D, src))
 							D.loc = T
-							T = src.loc
+							T = turfLoc
 							if (T.Enter(D, src))
 								ok = 1
 						else
 							T = get_step(usr, WEST)
 							if (T.Enter(D, src))
 								D.loc = T
-								T = src.loc
+								T = turfLoc
 								if (T.Enter(D, src))
 									ok = 1
 					else
@@ -5686,9 +5689,8 @@
 				else
 					if ((src.flags & 512 && get_dir(src, usr) & src.dir))
 						ok = 1
-						if (usr.loc != src.loc)
+						if (usr.loc != turfLoc)
 							for(var/atom/A as mob|obj|turf|area in usr.loc)
-								/* Bug #1937196 might be inside CheckExit --Stephen001 */
 								if ((!A.CheckExit(usr, src.loc)) && A != usr)
 									ok = 0
 			del(D)
