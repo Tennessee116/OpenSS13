@@ -1453,7 +1453,7 @@
 		for(var/turf/T in A)
 
 			if (T.z == shuttle_z)
-				for(var/atom/movable/AM as mob|obj in T)
+				for(var/atom/movable/AM in T)
 					AM.z = 1
 					//Foreach goto(79)
 				var/turf/U = locate(T.x, T.y, shuttle_z)
@@ -1473,6 +1473,9 @@
 			//Foreach goto(45)
 		src.timeleft = 1800
 		src.shuttle_location = 1
+
+		// Fix for bug #1952749 as per shadowlord13
+		/*
 		switch(src.mode)
 			if("meteor")
 				spawn( 0 )
@@ -1482,6 +1485,7 @@
 				spawn( 0 )
 					extend_process()
 					return
+		*/
 	else
 		check_win()
 	return
