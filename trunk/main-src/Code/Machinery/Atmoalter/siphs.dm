@@ -60,6 +60,8 @@ obj/machinery/atmoalter/siphs
 	// Reset the siphon state. If "valve" is negative, main valve is set to release at that rate
 	// If "valve" is positive, main valve set to siphon at that rate
 	// If "auto" true, main valve set to automatic status
+	// This routine is called by the siphonswitch computers to control the siphs
+
 
 	proc/reset(valve, auto)
 		if(c_status!=0)

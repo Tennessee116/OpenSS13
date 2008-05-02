@@ -2212,51 +2212,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 
 
 
-/obj/machinery/computer
-	name = "computer"
-	density = 1
-	anchored = 1.0
 
-/obj/machinery/computer/airtunnel
-	name = "Air Tunnel Control"
-	icon = 'airtunnelcomputer.dmi'
-	icon_state = "console00"
-/obj/machinery/computer/atmosphere
-	name = "atmosphere"
-	icon = 'turfs.dmi'
-/obj/machinery/computer/atmosphere/siphonswitch
-	name = "Area Air Control"
-	icon_state = "switch"
-	var/otherarea
-	var/area/area
-/obj/machinery/computer/atmosphere/siphonswitch/mastersiphonswitch
-	name = "Master Air Control"
-/obj/machinery/computer/card
-	name = "Identification Computer"
-	icon = 'stationobjs.dmi'
-	icon_state = "id_computer"
-	var/obj/item/weapon/card/id/scan = null
-	var/obj/item/weapon/card/id/modify = null
-	var/authenticated = 0.0
-	var/mode = 0.0
-	var/printing = null
-/obj/machinery/computer/communications
-	name = "communications"
-	icon = 'stationobjs.dmi'
-	icon_state = "comm_computer"
-/obj/machinery/computer/data
-	name = "data"
-	icon = 'weap_sat.dmi'
-	icon_state = "computer"
-
-	var/list/topics = list(  )
-
-/obj/machinery/computer/data/weapon
-	name = "weapon"
-/obj/machinery/computer/data/weapon/info
-	name = "Research Computer"
-/obj/machinery/computer/data/weapon/log
-	name = "Log Computer"
 /obj/machinery/computer/dna
 	name = "DNA operations computer"
 	icon = 'Cryogenic2.dmi'
@@ -2266,68 +2222,10 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	var/obj/item/weapon/card/data/modify2 = null
 	var/mode = null
 	var/temp = null
-/obj/machinery/computer/engine
-	name = "engine"
-	icon = 'enginecomputer.dmi'
-	var/temp = null
-	var/id = 1
-	var/obj/machinery/gas_sensor/gs
-	var/access = "4000/0030"
-	var/allowed
-
-/obj/machinery/computer/hologram_comp
-	name = "Hologram Computer"
-	icon = 'stationobjs.dmi'
-	icon_state = "holo_console0"
-	var/obj/machinery/hologram_proj/projector = null
-	var/temp = null
-	var/lumens = 0.0
-	var/h_r = 245.0
-	var/h_g = 245.0
-	var/h_b = 245.0
-/obj/machinery/computer/med_data
-	name = "Medical Records"
-	icon = 'weap_sat.dmi'
-	icon_state = "computer"
-	var/obj/item/weapon/card/id/scan = null
-	var/authenticated = null
-	var/rank = null
-	var/screen = null
-	var/datum/data/record/active1 = null
-	var/datum/data/record/active2 = null
-	var/a_id = null
-	var/temp = null
-	var/printing = null
-	var/allowed = "Medical Researcher/Medical Doctor/Head of Personnel/Captain"
-	var/access
-
-/obj/machinery/computer/pod
-	name = "Pod Launch Control"
-	icon = 'escapepod.dmi'
-	icon_state = "computer"
-	var/id = 1.0
-	var/obj/machinery/mass_driver/connected = null
-	var/timing = 0.0
-	var/time = 30.0
 
 
-/obj/machinery/computer/prison_shuttle
-	name = "prison shuttle"
-	icon = 'shuttle.dmi'
-	icon_state = "shuttlecom"
-/obj/machinery/computer/secure_data
-	name = "Security Records"
-	icon = 'weap_sat.dmi'
-	icon_state = "computer"
-	var/obj/item/weapon/card/id/scan = null
-	var/authenticated = null
-	var/rank = null
-	var/screen = null
-	var/datum/data/record/active1 = null
-	var/datum/data/record/active2 = null
-	var/a_id = null
-	var/temp = null
-	var/printing = null
+
+
 /obj/machinery/computer/security
 	name = "security"
 	icon = 'stationobjs.dmi'
@@ -2336,21 +2234,8 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	var/last_pic = 1.0
 	var/network = "SS13"
 	var/maplevel = 1
-/obj/machinery/computer/shuttle
-	name = "shuttle"
-	icon = 'shuttle.dmi'
-	icon_state = "shuttlecom"
-	var/auth_need = 3.0
 
-	var/list/authorized = list(  )
-	var/allowed
-	var/access = "2000"
 
-/obj/machinery/computer/sleep_console
-	name = "sleep console"
-	icon = 'Cryogenic2.dmi'
-	icon_state = "sleeperconsole"
-	var/obj/machinery/sleeper/connected = null
 /obj/machinery/computer/teleporter
 	name = "teleporter"
 	icon = 'stationobjs.dmi'
@@ -2360,24 +2245,6 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 
 
 
-
-/obj/machinery/cryo_cell
-	name = "cryo cell"
-	icon = 'Cryogenic2.dmi'
-	icon_state = "celltop"
-	density = 1
-	var/obj/machinery/line_in = null
-	var/mob/occupant = null
-	var/obj/substance/gas/gas = null
-	var/obj/substance/gas/ngas = null
-	anchored = 1.0
-	p_dir = 8.0
-	capmult = 1
-
-	var/obj/overlay/O1 = null
-	var/obj/overlay/O2 = null
-
-	var/obj/machinery/vnode = null
 
 /obj/machinery/dna_scanner
 	name = "DNA Scanner/Implanter"
@@ -2390,58 +2257,6 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 
 
 
-/obj/machinery/freezer
-	name = "freezer"
-	icon = 'Cryogenic2.dmi'
-	icon_state = "freezer_0"
-	density = 1
-	var/connector = null
-	var/obj/machinery/line_out = null
-	var/obj/machinery/vnode = null
-	var/c_used = 1.0
-	var/status = 0.0
-	var/t_flags = 3.0
-	var/transfer = 0.0
-	var/temperature = 60.0+T0C
-
-	var/obj/substance/gas/gas
-	var/obj/substance/gas/ngas
-	p_dir = 4.0
-	anchored = 1.0
-	capmult = 1
-
-
-/obj/machinery/hologram_proj
-	name = "Hologram Projector"
-	icon = 'stationobjs.dmi'
-	icon_state = "hologram0"
-	var/atom/projection = null
-	anchored = 1.0
-
-/obj/machinery/mass_driver
-	name = "mass driver"
-	icon = 'stationobjs.dmi'
-	icon_state = "mass_driver"
-	var/power = 1.0
-	var/code = 1.0
-	var/id = 1.0
-	anchored = 1.0
-
-/obj/machinery/nuclearbomb
-	desc = "Uh oh."
-	name = "Nuclear Fission Explosive"
-	icon = 'stationobjs.dmi'
-	icon_state = "nuclearbomb0"
-	density = 1
-	var/extended = 0.0
-	var/timeleft = 60.0
-	var/timing = 0.0
-	var/r_code = "ADMIN"
-	var/code = ""
-	var/yes_code = 0.0
-	var/safety = 1.0
-	var/obj/item/weapon/disk/nuclear/auth = null
-	flags = 320.0
 
 
 
@@ -2449,24 +2264,6 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 
 
 
-/obj/machinery/pod
-	name = "Escape Pod"
-	icon = 'escapepod.dmi'
-	icon_state = "pod"
-	density = 1
-	var/id = 1.0
-	var/speed = 10.0
-	var/capacity = null
-	flags = 320.0
-	anchored = 1.0
-/obj/machinery/recon
-	name = "1-Person Reconaissance Pod"
-	icon = 'escapepod.dmi'
-	icon_state = "recon"
-	density = 1
-	var/speed = 1.0
-	flags = 320.0
-	anchored = 1.0
 /obj/machinery/restruct
 	name = "DNA Physical Restructurization Accelerator"
 	icon = 'Cryogenic2.dmi'
@@ -2497,41 +2294,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 
 //*****
 
-/obj/machinery/shuttle
-	name = "shuttle"
-	icon = 'shuttle.dmi'
-/obj/machinery/shuttle/engine
-	name = "engine"
-	density = 1
-	anchored = 1.0
-/obj/machinery/shuttle/engine/heater
-	name = "heater"
-	icon_state = "heater"
-/obj/machinery/shuttle/engine/platform
-	name = "platform"
-	icon_state = "platform"
-/obj/machinery/shuttle/engine/propulsion
-	name = "propulsion"
-	icon_state = "propulsion"
-	opacity = 1
-/obj/machinery/shuttle/engine/propulsion/burst
-	name = "burst"
-/obj/machinery/shuttle/engine/propulsion/burst/left
-	name = "left"
-	icon_state = "burst_l"
-/obj/machinery/shuttle/engine/propulsion/burst/right
-	name = "right"
-	icon_state = "burst_r"
-/obj/machinery/shuttle/engine/router
-	name = "router"
-	icon_state = "router"
-/obj/machinery/sleeper
-	name = "sleeper"
-	icon = 'Cryogenic2.dmi'
-	icon_state = "sleeper_0"
-	density = 1
-	var/mob/occupant = null
-	anchored = 1.0
+
 /obj/machinery/teleport
 	name = "teleport"
 	icon = 'stationobjs.dmi'
@@ -2680,9 +2443,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	density = 1
 	var/obj/target = null
 	anchored = 1.0
-/obj/projection
-	name = "Projection"
-	anchored = 1.0
+
 /obj/rack
 	name = "rack"
 	icon = 'Icons.dmi'

@@ -6,6 +6,10 @@
 	Added remote APC control the power_monitor
 	Fixed a bug where APCs would continue to draw power for cell charging even when the breaker was off.
 
+	Added CO2 to gasbomb proc (plasmatank/proc/release())
+
+	Moved computer objects ex_act() to base type (since all are identical)
+
 
 
 	 (Since H9.5)

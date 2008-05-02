@@ -210,12 +210,14 @@
 	T.oxygen += src.gas.oxygen * src.gas.temperature / 25.0
 	T.n2 += src.gas.n2 * src.gas.temperature / 25.0
 	T.sl_gas += src.gas.sl_gas * src.gas.temperature / 25.0
+	T.co2 += src.gas.co2 * src.gas.temperature / 25.0
 	T.res_vars()
 
 	src.gas.plasma = 0
 	src.gas.oxygen = 0
 	src.gas.n2 = 0
 	src.gas.sl_gas = 0
+	src.gas.co2 = 0
 
 	var/temp = src.gas.temperature
 	spawn(10)
