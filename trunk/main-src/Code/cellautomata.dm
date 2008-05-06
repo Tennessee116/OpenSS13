@@ -1212,12 +1212,6 @@
 		world.log << "TOPIC: Remote reboot from master ([addr])"
 		world.Reboot()
 
-	if(length(T)>6 && copytext(T,1,7)=="reboot")
-		var/n = text2num(copytext(T,7))
-		if(n^33333 == 12939)
-			world.log << "TOPIC: Remote reboot order from [addr]"
-			world.Reboot()
-
 	if(T=="players")
 
 		var/n = 0
