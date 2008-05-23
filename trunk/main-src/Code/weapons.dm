@@ -1289,7 +1289,8 @@
 /obj/bullet/Bump(atom/A as mob|obj|turf|area)
 
 	spawn( 0 )
-		A.las_act("bullet", src)
+		if (A)	//fix for an odd bug whose cause I'm not certain of - I once saw the dream daemon console throw an exception in the A.las_act() line due to A being null. How the bullet managed to bump into null I do not know, but this might make it less likely. Best guess: Two bullets in the same cycle hit something whose las_act deleted it. -shadowlord13
+			A.las_act("bullet", src)
 		//SN src = null
 		del(src)
 		return
@@ -1321,7 +1322,8 @@
 /obj/beam/a_laser/Bump(atom/A as mob|obj|turf|area)
 
 	spawn( 0 )
-		A.las_act(null, src)
+		if (A)	//fix for an odd bug whose cause I'm not certain of - I once saw the dream daemon console throw an exception in the A.las_act() line due to A being null. How the bullet managed to bump into null I do not know, but this might make it less likely. Best guess: Two bullets in the same cycle hit something whose las_act deleted it. -shadowlord13
+			A.las_act(null, src)
 		//SN src = null
 		del(src)
 		return
@@ -1329,14 +1331,17 @@
 	return
 
 /obj/beam/a_laser/proc/process()
-
+	//world << text("laser at [] []:[], target is [] []:[]", src.loc, src.x, src.y, src:current, src.current:x, src.current:y)
 	if ((!( src.current ) || src.loc == src.current))
 		src.current = locate(min(max(src.x + src.xo, 1), world.maxx), min(max(src.y + src.yo, 1), world.maxy), src.z)
+		//world << text("current changed: target is now []. location was [],[], added [],[]", src.current, src.x, src.y, src.xo, src.yo)
 	if ((src.x == 1 || src.x == world.maxx || src.y == 1 || src.y == world.maxy))
+		//world << text("off-world, deleting")
 		//SN src = null
 		del(src)
 		return
 	step_towards(src, src.current)
+	//world << text("laser stepped, now [] []:[], target is [] []:[]", src.loc, src.x, src.y, src.current, src.current:x, src.current:y)
 	src.life--
 	if (src.life <= 0)
 		//SN src = null
