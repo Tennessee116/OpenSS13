@@ -229,7 +229,7 @@
 							spawn(1)
 								while (src.oxyloss>0 && stat!=2)
 									sleep(50)
-									src.oxyloss-=5
+									src.oxyloss-=1
 								src.oxyloss = 0
 							return
 						else if (src:aiRestorePowerRoutine==3)
@@ -238,7 +238,7 @@
 							spawn(1)
 								while (src.oxyloss>0 && stat!=2)
 									sleep(50)
-									src.oxyloss-=5
+									src.oxyloss-=1
 								src.oxyloss = 0
 							return
 					else
@@ -263,7 +263,7 @@
 									src.addLaw(index, "")
 								spawn(50)
 									while ((src:aiRestorePowerRoutine!=0) && stat!=2)
-										src.oxyloss += 5
+										src.oxyloss += 1
 										sleep(50)
 
 								spawn(20)
