@@ -512,7 +512,7 @@
 
 	if(href_list["vmode"])
 
-		if ((src.rank in list( "Moderator", "Supervisor", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 2)
 			vote.mode = text2num(href_list["vmode"])-1 	// hack to yield 0=restart, 1=changemode
 			vote.voting = 1						// now voting
 			vote.votetime = world.timeofday + config.voteperiod*10	// when the vote will end
@@ -530,7 +530,7 @@
 					CM.client.vote = "default"
 
 	if(href_list["votekill"])
-		if ((src.rank in list( "Moderator", "Supervisor", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 2)
 
 			world << "\red <B>***Voting aborted by [usr.key].</B>"
 
@@ -546,7 +546,7 @@
 
 
 	if (href_list["vt_rst"])
-		if ((src.rank in list("Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 3)
 
 			config.allowvoterestart = !config.allowvoterestart
 
@@ -557,7 +557,7 @@
 			update()
 
 	if (href_list["vt_mode"])
-		if ((src.rank in list("Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 3)
 
 			config.allowvotemode = !config.allowvotemode
 
@@ -568,14 +568,14 @@
 			update()
 
 	if (href_list["boot"])
-		if ((src.rank in list( "Moderator", "Supervisor", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 4)
 			var/dat = "<B>Boot Player:</B><HR>"
 			for(var/mob/M in world)
 				dat += text("<A href='?src=\ref[];boot2=\ref[]'>N:[] R:[] (K:[]) (IP:[])</A><BR>", src, M, M.name, M.rname, (M.client ? M.client : M.lastKnownCKey? "Formerly [M.lastKnownCKey]" : "No Client"), M.lastKnownIP)
 				//Foreach goto(103)
 			usr << browse(dat, "window=boot")
 	if (href_list["boot2"])
-		if ((src.rank in list( "Moderator", "Supervisor", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 4)
 			var/mob/M = locate(href_list["boot2"])
 			if (ismob(M))
 				if ((M.client && M.client.holder && M.client.holder.rank >= src.rank))
@@ -585,7 +585,7 @@
 				//M.client = null
 				del(M.client)
 	if (href_list["ban"])
-		if ((src.rank in list( "Moderator", "Supervisor", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 4)
 			var/dat = "<B>Ban Player:</B><HR>"
 			for(var/mob/M in world)
 				dat += text("<A href='?src=\ref[];ban2=\ref[]'>N: [] R: [] (K: []) (IP: [])</A><BR>", src, M, M.name, M.rname, (M.client ? M.client : M.lastKnownCKey? "Formerly [M.lastKnownCKey]" : "No Client"), M.lastKnownIP)
@@ -596,7 +596,7 @@
 				//Foreach goto(424)
 			usr << browse(dat, "window=ban")
 	if (href_list["ban2"])
-		if ((src.rank in list( "Moderator", "Supervisor", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 4)
 			var/mob/M = locate(href_list["ban2"])
 			if (ismob(M))
 				if ((M.client && M.client.holder && M.client.holder.rank >= src.rank))
@@ -607,20 +607,20 @@
 				//M.client = null
 				del(M.client)
 	if (href_list["unban2"])
-		if ((src.rank in list( "Moderator", "Supervisor", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 4)
 			var/t = href_list["unban2"]
 			if (t)
 				banned -= t
 			if(config.logadmin) world.log << text("ADMIN: [] unbanned [].", usr.key, t)
 	if (href_list["mute"])
-		if ((src.rank in list( "Moderator", "Supervisor", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 4)
 			var/dat = "<B>Mute/Unmute Player:</B><HR>"
 			for(var/mob/M in world)
 				dat += text("<A href='?src=\ref[];mute2=\ref[]'>N:[] R:[] (K:[]) (IP: []) \[[]\]</A><BR>", src, M, M.name, M.rname, (M.client ? M.client : M.lastKnownCKey? "Formerly [M.lastKnownCKey]" : "No Client"), M.lastKnownIP, (M.muted ? "Muted" : "Voiced"))
 				//Foreach goto(757)
 			usr << browse(dat, "window=mute")
 	if (href_list["mute2"])
-		if ((src.rank in list( "Moderator", "Supervisor", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 4)
 			var/mob/M = locate(href_list["mute2"])
 			if (ismob(M))
 				if ((M.client && M.client.holder && M.client.holder.rank >= src.rank))
@@ -629,30 +629,30 @@
 				if(config.logadmin) world.log << text("ADMIN: [] altered []'s mute status.", usr.key, M.key)
 				M.muted = !( M.muted )
 	if (href_list["restart"])
-		if ((src.rank in list( "Game Master", "Supervisor", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 2)
 			var/dat = text("<B>Restart game?</B><HR>\n<BR>\n<A href='?src=\ref[];restart2=1'>Yes</A>\n", src)
 			usr << browse(dat, "window=restart")
 	if (href_list["restart2"])
-		if ((src.rank in list( "Game Master", "Supervisor", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 2)
 			world << text("\red <B> Restarting world!</B>\blue  Initiated by []!", usr.key)
 			if(config.logadmin) world.log << text("ADMIN: [] initiated a reboot.", usr.key)
 			sleep(50)
 			world.Reboot()
 	if (href_list["restart3"])
-		if ((src.rank in list( "Game Master", "Supervisor", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 2)
 			if( alert("Reboot server?",,"Yes","No") == "No")
 				return
 			world << text("\red <B> Rebooting world!</B>\blue  Initiated by []!", usr.key)
 			if(config.logadmin) world.log << text("ADMIN: [] initiated an immediate reboot.", usr.key)
 			world.Reboot()
 	if (href_list["c_mode"])
-		if ((src.rank in list( "Game Master", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 3)
 			if (ticker)
 				return alert(usr, "The game has already started.", null, null, null, null)
 			var/dat = text("<B>What mode do you wish to play?</B><HR>\n<A href='?src=\ref[];c_mode2=secret'>Secret</A><br>\n<A href='?src=\ref[];c_mode2=random'>Random</A><br>\n<A href='?src=\ref[];c_mode2=traitor'>Traitor</A><br>\n<A href='?src=\ref[];c_mode2=meteor'>Meteor</A><br>\n<A href='?src=\ref[];c_mode2=extended'>Extended</A><br>\n<A href='?src=\ref[];c_mode2=monkey'>Monkey</A><br>\n<A href='?src=\ref[];c_mode2=nuclear'>Nuclear Emergency</A><br>\n<A href='?src=\ref[];c_mode2=blob'>Blob</A><br>\n<A href='?src=\ref[];c_mode2=sandbox'>Sandbox</A><br>\n\nNow: []\n", src, src, src, src, src, src, src, src, src, master_mode)
 			usr << browse(dat, "window=c_mode")
 	if (href_list["c_mode2"])
-		if ((src.rank in list( "Game Master", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 3)
 			if (ticker)
 				return alert(usr, "The game has already started.", null, null, null, null)
 			switch(href_list["c_mode2"])
@@ -749,14 +749,14 @@
 		new Q( usr.loc )
 		if(config.logadmin) world.log << text("ADMIN: [] created a []", usr.key, Q)
 	if (href_list["dna"])
-		if ((src.rank in list( "Game Master", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 3)
 			var/dat = "<B>Registered DNA sequences:</B><HR>"
 			for(var/M in reg_dna)
 				dat += text("\t [] = []<BR>", M, reg_dna[text("[]", M)])
 				//Foreach goto(2171)
 			usr << browse(dat, "window=dna")
 	if (href_list["t_ooc"])
-		if ((src.rank in list( "Supervisor", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 2)
 			ooc_allowed = !( ooc_allowed )
 			if (ooc_allowed)
 				world << "<B>The OOC channel has been globally enabled!</B>"
@@ -764,12 +764,12 @@
 				world << "<B>The OOC channel has been globally disabled!</B>"
 			if(config.logadmin) world.log << text("ADMIN: [] toggled OOC.", usr.key)
 	if (href_list["startnow"])
-		if ((src.rank in list( "Supervisor", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 2)
 			world << "<B>The game will now start immediately thanks to [usr.key]!</B>"
 			usr.start_now()
 
 	if (href_list["toggle_enter"])
-		if ((src.rank in list( "Game Master", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 3)
 			enter_allowed = !( enter_allowed )
 			if (!( enter_allowed ))
 				world << "<B>You may no longer enter the game.</B>"
@@ -779,7 +779,7 @@
 			world.update_stat()
 			update()
 	if (href_list["toggle_ai"])
-		if ((src.rank in list( "Game Master", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 3)
 			config.allowai = !( config.allowai )
 			if (!( config.allowai ))
 				world << "<B>The AI job is no longer chooseable.</B>"
@@ -789,7 +789,7 @@
 			world.update_stat()
 			update()
 	if (href_list["bombtemp_determines_range"])
-		if ((src.rank in list( "Game Master", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 3)
 			config.bombtemp_determines_range = !( config.bombtemp_determines_range )
 			if (!( config.bombtemp_determines_range ))
 				world << "<B>Bomb temperature no longer determines range (superheated bombs will not destroy a larger area than 500 degree bombs).</B>"
@@ -799,7 +799,7 @@
 			world.update_stat()
 			update()
 	if (href_list["crowbars_close_depowered_doors"])
-		if ((src.rank in list( "Game Master", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 3)
 			config.crowbars_close_depowered_doors = !( config.crowbars_close_depowered_doors )
 			if (!( config.crowbars_close_depowered_doors ))
 				world << "<B>Crowbars can no longer close depowered doors.</B>"
@@ -809,7 +809,7 @@
 			world.update_stat()
 			update()
 	if (href_list["ai_can_call_shuttle"])
-		if ((src.rank in list( "Game Master", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 3)
 			config.ai_can_call_shuttle = !( config.ai_can_call_shuttle )
 			if (!( config.ai_can_call_shuttle ))
 				world << "<B>The AI can no longer call the shuttle.</B>"
@@ -819,7 +819,7 @@
 			world.update_stat()
 			update()
 	if (href_list["ai_can_uncall_shuttle"])
-		if ((src.rank in list( "Game Master", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 3)
 			config.ai_can_uncall_shuttle = !( config.ai_can_uncall_shuttle )
 			if (!( config.ai_can_uncall_shuttle ))
 				world << "<B>The AI can no longer send the shuttle back.</B>"
@@ -830,7 +830,7 @@
 			update()
 			
 	if (href_list["toggle_abandon"])
-		if ((src.rank in list( "Game Master", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 3)
 			abandon_allowed = !( abandon_allowed )
 			if (abandon_allowed)
 				world << "<B>You may now abandon mob.</B>"
@@ -840,7 +840,7 @@
 			world.update_stat()
 			update()
 	if (href_list["delay"])
-		if ((src.rank in list( "Game Master", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 2)
 			if (ticker)
 				return alert("Too late... The game has already started!", null, null, null, null, null)
 			going = !( going )
@@ -851,7 +851,7 @@
 				world << text("<B>The game will start soon thanks to [] (Administrator to SS13)</B>", usr.key)
 				if(config.logadmin) world.log << text("ADMIN: [] removed the delay.", usr.key)
 	if (href_list["secrets"])
-		if ((src.rank in list( "Game Master", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 3)
 			var/dat = {"
 <B>What secret do you wish to activate?</B><HR>
 <A href='?src=\ref[src];secrets2=sec_clothes'>Remove 'internal' clothing</A><BR>
@@ -867,7 +867,7 @@
 
 			usr << browse(dat, "window=secrets")
 	if (href_list["secrets2"])
-		if ((src.rank in list( "Game Master", "Administrator", "Major Administrator", "Primary Administrator" )))
+		if (src.a_level >= 3)
 			var/ok = 0
 			switch(href_list["secrets2"])
 				if("sec_clothes")
@@ -972,20 +972,20 @@
 /obj/admins/proc/update()
 
 	var/dat
-	var/lvl = 0
+	a_level = 0
 	switch(src.rank)
 		if("Moderator")
-			lvl = 1
+			a_level = 1
 		if("Game Master")
-			lvl = 2
+			a_level = 2
 		if("Supervisor")
-			lvl = 3
+			a_level = 3
 		if("Administrator")
-			lvl = 4
+			a_level = 4
 		if("Major Administrator")
-			lvl = 5
+			a_level = 5
 		if("Primary Administrator")
-			lvl = 6
+			a_level = 6
 			
 
 
@@ -994,7 +994,7 @@
 
 			dat += "<center><B>Admin Control Console</B></center><hr>\n"
 
-			if(lvl>=4)
+			if(a_level>=4)
 				dat += {"
 	<A href='?src=\ref[src];boot=1'>Boot Player/Key</A><br>
 	<A href='?src=\ref[src];ban=1'>Ban/Unban Player/Key</A><br>
@@ -1002,42 +1002,42 @@
 	"}
 			dat += "<br>"
 
-			if(lvl!=1)
+			if(a_level!=1)
 				dat += "<A href='?src=\ref[src];t_ooc=1'>Toggle OOC</A><br>"
 				dat += "<A href='?src=\ref[src];delay=1'>Delay Game</A><br>"
 				dat += "<A href='?src=\ref[src];startnow=1'>Start Round Now</A><br>"
 
-			if(lvl >=3 )
+			if(a_level >=3 )
 				dat += "<A href='?src=\ref[src];toggle_enter=1'>Toggle Entering [enter_allowed]</A><br>"
 				dat += "<A href='?src=\ref[src];toggle_abandon=1'>Toggle Abandon [abandon_allowed]</A><br>"
 				dat += "<A href='?src=\ref[src];toggle_ai=1'>Toggle AI [config.allowai]</A><br>"
 				dat += "<A href='?src=\ref[src];toggle_bombtemp_determines_range=1'>Toggle Bombtemp-Determines-Range [config.bombtemp_determines_range]</A><br>"
 				
 				dat += "<A href='?src=\ref[src];c_mode=1'>Change Game Mode</A><br>"
-			if(lvl >= 2)
+			if(a_level >= 2)
 				dat += "<A href='?src=\ref[src];restart=1'>Restart Game</A><br>"
 				dat += "<A href='?src=\ref[src];restart3=1'>Immediate Reboot</A><br>"
 
 			dat += "<BR>"
 
-			if(lvl!=1)
+			if(a_level!=1)
 				dat += "<A href='?src=\ref[src];vmode=1'>Begin restart vote.</A><BR>"
 				dat += "<A href='?src=\ref[src];vmode=2'>Begin change mode vote.</A><BR>"
 				dat += "<A href='?src=\ref[src];votekill=1'>Abort current vote.</A><BR>"
 
-			if(lvl>=3)
+			if(a_level>=3)
 				dat += "<A href='?src=\ref[src];vt_rst=1'>Toggle restart voting [config.allowvoterestart].</A><BR>"
 				dat += "<A href='?src=\ref[src];vt_mode=1'>Toggle mode voting [config.allowvotemode].</A><BR>"
 
 			dat += "<BR>"
 
-			if(lvl >=3 )
+			if(a_level >=3 )
 				dat += "<A href='?src=\ref[src];secrets=1'>Activate Secrets</A><br>"
 				dat += "<A href='?src=\ref[src];m_item=1'>Make Item</A><br>"
 				dat += "<A href='?src=\ref[src];m_obj=1'>Make Object</A><br>"
 
 			dat += "<BR>"
-			if(lvl >=3 )
+			if(a_level >=3 )
 
 				dat += "<A href='?src=\ref[src];dna=1'>List DNA</A><br>"
 				dat += "<A href='?src=\ref[src];l_keys=1'>List Keys</A><br>"
