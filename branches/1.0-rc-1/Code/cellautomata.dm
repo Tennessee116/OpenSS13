@@ -579,7 +579,7 @@
 			var/mob/M = locate(href_list["boot2"])
 			if (ismob(M))
 				if ((M.client && M.client.holder && M.client.holder.rank >= src.rank))
-					alert("You cannot perform this. Action you must be of a higher administrative rank!", null, null, null, null, null)
+					alert("You cannot perform this action! You must be of a higher administrative rank!", null, null, null, null, null)
 					return
 				if(config.logadmin) world.log << text("ADMIN: [] booted [].", usr.key, M.key)
 				//M.client = null
@@ -600,7 +600,7 @@
 			var/mob/M = locate(href_list["ban2"])
 			if (ismob(M))
 				if ((M.client && M.client.holder && M.client.holder.rank >= src.rank))
-					alert("You cannot perform this. Action you must be of a higher administrative rank!", null, null, null, null, null)
+					alert("You cannot perform this action! You must be of a higher administrative rank!", null, null, null, null, null)
 					return
 				if(config.logadmin) world.log << text("ADMIN: [] banned [].", usr.key, M.key)
 				banned += ckey(M.key)
@@ -624,7 +624,7 @@
 			var/mob/M = locate(href_list["mute2"])
 			if (ismob(M))
 				if ((M.client && M.client.holder && M.client.holder.rank >= src.rank))
-					alert("You cannot perform this. Action you must be of a higher administrative rank!", null, null, null, null, null)
+					alert("You cannot perform this action! You must be of a higher administrative rank!", null, null, null, null, null)
 					return
 				if(config.logadmin) world.log << text("ADMIN: [] altered []'s mute status.", usr.key, M.key)
 				M.muted = !( M.muted )
