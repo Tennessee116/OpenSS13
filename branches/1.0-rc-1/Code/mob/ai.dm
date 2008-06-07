@@ -186,7 +186,9 @@
 			if (src.health <= -100.0)
 				death()
 				return
-
+			else if (src.health < 0)
+				src.oxyloss++
+			
 			if (src.mach)
 				if (src.machine)
 					src.mach.icon_state = "mach1"
@@ -227,7 +229,7 @@
 							spawn(1)
 								while (src.oxyloss>0 && stat!=2)
 									sleep(50)
-									src.oxyloss-=1
+									src.oxyloss-=5
 								src.oxyloss = 0
 							return
 						else if (src:aiRestorePowerRoutine==3)
@@ -236,7 +238,7 @@
 							spawn(1)
 								while (src.oxyloss>0 && stat!=2)
 									sleep(50)
-									src.oxyloss-=1
+									src.oxyloss-=5
 								src.oxyloss = 0
 							return
 					else
@@ -261,7 +263,7 @@
 									src.addLaw(index, "")
 								spawn(50)
 									while ((src:aiRestorePowerRoutine!=0) && stat!=2)
-										src.oxyloss += 1
+										src.oxyloss += 5
 										sleep(50)
 
 								spawn(20)
@@ -285,7 +287,7 @@
 									var/obj/machinery/power/apc/theAPC = null
 									for (var/something in loc)
 										if (istype(something, /obj/machinery/power/apc))
-											if (!(something:stat & BROKEN|NOPOWER))
+											if (!(something:stat & BROKEN))
 												theAPC = something
 												break
 									if (theAPC==null)
@@ -302,7 +304,7 @@
 									theAPC = null
 									for (var/something in loc)
 										if (istype(something, /obj/machinery/power/apc))
-											if (!(something:stat & BROKEN|NOPOWER))
+											if (!(something:stat & BROKEN))
 												theAPC = something
 												break
 									if (theAPC==null)
@@ -319,7 +321,7 @@
 									theAPC = null
 									for (var/something in loc)
 										if (istype(something, /obj/machinery/power/apc))
-											if (!(something:stat & BROKEN|NOPOWER))
+											if (!(something:stat & BROKEN))
 												theAPC = something
 												break
 									if (theAPC==null)
@@ -336,7 +338,7 @@
 									theAPC = null
 									for (var/something in loc)
 										if (istype(something, /obj/machinery/power/apc))
-											if (!(something:stat & BROKEN|NOPOWER))
+											if (!(something:stat & BROKEN))
 												theAPC = something
 												break
 									if (theAPC==null)
