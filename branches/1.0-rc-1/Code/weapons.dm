@@ -63,18 +63,12 @@
 			if (istype(src.loc, /mob))
 				attack_self(src.loc)
 			else
-				for(var/mob/M in viewers(1, src))
-					if (M.client)
-						src.attack_self(M)
-					//Foreach goto(164)
+				src.updateSelfDialog(src)
 		else
 			if (istype(src.master.loc, /mob))
 				src.attack_self(src.master.loc)
 			else
-				for(var/mob/M in viewers(1, src.master))
-					if (M.client)
-						src.attack_self(M)
-					//Foreach goto(240)
+				src.updateSelfDialog(src.master)
 		src.add_fingerprint(usr)
 	else
 		usr << browse(null, "window=infra_sensor")
@@ -177,18 +171,12 @@
 			if (istype(src.loc, /mob))
 				attack_self(src.loc)
 			else
-				for(var/mob/M in viewers(1, src))
-					if (M.client)
-						src.attack_self(M)
-					//Foreach goto(234)
+				src.updateSelfDialog(src)
 		else
 			if (istype(src.master.loc, /mob))
 				src.attack_self(src.master.loc)
 			else
-				for(var/mob/M in viewers(1, src.master))
-					if (M.client)
-						src.attack_self(M)
-					//Foreach goto(310)
+				src.updateSelfDialog(src.master)
 	else
 		usr << browse(null, "window=prox")
 		return
@@ -316,18 +304,12 @@
 			if (istype(src.loc, /mob))
 				attack_self(src.loc)
 			else
-				for(var/mob/M in viewers(1, src))
-					if (M.client)
-						src.attack_self(M)
-					//Foreach goto(211)
+				src.updateSelfDialog(src)
 		else
 			if (istype(src.master.loc, /mob))
 				src.attack_self(src.master.loc)
 			else
-				for(var/mob/M in viewers(1, src.master))
-					if (M.client)
-						src.attack_self(M)
-					//Foreach goto(287)
+				src.updateSelfDialog(src.master)
 	else
 		usr << browse(null, "window=infra")
 		return
@@ -408,17 +390,12 @@
 			if (istype(src.loc, /mob))
 				attack_self(src.loc)
 			else
-				for(var/mob/M in viewers(1, src))
-					if (M.client)
-						src.attack_self(M)
-					//Foreach goto(100)
+				src.updateSelfDialog(src)
 		else
 			if (istype(src.master.loc, /mob))
 				src.attack_self(src.master.loc)
 			else
-				for(var/mob/M in viewers(1, src.master))
-					if (M.client)
-						src.attack_self(M)
+				src.updateSelfDialog(src.master)
 	else
 		//If it's not timing, reset the icon so it doesn't look like it's still about to go off.
 		src.c_state(0)
@@ -506,18 +483,12 @@
 			if (istype(src.loc, /mob))
 				attack_self(src.loc)
 			else
-				for(var/mob/M in viewers(1, src))
-					if (M.client)
-						src.attack_self(M)
-					//Foreach goto(192)
+				src.updateSelfDialog(src)
 		else
 			if (istype(src.master.loc, /mob))
 				src.attack_self(src.master.loc)
 			else
-				for(var/mob/M in viewers(1, src.master))
-					if (M.client)
-						src.attack_self(M)
-					//Foreach goto(268)
+				src.updateSelfDialog(src.master)
 		src.add_fingerprint(usr)
 	else
 		usr << browse(null, "window=timer")

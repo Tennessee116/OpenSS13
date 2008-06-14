@@ -90,7 +90,9 @@ obj/machinery/door
 				attackby(H.wear_id, user)
 		else if(istype(user, /mob/ai))
 			attackby(user, user)
-
+		
+		
+		
 	// Does it accept IDs?
 
 	proc/acceptsIDs()

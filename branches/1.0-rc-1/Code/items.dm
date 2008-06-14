@@ -389,10 +389,7 @@
 													src.board_stat = text("[][][]", copytext(src.board_stat, 1, place), src.selected, copytext(src.board_stat, place + 2, 129))
 		src.add_fingerprint(usr)
 		update()
-		for(var/mob/M in viewers(1, src))
-			if ((M.client && M.machine == src))
-				src.attack_hand(M)
-			//Foreach goto(835)
+		updateDialog()
 	return
 
 /obj/item/weapon/ex_act(severity)
@@ -770,80 +767,79 @@
 	var/turf/T = get_turf(src)
 	T.firelevel = T.poison
 	for(var/mob/M in viewers(T, null))
-		if (locate(/obj/item/weapon/cloaking_device, M))
-			for(var/obj/item/weapon/cloaking_device/S in M)
-				S.active = 0
-				S.icon_state = "shield0"
-				//Foreach goto(72)
-		if ((get_dist(M, T) <= 2 || src.loc == M.loc || src.loc == M))
-			flick("e_flash", M.flash)
-			M.stunned = 10
-			M.weakened = 3
-			M << "\red <B>BANG</B>"
-			if ((prob(14) || (M == src.loc && prob(70))))
-				M.ear_damage += rand(10, 20)
-			else
-				if (prob(30))
-					M.ear_damage += rand(7, 14)
-			if (!( M.paralysis ))
-				M.eye_stat += rand(10, 15)
-			if (prob(10))
-				M.eye_stat += 7
-			M.ear_deaf += 30
-			if (M == src.loc)
-				M.eye_stat += 10
-				if (prob(60))
-					if (istype(M, /mob/human))
-						var/mob/human/H = M
-						if (!( istype(H.ears, /obj/item/weapon/clothing/ears/earmuffs) ))
+		if (istype(M, /mob/human) || istype(M, /mob/monkey))
+			if (locate(/obj/item/weapon/cloaking_device, M))
+				for(var/obj/item/weapon/cloaking_device/S in M)
+					S.active = 0
+					S.icon_state = "shield0"
+			if ((get_dist(M, T) <= 2 || src.loc == M.loc || src.loc == M))
+				flick("e_flash", M.flash)
+				M.stunned = 10
+				M.weakened = 3
+				M << "\red <B>BANG</B>"
+				if ((prob(14) || (M == src.loc && prob(70))))
+					M.ear_damage += rand(10, 20)
+				else
+					if (prob(30))
+						M.ear_damage += rand(7, 14)
+				if (!( M.paralysis ))
+					M.eye_stat += rand(10, 15)
+				if (prob(10))
+					M.eye_stat += 7
+				M.ear_deaf += 30
+				if (M == src.loc)
+					M.eye_stat += 10
+					if (prob(60))
+						if (istype(M, /mob/human))
+							var/mob/human/H = M
+							if (!( istype(H.ears, /obj/item/weapon/clothing/ears/earmuffs) ))
+								M.ear_damage += 15
+								M.ear_deaf += 60
+						else
 							M.ear_damage += 15
 							M.ear_deaf += 60
-					else
-						M.ear_damage += 15
-						M.ear_deaf += 60
-		else
-			if (get_dist(M, T) <= 5)
-				flick("e_flash", M.flash)
-				if (!( istype(M, /mob/human) ))
-					M.stunned = 7
-					M.weakened = 2
-				else
-					var/mob/human/H = M
-					M.ear_deaf += 10
-					if (prob(20))
-						M.ear_damage += 10
-					if ((!( istype(H.glasses, /obj/item/weapon/clothing/glasses/sunglasses) ) || M.paralysis))
+			else
+				if (get_dist(M, T) <= 5)
+					flick("e_flash", M.flash)
+					if (!( istype(M, /mob/human) ))
 						M.stunned = 7
 						M.weakened = 2
 					else
-						if (!( M.paralysis ))
-							M.eye_stat += rand(1, 3)
-				M << "\red <B>BANG</B>"
-			else
-				if (!( istype(M, /mob/human) ))
-					flick("flash", M.flash)
+						var/mob/human/H = M
+						M.ear_deaf += 10
+						if (prob(20))
+							M.ear_damage += 10
+						if ((!( istype(H.glasses, /obj/item/weapon/clothing/glasses/sunglasses) ) || M.paralysis))
+							M.stunned = 7
+							M.weakened = 2
+						else
+							if (!( M.paralysis ))
+								M.eye_stat += rand(1, 3)
+					M << "\red <B>BANG</B>"
 				else
-					var/mob/human/H = M
-					if (!( istype(H.glasses, /obj/item/weapon/clothing/glasses/sunglasses) ))
+					if (!( istype(M, /mob/human) ))
 						flick("flash", M.flash)
-				M.eye_stat += rand(1, 2)
-				M.ear_deaf += 5
-				M << "\red <B>BANG</B>"
-		if (M.eye_stat >= 20)
-			M << "\red Your eyes start to burn badly!"
-			M.disabilities |= 1
-			if (prob(M.eye_stat - 20 + 1))
-				M << "\red You go blind!"
-				M.sdisabilities |= 1
-		if (M.ear_damage >= 15)
-			M << "\red Your ears start to ring badly!"
-			if (prob(M.ear_damage - 10 + 5))
-				M << "\red You go deaf!"
-				M.sdisabilities |= 4
-		else
-			if (M.ear_damage >= 5)
-				M << "\red Your ears start to ring!"
-		//Foreach goto(39)
+					else
+						var/mob/human/H = M
+						if (!( istype(H.glasses, /obj/item/weapon/clothing/glasses/sunglasses) ))
+							flick("flash", M.flash)
+					M.eye_stat += rand(1, 2)
+					M.ear_deaf += 5
+					M << "\red <B>BANG</B>"
+			if (M.eye_stat >= 20)
+				M << "\red Your eyes start to burn badly!"
+				M.disabilities |= 1
+				if (prob(M.eye_stat - 20 + 1))
+					M << "\red You go blind!"
+					M.sdisabilities |= 1
+			if (M.ear_damage >= 15)
+				M << "\red Your ears start to ring badly!"
+				if (prob(M.ear_damage - 10 + 5))
+					M << "\red You go deaf!"
+					M.sdisabilities |= 4
+			else
+				if (M.ear_damage >= 5)
+					M << "\red Your ears start to ring!"
 	//SN src = null
 
 	for(var/obj/blob/B in view(8,T))
@@ -876,6 +872,9 @@
 			var/mob/human/H = M
 			if (istype(H.glasses, /obj/item/weapon/clothing/glasses/sunglasses))
 				safety = 1
+		else if (!istype(M, /mob/monkey))
+			safety = 1
+
 		if (!( safety ))
 			M.weakened = 10
 			if (M.client)
@@ -914,21 +913,20 @@
 	flick("flash2", src)
 	if (!( flag ))
 		for(var/mob/M in oviewers(3, null))
-			if (prob(50))
-				if (locate(/obj/item/weapon/cloaking_device, M))
-					for(var/obj/item/weapon/cloaking_device/S in M)
-						S.active = 0
-						S.icon_state = "shield0"
-						//Foreach goto(201)
-			if (M.client)
-				var/safety = null
-				if (istype(M, /mob/human))
-					var/mob/human/H = M
-					if (istype(H.glasses, /obj/item/weapon/clothing/glasses/sunglasses))
-						safety = 1
-				if (!( safety ))
-					flick("flash", M.flash)
-			//Foreach goto(160)
+			if (istype(M, /mob/human) || istype(M, /mob/monkey))
+				if (prob(50))
+					if (locate(/obj/item/weapon/cloaking_device, M))
+						for(var/obj/item/weapon/cloaking_device/S in M)
+							S.active = 0
+							S.icon_state = "shield0"
+				if (M.client)
+					var/safety = null
+					if (istype(M, /mob/human))
+						var/mob/human/H = M
+						if (istype(H.glasses, /obj/item/weapon/clothing/glasses/sunglasses))
+							safety = 1
+					if (!( safety ))
+						flick("flash", M.flash)
 	return
 
 /obj/item/weapon/locator/attack_self(mob/user)
@@ -1259,10 +1257,10 @@
 			..()
 			for(var/mob/O in viewers(M, null))
 				O.show_message(text("\red <B>[] has been pistol whipped by []!</B>", M, user), 1, "\red You have been pistol whipped by []!", 2)
-			
+
 	else
 		var/mob/human/H = M
-		
+
 	// ******* Check
 
 		if ((istype(H, /mob/human) && istype(H, /obj/item/weapon/clothing/head) && H.flags & 8 && prob(80)))
@@ -1283,7 +1281,7 @@
 				M.stat = 1
 				for(var/mob/O in viewers(M, null))
 					O.show_message(text("\red <B>[] has been shot point-blank by []!</B>", M, user), 1, "\red You hear someone fall", 2)
-				
+
 		else
 			if (prob(50))
 				if (M.paralysis < 60)
@@ -1298,7 +1296,7 @@
 				for(var/mob/O in viewers(M, null))
 					if ((O.client && !( O.blinded )))
 						O.show_message(text("\red <B>[] has been pistol whipped by []!</B>", M, user), 1, "\red You hear someone fall", 2)
-		
+
 	return
 
 /obj/item/weapon/gun/energy/proc/update_icon()
@@ -1418,7 +1416,7 @@
 /obj/item/weapon/gun/energy/taser_gun/attack(mob/M, mob/user)
 
 	src.add_fingerprint(user)
-	
+
 	if (istype(M, /mob/ai) && M.stat<2)
 		if ((user.a_intent == "hurt" && src.charges > 0))
 			src.charges--
@@ -1430,7 +1428,7 @@
 		else
 			..()
 	else
-		
+
 		var/mob/human/H = M
 
 		// ******* Check
@@ -1656,7 +1654,7 @@
 		spawn( 0 )
 			O.process()
 			return
-	else
+	else if (istype(user, /mob/human) || istype(user, /mob/monkey))
 		src.add_fingerprint(user)
 		ingest(M)
 	return
@@ -1777,7 +1775,7 @@
 		spawn( 0 )
 			O.process()
 			return
-	else
+	else if (istype(M, /mob/monkey))
 		var/obj/equip_e/monkey/O = new /obj/equip_e/monkey(  )
 		O.source = user
 		O.target = M
@@ -1789,6 +1787,8 @@
 		spawn( 0 )
 			O.process()
 			return
+	else
+		user << "You can't handcuff [M]."
 	return
 
 /obj/item/weapon/throwing(t_dir, rs)
@@ -2707,7 +2707,7 @@
 
 /obj/item/weapon/pen/sleepypen/attack(mob/M, mob/user)
 
-	if (!( istype(M, /mob) ))
+	if (!((istype(M, /mob/human) || istype(M, /mob/monkey))))
 		return
 	if (src.desc == "It's a normal black ink pen.")
 		return ..()
@@ -3065,25 +3065,27 @@
 	if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
 		user << "\red You don't have the dexterity to do this!"
 		return
-	
-	for (var/mob/O in viewers(M, null))
-		O.show_message("\red [user] has analyzed [M]'s vitals!", 1)
-	
-	user.show_message("\blue Analyzing Results for [M]:\n\t Overall Status: [M.stat > 1 ? "dead" : "[M.health]% healthy"]", 1)
-	user.show_message("\blue \t Damage Specifics: [M.oxyloss]-[M.toxloss]-[M.fireloss]-[M.bruteloss]", 1)
-	user.show_message("\blue Key: Suffocation/Toxin/Burns/Brute", 1)
-	
-	if (M.rejuv)
-		user.show_message("\blue Bloodstream Analysis located [M.rejuv] units of rejuvenation chemicals.", 1)
-	if (M.antitoxs)
-		user.show_message("\blue Bloodstream Analysis located [M.antitoxs] units of antitoxin chemicals.", 1)
-	if (M.plasma)
-		user.show_message("\blue Bloodstream Analysis located [M.antitoxs] units of toxic plasma chemicals.", 1)
-	// Not checked: r_epil, r_ch_cou, r_tourette
-	
-	if (!M.client)
-		user.show_message("\blue [M] has a vacant look in \his eyes.", 1)
-	
+
+	if (istype(M, /mob/human) || istype(M, /mob/monkey))
+		for (var/mob/O in viewers(M, null))
+			O.show_message("\red [user] has analyzed [M]'s vitals!", 1)
+
+		user.show_message("\blue Analyzing Results for [M]:\n\t Overall Status: [M.stat > 1 ? "dead" : "[M.health]% healthy"]", 1)
+		user.show_message("\blue \t Damage Specifics: [M.oxyloss]-[M.toxloss]-[M.fireloss]-[M.bruteloss]", 1)
+		user.show_message("\blue Key: Suffocation/Toxin/Burns/Brute", 1)
+
+		if (M.rejuv)
+			user.show_message("\blue Bloodstream Analysis located [M.rejuv] units of rejuvenation chemicals.", 1)
+		if (M.antitoxs)
+			user.show_message("\blue Bloodstream Analysis located [M.antitoxs] units of antitoxin chemicals.", 1)
+		if (M.plasma)
+			user.show_message("\blue Bloodstream Analysis located [M.antitoxs] units of toxic plasma chemicals.", 1)
+		// Not checked: r_epil, r_ch_cou, r_tourette
+
+		if (!M.client)
+			user.show_message("\blue [M] has a vacant look in \his eyes.", 1)
+	else
+		user << "You can't get any meaningful results about [M] from the analyzer."
 	src.add_fingerprint(user)
 
 /obj/item/weapon/analyzer/attack_self(mob/user)
@@ -4478,13 +4480,16 @@
 		user << "\red You don't have the dexterity to do this!"
 		return
 	if (user)
-		for(var/mob/O in viewers(M, null))
-			O.show_message(text("\red [] has been eyedropped with [] by [].", M, src, user), 1)
-			//Foreach goto(89)
-		var/amount = src.chem.dropper_mob(M, 1)
-		src.update_is()
-		user.show_message(text("\red You drop [] units into []'s eyes. The dropper contains [] millimeters.", amount, M, src.chem.volume()))
-		src.add_fingerprint(user)
+		if (istype(M, /mob/human) || istype(M, /mob/monkey))
+			for(var/mob/O in viewers(M, null))
+				O.show_message(text("\red [] has been eyedropped with [] by [].", M, src, user), 1)
+				//Foreach goto(89)
+			var/amount = src.chem.dropper_mob(M, 1)
+			src.update_is()
+			user.show_message(text("\red You drop [] units into []'s eyes. The dropper contains [] millimeters.", amount, M, src.chem.volume()))
+			src.add_fingerprint(user)
+		else
+			user << "\red You can't eyedrop [M]!"
 	return
 
 /obj/item/weapon/implantcase/proc/update()
@@ -4764,7 +4769,7 @@
 			spawn( 0 )
 				O.process()
 				return
-		else
+		else if (istype(M, /mob/monkey))
 			for(var/mob/O in viewers(M, null))
 				O.show_message(text("\red [] has been injected with [] by [].", M, src, user), 1)
 				//Foreach goto(192)
@@ -4825,8 +4830,10 @@
 			H.UpdateDamageIcon()
 		else
 			H.UpdateDamage()
-	M.health = 100 - M.oxyloss - M.toxloss - M.fireloss - M.bruteloss
-	src.amount--
+		M.health = 100 - M.oxyloss - M.toxloss - M.fireloss - M.bruteloss
+		src.amount--
+	else
+		user << text("\red The [] only works on humans.", src)
 	return
 
 /obj/item/weapon/brutepack/examine()
@@ -4927,11 +4934,13 @@
 			H.UpdateDamageIcon()
 		else
 			H.UpdateDamage()
-	src.amount--
-	if (src.amount <= 0)
-		//SN src = null
-		del(src)
-		return
+		src.amount--
+		if (src.amount <= 0)
+			//SN src = null
+			del(src)
+			return
+	else
+		user << text("The [] only works on humans.", src)
 	return
 
 /obj/item/weapon/ointment/examine()
@@ -5577,7 +5586,7 @@
 
 /atom/proc/attack_ai(mob/user)
 	return
-	
+
 /atom/proc/hand_h(mob/user)
 	return
 
@@ -5633,6 +5642,179 @@
 	..()
 	return
 
+/*
+	Proc name: canReach
+	Purpose: To indicate whether something - a turf, a mob, an object, whatever - can be reached from the user's location.
+	Parameters:
+		user - the mob who will be doing the attempted touching
+		usingWeapon - the weapon the mob is using to reach src. This is important if they're actually trying to *shoot* someone.
+		ignoreNextMoveTime - Normally this would be 0, and if world.time wasn't < next_time, the proc would return 0. If it was < next_time, prev_time and next_time would be changed (next_time being set to world.time + 10).
+			If, instead, ignoreNextMoveTime is 1, next_time, world.time, and prev_time will not be examined or changed.
+	
+	Return value:
+		This returns 0 if, for some reason, the user can't reach src. If not, the return value is a set of 3 bitflags:
+		1: CANREACH_USINGWEAPON: If set, user is using a "weapon" (passed in as usingWeapon) on src. (This is - in this version - completely useless to check, since it will always be set if you passed something other than null in usingWeapon.)
+		2: CANREACH_CANTOUCH: If set, src can be touched by user (which was called t5 in DblClick). This is set if (get_dist(src, user) <= 1 || src.loc == user), or if the user is the AI, or if the user is a drone controlled by an AI using the AI interface tool.
+		4: CANREACH_ALLOWED: If set, src is reachable by user, or the attempt is allowed for another reason. This is always set if the return value is valid. This differs from cantouch because this will be set if the user is using a gun on someone distant, whereas cantouch will not be set in that case. It's also theoretically possible to have a return value which contains only 4 for some /obj/screen objects, if the code in /atom/DblClick wasn't just overly paranoid.
+		
+		Valid combinations of those are: 0, 4, 5, 6, or 7. (You won't ever have 1 or 2 set if 4 isn't set)
+	
+	Detail on what's checked:
+		The user has to be able to move unless they are an AI, and their stat has to be 0 (alive and awake).
+		If the src is not in user's inventory, we MIGHT return 0:
+			If src is not a turf, and it is not on a turf, and it is inside something else which is not in a turf:
+				We return 0, it cannot be reached.
+			If not, if the user is inside some item instead of on a turf, and src is not in the same place as the user, and src is not a screen object, and src is not inside an item in user's inventory:
+				We return 0, it cannot be reached.
+			(Otherwise we continue)
+		And some other difficult to explain stuff is done here.
+	
+		Either CANREACH_CANTOUCH will be true, or the user must be using a weapon which has flag 16 set, or src is an /obj/screen.
+		Checks to determine if there are obstacles in the way (windows, etc) are done unless src is an /obj/screen.
+*/
+
+#define CANREACH_USINGWEAPON 1
+#define CANREACH_CANTOUCH 2
+#define CANREACH_ALLOWED 4
+
+/* Note: CANREACH_USINGWEAPON and CANREACH_CANTOUCH are not referenced in canReach because those are set by just a something&1 and a (something&1)<<1 */
+
+/atom/proc/canReach(mob/user, obj/item/weapon/usingWeapon, ignoreNextMoveTime)
+	if (((!user.canmove) && (!istype(user, /mob/ai))) || user.stat != 0)
+		return 0
+	/* This line broke my mental parser. --Stephen001 */
+	if ((!(src in user.contents) && (((!(isturf(src)) && (!(isturf(src.loc)) && (src.loc && !(isturf(src.loc.loc))))) || !(isturf(user.loc))) && (src.loc != user.loc && (!(istype(src, /obj/screen)) && !(user.contents.Find(src.loc)))))))
+		return 0
+	/* How's this? --shadowlord13 */
+	/*
+	//If the dclicked item is not in our inventory
+	if (!(src in user.contents))
+		//If the item is not a turf, and it is not on a turf, and it is inside something else which is not in a turf
+		if (!(isturf(src)) && (!(isturf(src.loc)) && (src.loc && !(isturf(src.loc.loc)))))
+			return
+		//If not, if we are inside some item instead of on a turf, and the dclicked item is not in the same place as us, and the dclicked item is not a screen object, and the dclicked item is not inside an item in our inventory.
+		else if	((!(isturf(user.loc))) && (src.loc != user.loc && (!(istype(src, /obj/screen)) && !(user.contents.Find(src.loc)))))
+			return
+	*/
+
+
+	/* Surely src.loc == user is redundant? --Stephen001 */
+	/* That's checking to see if it's being held/worn or something like that, methinks --shadowlord13 */
+	var/t5 = (get_dist(src, user) <= 1 || src.loc == user)
+	if (istype(user, /mob/ai))
+		t5 = 1
+	
+	if ((istype(src, /obj/item/weapon/organ) && src in user.contents))
+		var/mob/human/H = user
+		if (istype(user, /mob/human))
+			if (!(src == H.l_store || src == H.r_store))
+				return 0
+		else
+			return 0
+	/* Suggested fix by shadowlord13 for Bug #1952091. --Stephen001 */
+	var/turf/turfLoc = (istype(src, /turf) ? src : src.loc)
+	
+	/* Seems like a pretty important expression. Dare I fathom what it checks? --Stephen001 */
+	/* flag 16 in this case apparently disables the distance check and the alternate 'is in contents' check in the var/t5 line.
+		It's used on guns, for instance. --shadowlord13 */
+	if (((t5 || (usingWeapon && (usingWeapon.flags & 16))) && !(istype(src, /obj/screen))))
+		if (ignoreNextMoveTime!=0)
+			if (user.next_move < world.time)
+				user.prev_move = user.next_move
+				user.next_move = world.time + 10
+			else
+				return 0
+		if ((turfLoc && (get_dist(src, user) < 2 || turfLoc == user.loc)))
+			var/direct = get_dir(user, src)
+			var/obj/item/weapon/dummy/D = new /obj/item/weapon/dummy(user.loc)
+			var/ok = 0
+			if ((direct - 1) & direct)
+				var/turf/T
+				switch(direct)
+					if(5.0)
+						T = get_step(user, NORTH)
+						if (T.Enter(D, src))
+							D.loc = T
+							T = turfLoc
+							if (T.Enter(D, src))
+								ok = 1
+						else
+							T = get_step(user, EAST)
+							if (T.Enter(D, src))
+								D.loc = T
+								T = turfLoc
+								if (T.Enter(D, src))
+									ok = 1
+					if(6.0)
+						T = get_step(user, SOUTH)
+						if (T.Enter(D, src))
+							D.loc = T
+							T = turfLoc
+							if (T.Enter(D, src))
+								ok = 1
+						else
+							T = get_step(user, EAST)
+							if (T.Enter(D, src))
+								D.loc = T
+								T = turfLoc
+								if (T.Enter(D, src))
+									ok = 1
+					if(9.0)
+						T = get_step(user, NORTH)
+						if (T.Enter(D, src))
+							D.loc = T
+							T = turfLoc
+							if (T.Enter(D, src))
+								ok = 1
+						else
+							T = get_step(user, WEST)
+							if (T.Enter(D, src))
+								D.loc = T
+								T = turfLoc
+								if (T.Enter(D, src))
+									ok = 1
+					if(10.0)
+						T = get_step(user, SOUTH)
+						if (T.Enter(D, src))
+							D.loc = T
+							T = turfLoc
+							if (T.Enter(D, src))
+								ok = 1
+						else
+							T = get_step(user, WEST)
+							if (T.Enter(D, src))
+								D.loc = T
+								T = turfLoc
+								if (T.Enter(D, src))
+									ok = 1
+					else
+			else
+				if (turfLoc.Enter(D, src))
+					ok = 1
+				else
+					if ((src.flags & 512 && get_dir(src, user) & src.dir))
+						ok = 1
+						if (user.loc != turfLoc)
+							for(var/atom/A in user.loc)
+								if ((!A.CheckExit(user, src.loc)) && A != user)
+									ok = 0
+			del(D)
+			if (!(ok))
+				return 0
+		//user << "Debug message: usingWeapon [usingWeapon] t5 [t5] src [src] user [user]"
+		
+		return (((t5!=0)&1)<<1) | ((usingWeapon!=0)&1) | CANREACH_ALLOWED
+	else
+		if (istype(src, /obj/screen))
+			if (ignoreNextMoveTime!=0)
+				if (user.next_move < world.time)
+					user.prev_move = user.next_move
+					user.next_move = world.time + 10
+				else
+					return 0
+			return (((t5!=0)&1)<<1) | ((usingWeapon!=0)&1) | CANREACH_ALLOWED
+	return 0
+
 /atom/Click()
 	//world << "atom.Click() on [src] by [usr] : src.type is [src.type]"
 	if (!usr.disable_one_click)
@@ -5651,143 +5833,39 @@
 	if ((W == src && usr.stat == 0))
 		spawn(0) W.attack_self(usr)
 		return
-	if (((!usr.canmove) && (!istype(usr, /mob/ai))) || usr.stat != 0)
-
+	var/retval = src.canReach(usr, W, 0)
+	
+	if (retval==0)
 		return
-	/* This line broke my mental parser. --Stephen001 */
-	if ((!(src in usr.contents) && (((!(isturf(src)) && (!(isturf(src.loc)) && (src.loc && !(isturf(src.loc.loc))))) || !(isturf(usr.loc))) && (src.loc != usr.loc && (!(istype(src, /obj/screen)) && !(usr.contents.Find(src.loc)))))))
-		return
-	/* Surely src.loc == usr is redundant? --Stephen001 */
-	var/t5 = (get_dist(src, usr) <= 1 || src.loc == usr)
-	if (istype(usr, /mob/ai))
-		t5 = 1
-	if ((istype(src, /obj/item/weapon/organ) && src in usr.contents))
-		var/mob/human/H = usr
-		usr << "Betchya think you're really smart trying to remove your own body parts aren't ya!"
-		if (istype(usr, /mob/human))
-			if (!(src == H.l_store || src == H.r_store))
-				return
-		else
-			return
-	/* Suggested fix by shadowlord13 for Bug #1952091. --Stephen001 */
-	var/turf/turfLoc = (istype(src, /turf) ? src : src.loc)
-	/* Seems like a pretty important expression. Dare I fathom what it checks? --Stephen001 */
-	if (((t5 || (W && (W.flags & 16))) && !(istype(src, /obj/screen))))
-		if (usr.next_move < world.time)
-			usr.prev_move = usr.next_move
-			usr.next_move = world.time + 10
-		else
-			return
-		if ((turfLoc && (get_dist(src, usr) < 2 || turfLoc == usr.loc)))
-			var/direct = get_dir(usr, src)
-			var/obj/item/weapon/dummy/D = new /obj/item/weapon/dummy(usr.loc)
-			var/ok = 0
-			if ((direct - 1) & direct)
-				var/turf/T
-				switch(direct)
-					if(5.0)
-						T = get_step(usr, NORTH)
-						if (T.Enter(D, src))
-							D.loc = T
-							T = turfLoc
-							if (T.Enter(D, src))
-								ok = 1
-						else
-							T = get_step(usr, EAST)
-							if (T.Enter(D, src))
-								D.loc = T
-								T = turfLoc
-								if (T.Enter(D, src))
-									ok = 1
-					if(6.0)
-						T = get_step(usr, SOUTH)
-						if (T.Enter(D, src))
-							D.loc = T
-							T = turfLoc
-							if (T.Enter(D, src))
-								ok = 1
-						else
-							T = get_step(usr, EAST)
-							if (T.Enter(D, src))
-								D.loc = T
-								T = turfLoc
-								if (T.Enter(D, src))
-									ok = 1
-					if(9.0)
-						T = get_step(usr, NORTH)
-						if (T.Enter(D, src))
-							D.loc = T
-							T = turfLoc
-							if (T.Enter(D, src))
-								ok = 1
-						else
-							T = get_step(usr, WEST)
-							if (T.Enter(D, src))
-								D.loc = T
-								T = turfLoc
-								if (T.Enter(D, src))
-									ok = 1
-					if(10.0)
-						T = get_step(usr, SOUTH)
-						if (T.Enter(D, src))
-							D.loc = T
-							T = turfLoc
-							if (T.Enter(D, src))
-								ok = 1
-						else
-							T = get_step(usr, WEST)
-							if (T.Enter(D, src))
-								D.loc = T
-								T = turfLoc
-								if (T.Enter(D, src))
-									ok = 1
-					else
-			else
-				if (turfLoc.Enter(D, src))
-					ok = 1
-				else
-					if ((src.flags & 512 && get_dir(src, usr) & src.dir))
-						ok = 1
-						if (usr.loc != turfLoc)
-							for(var/atom/A in usr.loc)
-								if ((!A.CheckExit(usr, src.loc)) && A != usr)
-									ok = 0
-			del(D)
-			if (!(ok))
-				return 0
 
-		if (!usr.restrained())
-			if (W)
-				if (t5)
-					src.attackby(W, usr)
+	if (retval & CANREACH_ALLOWED)
+		if (!(istype(src, /obj/screen)))
+			if (!usr.restrained())
 				if (W)
-					W.afterattack(src, usr, (t5 ? 1 : 0))
+					if (retval & CANREACH_CANTOUCH)
+						src.attackby(W, usr)
+					if (W)
+						W.afterattack(src, usr, ((retval & CANREACH_CANTOUCH) ? 1 : 0))
+				else
+					if (istype(usr, /mob/human))
+						src.attack_hand(usr, usr.hand)
+					else
+						if (istype(usr, /mob/monkey))
+							src.attack_paw(usr, usr.hand)
+						else
+							if (istype(usr, /mob/ai))
+								src.attack_ai(usr, usr.hand)
 			else
 				if (istype(usr, /mob/human))
-					src.attack_hand(usr, usr.hand)
+					src.hand_h(usr, usr.hand)
 				else
 					if (istype(usr, /mob/monkey))
-						src.attack_paw(usr, usr.hand)
+						src.hand_p(usr, usr.hand)
 					else
 						if (istype(usr, /mob/ai))
-							src.attack_ai(usr, usr.hand)
+							src.hand_a(usr, usr.hand)
+	
 		else
-			if (istype(usr, /mob/human))
-				src.hand_h(usr, usr.hand)
-			else
-				if (istype(usr, /mob/monkey))
-					src.hand_p(usr, usr.hand)
-				else
-					if (istype(usr, /mob/ai))
-						src.hand_a(usr, usr.hand)
-
-	else
-		if (istype(src, /obj/screen))
-			usr.prev_move = usr.next_move
-			if (usr.next_move < world.time)
-				usr.next_move = world.time + 10
-			else
-				return
 			if (!( usr.restrained() ))
 				if ((W && !( istype(src, /obj/screen) )))
 					src.attackby(W, usr)
@@ -5832,5 +5910,10 @@
 	for(var/mob/M in nearby)
 		if ((M.client && M.machine == src))
 			src:attack_self(M)
-	AutoUpdateAI(src, 1)
-	
+
+//Used for infra_sensor, etc
+/obj/proc/updateSelfDialog(atom/origin)
+	var/list/nearby = viewers(1, origin)
+	for(var/mob/M in nearby)
+		if (M.client)
+			src:attack_self(M)

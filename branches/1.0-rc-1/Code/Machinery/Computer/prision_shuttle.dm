@@ -70,7 +70,7 @@ obj/machinery/computer/prison_shuttle
 	verb/restabalize()
 		set src in oview(1)
 
-		viewers(null, null) << "\red <B>Restabalizing prison shuttle atmosphere!</B>"
+		viewers(null, null) << "\red <B>Restabilizing prison shuttle atmosphere!</B>"
 		var/A = locate(/area/shuttle_prison)
 		for(var/obj/move/T in A)
 			T.firelevel = 0
@@ -93,5 +93,5 @@ obj/machinery/computer/prison_shuttle
 			T.otemp = T20C
 			T.ttemp = T20C
 
-		viewers(null, null) << "\red <B>Prison shuttle Restabalized!</B>"
+		viewers(null, null) << "\red <B>Prison shuttle Restabilized!</B>"
 		src.add_fingerprint(usr)

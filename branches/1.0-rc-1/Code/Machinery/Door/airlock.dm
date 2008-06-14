@@ -355,24 +355,6 @@ About the new airlock wires panel:
 		if (src.secondsBackupPowerLost > 0)
 			if ((!src.isWireCut(AIRLOCK_WIRE_BACKUP_POWER1)) && (!src.isWireCut(AIRLOCK_WIRE_BACKUP_POWER2)))
 				t1 += text("Backup power is offline for [] seconds.<br>\n", src.secondsBackupPowerLost)
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 			else
 				t1 += text("Backup power is offline indefinitely.<br>\n")
 		else if (src.secondsMainPowerLost > 0)
@@ -452,7 +434,6 @@ About the new airlock wires panel:
 		if (src.aiHacking==0)
 			src.aiHacking=1
 			spawn(20)
-				//TODO: Make this take a minute
 				user << "Airlock AI control has been blocked. Beginning fault-detection."
 				sleep(50)
 				if (src.canAIControl())
@@ -561,9 +542,6 @@ About the new airlock wires panel:
 			usr << browse(null, "window=airlock")
 			if (usr.machine==src)
 				usr.machine = null
-	
-	
-	
 				return
 		if (!istype(usr, /mob/ai))
 			if ((get_dist(src, usr) <= 1 && istype(src.loc, /turf)))
@@ -577,71 +555,6 @@ About the new airlock wires panel:
 						return
 					if (src.isWireColorCut(t1))
 						src.mend(t1)
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 					else
 						src.cut(t1)
 				else if (href_list["pulse"])

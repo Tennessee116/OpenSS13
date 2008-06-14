@@ -99,26 +99,27 @@
 	
 	..()
 	if ((prob(30) && M.stat < 2))
-		var/mob/human/H = M
+		if (istype(M, /mob/human) || istype(M, /mob/monkey))
+			var/mob/human/H = M
 
 // ******* Check
 
-		if ((istype(H, /mob/human) && istype(H, /obj/item/weapon/clothing/head) && H.flags & 8 && prob(80)))
-			M << "\red The helmet protects you from being hit hard in the head!"
-			return
-		var/time = rand(10, 120)
-		if (prob(90))
-			if (M.paralysis < time)
-				M.paralysis = time
-		else
-			if (M.stunned < time)
-				M.stunned = time
-		M.stat = 1
-		for(var/mob/O in viewers(M, null))
-			if ((O.client && !( O.blinded )))
-				O << text("\red <B>[] has been knocked unconscious!</B>", M)
-			//Foreach goto(169)
-		M << text("\red <B>This was a []% hit. Roleplay it! (personality/memory change if the hit was severe enough)</B>", time * 100 / 120)
+			if ((istype(H, /mob/human) && istype(H, /obj/item/weapon/clothing/head) && H.flags & 8 && prob(80)))
+				M << "\red The helmet protects you from being hit hard in the head!"
+				return
+			var/time = rand(10, 120)
+			if (prob(90))
+				if (M.paralysis < time)
+					M.paralysis = time
+			else
+				if (M.stunned < time)
+					M.stunned = time
+			M.stat = 1
+			for(var/mob/O in viewers(M, null))
+				if ((O.client && !( O.blinded )))
+					O << text("\red <B>[] has been knocked unconscious!</B>", M)
+				//Foreach goto(169)
+			M << text("\red <B>This was a []% hit. Roleplay it! (personality/memory change if the hit was severe enough)</B>", time * 100 / 120)
 	return
 
 /obj/item/weapon/tank/New()
@@ -1677,7 +1678,6 @@
 			if (prob(25))
 				src.health -= 11
 				healthcheck()
-		else
 	return
 
 /obj/grille/blob_act()
@@ -2224,6 +2224,7 @@
 					return
 				if ((user.loc == T && user.equipped() == W && !( user.stat )))
 					src.d_state = 5
+					user << "\green Support rods cut."
 		else
 			if (istype(W, /obj/item/weapon/wirecutters))
 				if (src.d_state == 0)
@@ -2239,6 +2240,7 @@
 							return
 						if ((user.loc == T && user.equipped() == W && !( user.stat )))
 							src.d_state = 3
+							user << "\green Metal cover sliced."
 					else
 						if (src.d_state == 5)
 							var/turf/T = user.loc
@@ -2250,6 +2252,7 @@
 							if ((user.loc == T && user.equipped() == W && !( user.stat )))
 								src.d_state = 6
 								new /obj/item/weapon/rods( src )
+								user << "\green Support rods removed."
 				else
 					if (istype(W, /obj/item/weapon/screwdriver))
 						if (src.d_state == 1)
@@ -2260,6 +2263,7 @@
 								return
 							if ((user.loc == T && user.equipped() == W && !( user.stat )))
 								src.d_state = 2
+								user << "\green Support lines removed."
 					else
 						if (istype(W, /obj/item/weapon/crowbar))
 							if (src.d_state == 3)
@@ -2270,6 +2274,7 @@
 									return
 								if ((user.loc == T && user.equipped() == W && !( user.stat )))
 									src.d_state = 4
+									user << "\green Cover pried off."
 							else
 								if (src.d_state == 6)
 									var/turf/T = user.loc
@@ -2280,6 +2285,7 @@
 									if ((user.loc == T && user.equipped() == W && !( user.stat )))
 										src.d_state = 7
 										new /obj/item/weapon/sheet/metal( src )
+										user << "\green Outer sheath pried off."
 						else
 							if (istype(W, /obj/item/weapon/sheet/metal))
 								var/turf/T = user.loc

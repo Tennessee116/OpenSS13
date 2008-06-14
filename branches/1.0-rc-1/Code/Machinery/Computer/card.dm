@@ -274,9 +274,7 @@ obj/machinery/computer/card
 			if (src.modify)
 				src.modify.name = "[src.modify.registered]'s ID Card ([src.modify.access_level]>[src.modify.lab_access]-[src.modify.engine_access]-[src.modify.air_access])"
 
-			for(var/mob/M in viewers(1, src))
-				if ((M.client && M.machine == src))
-					src.attack_hand(M)
+			src.updateDialog()
 
 			src.add_fingerprint(usr)
 		else

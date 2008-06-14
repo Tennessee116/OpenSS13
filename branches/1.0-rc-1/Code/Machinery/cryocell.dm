@@ -430,9 +430,7 @@ obj/machinery/cryo_cell
 		if (src.gas.temperature < (60+T0C))
 			src.gas.temperature = min(src.gas.temperature + 1, 60+T0C)
 
-		for(var/mob/E in viewers(1, src))
-			if ((E.client && E.machine == src))
-				src.attack_hand(E)
+		src.updateDialog()
 
 
 

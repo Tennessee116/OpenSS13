@@ -568,10 +568,7 @@ obj/machinery/atmoalter/siphs
 			// Pipe valve status handled by /obj/machinery/connector/process()
 
 			src.setstate()
-			for(var/mob/M in viewers(1, src))
-				if ((M.client && M.machine == src))
-					src.attack_hand(M)
-				//Foreach goto(654)
+			src.updateDialog()
 			return
 
 

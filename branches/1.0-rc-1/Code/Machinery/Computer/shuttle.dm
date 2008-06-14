@@ -22,7 +22,7 @@ obj/machinery/computer/shuttle
 	verb/restabalize()
 		set src in oview(1)
 
-		world << "\red <B>Restabalizing shuttle atmosphere!</B>"
+		world << "\red <B>Restabilizing shuttle atmosphere!</B>"
 		var/A = locate(/area/shuttle)
 		for(var/obj/move/T in A)
 			T.firelevel = 0
@@ -45,7 +45,7 @@ obj/machinery/computer/shuttle
 			T.otemp = T20C
 			T.ttemp = T20C
 
-		world << "\red <B>Shuttle Restabalized!</B>"
+		world << "\red <B>Shuttle Restabilized!</B>"
 		src.add_fingerprint(usr)
 
 
