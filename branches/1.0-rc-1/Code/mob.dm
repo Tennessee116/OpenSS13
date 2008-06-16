@@ -4742,7 +4742,7 @@
 	return
 
 /mob/human/show_inv(mob/user as mob)
-	if (istype(user, /mob/human) || istype(user, /mob/monkey)	//AI should not be able to do this
+	if (istype(user, /mob/human) || istype(user, /mob/monkey))	//AI should not be able to do this
 		user.machine = src
 		// Fix added for Bug #1986988.
 		var/dat = text("<PRE>\n<B><FONT size=3>[]</FONT></B>\n\t<B>Head(Mask):</B> <A href='?src=\ref[];item=mask'>[]</A>\n\t\t<B>Headset:</B> <A href='?src=\ref[];item=headset'>[]</A>\n\t<B>Left Hand:</B> <A href='?src=\ref[];item=l_hand'>[]</A>\n\t<B>Right Hand:</B> <A href='?src=\ref[];item=r_hand'>[]</A>\n\t<B>Gloves:</B> <A href='?src=\ref[];item=gloves'>[]</A>\n\t<B>Eyes:</B> <A href='?src=\ref[];item=eyes'>[]</A>\n\t<B>Ears:</B> <A href='?src=\ref[];item=ears'>[]</A>\n\t<B>Head:</B> <A href='?src=\ref[];item=head'>[]</A>\n\t<B>Shoes:</B> <A href='?src=\ref[];item=shoes'>[]</A>\n\t<B>Belt:</B> <A href='?src=\ref[];item=belt'>[]</A>\n\t<B>Uniform:</B> <A href='?src=\ref[];item=uniform'>[]</A>\n\t<B>(Exo)Suit:</B> <A href='?src=\ref[];item=suit'>[]</A>\n\t<B>Back:</B> <A href='?src=\ref[];item=back'>[]</A> []\n\t<B>ID:</B> <A href='?src=\ref[];item=id'>[]</A>\n\t[]\n\t[]\n\t<A href='?src=\ref[];item=pockets'>Empty Pockets</A>\n<A href='?src=\ref[];mach_close=mob[]'>Close</A>\n</PRE>", src.name, src, (src.wear_mask ? text("[]", src.wear_mask) : "Nothing"), src, (src.w_radio ? text("[]", src.w_radio) : "Nothing"), src, (src.l_hand ? text("[]", src.l_hand) : "Nothing"), src, (src.r_hand ? text("[]", src.r_hand) : "Nothing"), src, (src.gloves ? text("[]", src.gloves) : "Nothing"), src, (src.glasses ? text("[]", src.glasses) : "Nothing"), src, (src.ears ? text("[]", src.ears) : "Nothing"), src, (src.head ? text("[]", src.head) : "Nothing"), src, (src.shoes ? text("[]", src.shoes) : "Nothing"), src, (src.belt ? text("[]", src.belt) : "Nothing"), src, (src.w_uniform ? text("[]", src.w_uniform) : "Nothing"), src, (src.wear_suit ? text("[]", src.wear_suit) : "Nothing"), src, (src.back ? text("[]", src.back) : "Nothing"), ((istype(src.wear_mask, /obj/item/weapon/clothing/mask) && istype(src.back, /obj/item/weapon/tank) && !( src.internal )) ? text(" <A href='?src=\ref[];item=internal'>Set Internal</A>", src) : ""), src, (src.wear_id ? text("[]", src.wear_id) : "Nothing"), (src.handcuffed ? text("<A href='?src=\ref[];item=handcuff'>Handcuffed</A>", src) : text("<A href='?src=\ref[];item=handcuff'>Not Handcuffed</A>", src)), (src.internal ? text("<A href='?src=\ref[];item=internal'>Remove Internal</A>", src) : ""), src, user, url_encode(src.name))
@@ -4938,11 +4938,11 @@
 	return
 
 /mob/proc/show_inv(mob/user as mob)
-	if (istype(user, /mob/human) || istype(user, /mob/monkey)	//AI should not be able to do this
+	if (istype(user, /mob/human) || istype(user, /mob/monkey))	//AI should not be able to do this
 		user.machine = src
 		var/dat = text("<TT>\n<B><FONT size=3>[]</FONT></B><BR>\n\t<B>Head(Mask):</B> <A href='?src=\ref[];item=mask'>[]</A><BR>\n\t<B>Left Hand:</B> <A href='?src=\ref[];item=l_hand'>[]</A><BR>\n\t<B>Right Hand:</B> <A href='?src=\ref[];item=r_hand'>[]</A><BR>\n\t<B>Back:</B> <A href='?src=\ref[];item=back'>[]</A><BR>\n\t[]<BR>\n\t[]<BR>\n\t[]<BR>\n\t<A href='?src=\ref[];item=pockets'>Empty Pockets</A><BR>\n<A href='?src=\ref[];mach_close=mob[]'>Close</A><BR>\n</TT>", src.name, src, (src.wear_mask ? text("[]", src.wear_mask) : "Nothing"), src, (src.l_hand ? text("[]", src.l_hand) : "Nothing"), src, (src.r_hand ? text("[]", src.r_hand) : "Nothing"), src, (src.back ? text("[]", src.back) : "Nothing"), ((istype(src.wear_mask, /obj/item/weapon/clothing/mask) && istype(src.back, /obj/item/weapon/tank) && !( src.internal )) ? text(" <A href='?src=\ref[];item=internal'>Set Internal</A>", src) : ""), (src.internal ? text("<A href='?src=\ref[];item=internal'>Remove Internal</A>", src) : ""), (src.handcuffed ? text("<A href='?src=\ref[];item=handcuff'>Handcuffed</A>", src) : text("<A href='?src=\ref[];item=handcuff'>Not Handcuffed</A>", src)), src, user, src.name)
 		user << browse(dat, text("window=mob[]", url_encode(src.name)))
-	
+
 /mob/proc/u_equip(W as obj)
 
 	if (W == src.r_hand)
@@ -5949,7 +5949,7 @@
 	if (!ticker)
 		M << "You cannot attack people before the game has started."
 		return
-	
+
 	if (M.a_intent == "help")
 		src.sleeping = 0
 		src.resting = 0
