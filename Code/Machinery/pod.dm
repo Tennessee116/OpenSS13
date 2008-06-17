@@ -79,8 +79,6 @@ obj/machinery/pod
 
 	// Eject from pod - place player behind pod and restore view
 
-	//I left these all as regular .client since the verbs won't work if the mob doesn't have the client anyhow (a remote-controlled mob with no client won't be able to use the verbs). --shadowlord13
-
 	verb/eject()
 		set src = usr.loc
 
@@ -99,14 +97,16 @@ obj/machinery/pod
 	verb/board()
 		set src in oview(1)
 
-		if (usr.stat)
+		var/result = src.canReach(usr, null, 1)
+		if (result==0)
+			usr << "You can't reach [src]."
 			return
 		var/mob/M = usr
 		if (M.client)
 			M.client.perspective = EYE_PERSPECTIVE
 			M.client.eye = src
 		M.loc = src
-		return
+
 
 
 	// Load pod - whatever the player is pulling gets loaded into the pod (including other players)
@@ -125,12 +125,21 @@ obj/machinery/pod
 
 				if (ismob(H.pulling))
 					var/mob/M = H.pulling
+					var/result = src.canReach(H, null, 1)
+					if (result==0)
+						usr << "You can't reach [src]."
+						return
+					result = H.pulling.canReach(H, null, 1)
+					if (result==0)
+						usr << "You can't reach [H.pulling]."
+						return
+
 					if (M.client)
 						M.client.perspective = EYE_PERSPECTIVE
 						M.client.eye = src
 				for(var/mob/O in viewers(src, null))
-					if (O.hasClient() && (!( O.blinded )))
-						O.client_mob() << text("\blue <B> [] loads [] into []!</B>", H, H.pulling, src)
+					if ((O.client && !( O.blinded )))
+						O << text("\blue <B> [] loads [] into []!</B>", H, H.pulling, src)
 				H.pulling = null
 		return
 
@@ -143,11 +152,16 @@ obj/machinery/pod
 
 		if (usr.stat)
 			return
+		var/result = src.canReach(usr, null, 1)
+		if (result==0)
+			usr << "You can't reach [src]."
+			return
+
 		if (istype(A, /atom/movable))
 			A.loc = src.loc
 			for(var/mob/O in viewers(src, null))
-				if (O.hasClient() && (!( O.blinded )))
-					O.client_mob() << text("\blue <B> [] unloads [] from []!</B>", usr, A, src)
+				if ((O.client && !( O.blinded )))
+					O << text("\blue <B> [] unloads [] from []!</B>", usr, A, src)
 				//Foreach goto(54)
 			if (ismob(A))
 				var/mob/M = A

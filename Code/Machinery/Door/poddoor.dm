@@ -15,10 +15,10 @@ obj/machinery/door/poddoor
 	// Standard open() and close() procs do not work
 
 	open()
-		usr.client_mob() << "This is a remote controlled door!"
+		usr << "This is a remote controlled door!"
 
 	close()
-		usr.client_mob() << "This is a remote controlled door!"
+		usr << "This is a remote controlled door!"
 
 
 

@@ -110,17 +110,13 @@
 		if (istype(W, /obj/item/weapon/weldingtool))
 			var/obj/item/weapon/weldingtool/T = W
 			if ((T.welding && T.weldfuel > 0))
-				var/list/observers = viewers(user, null)
-				for (var/mob/who in observers)
-					who.client_mob() << text("[] burns the paper with the welding tool!", user)
+				viewers(user, null) << text("[] burns the paper with the welding tool!", user)
 				spawn( 0 )
 					src.burn(1800000.0)
 					return
 		else
 			if (istype(W, /obj/item/weapon/igniter))
-				var/list/observers = viewers(user, null)
-				for (var/mob/who in observers)
-					who.client_mob() << text("[] burns the paper with the igniter!", user)
+				viewers(user, null) << text("[] burns the paper with the igniter!", user)
 				spawn( 0 )
 					src.burn(1800000.0)
 					return
@@ -133,7 +129,7 @@
 	for(var/atom/movable/A in src)
 		A.burn(fi_amount)
 		//Foreach goto(23)
-	if (fi_amount >= config.min_gas_for_fire)
+	if (fi_amount >= 900000.0)
 		src.amount = 0
 	src.update()
 	return
@@ -199,12 +195,12 @@
 		//Foreach goto(33)
 	if (n <= 0)
 		n = 0
-		usr.client_mob() << "There are no papers in the bin."
+		usr << "There are no papers in the bin."
 	else
 		if (n == 1)
-			usr.client_mob() << "There is one paper in the bin."
+			usr << "There is one paper in the bin."
 		else
-			usr.client_mob() << text("There are [] papers in the bin.", n)
+			usr << text("There are [] papers in the bin.", n)
 	return
 
 /obj/item/weapon/dummy/ex_act()
@@ -319,7 +315,7 @@
 		user.machine = src
 		if (!( src.data ))
 			update()
-		user.client_mob() << browse(src.data, "window=game_kit")
+		user << browse(src.data, "window=game_kit")
 		return
 	return
 
@@ -586,42 +582,40 @@
 	set src in oview(1)
 
 	..()
-	usr.client_mob() << text("There is about [] square units of paper left!", src.amount)
+	usr << text("There is about [] square units of paper left!", src.amount)
 	return
 
 /obj/item/weapon/wrapping_paper/attackby(obj/item/weapon/W, mob/user)
 
 	if (!( locate(/obj/table, src.loc) ))
-		user.client_mob() << "\blue You MUST put the paper on a table!"
+		user << "\blue You MUST put the paper on a table!"
 	if (W.w_class < 4)
 		if ((istype(user.l_hand, /obj/item/weapon/wirecutters) || istype(user.r_hand, /obj/item/weapon/wirecutters)))
 			var/a_used = 2 ** (src.w_class - 1)
 			if (src.amount < a_used)
-				user.client_mob() << "\blue You need more paper!"
+				user << "\blue You need more paper!"
 				return
 			else
-				if (user.can_drop())
-					src.amount -= a_used
-					user.drop_item()
-
-					var/obj/item/weapon/gift/G = new /obj/item/weapon/gift( src.loc )
-					G.size = W.w_class
-					G.w_class = G.size + 1
-					G.icon_state = text("gift[]", G.size)
-					G.gift = W
-					W.loc = G
-					G.add_fingerprint(user)
-					W.add_fingerprint(user)
-					src.add_fingerprint(user)
+				src.amount -= a_used
+				user.drop_item()
+				var/obj/item/weapon/gift/G = new /obj/item/weapon/gift( src.loc )
+				G.size = W.w_class
+				G.w_class = G.size + 1
+				G.icon_state = text("gift[]", G.size)
+				G.gift = W
+				W.loc = G
+				G.add_fingerprint(user)
+				W.add_fingerprint(user)
+				src.add_fingerprint(user)
 			if (src.amount <= 0)
 				new /obj/item/weapon/c_tube( src.loc )
 				//SN src = null
 				del(src)
 				return
 		else
-			user.client_mob() << "\blue You need scissors!"
+			user << "\blue You need scissors!"
 	else
-		user.client_mob() << "\blue The object is FAR too large!"
+		user << "\blue The object is FAR too large!"
 	return
 
 /obj/item/weapon/gift/attack_self(mob/user)
@@ -647,7 +641,7 @@
 
 /obj/item/weapon/a_gift/burn(fi_amount)
 
-	if (fi_amount > config.min_gas_for_fire)
+	if (fi_amount > 900000.0)
 		//SN src = null
 		del(src)
 		return
@@ -743,7 +737,7 @@
 
 	if (user.equipped() == src)
 		if (!( src.state ))
-			user.client_mob() << "\red You prime the flashbang! [det_time/10] seconds!"
+			user << "\red You prime the flashbang! [det_time/10] seconds!"
 			src.state = 1
 			src.icon_state = "flashbang1"
 			spawn( src.det_time )
@@ -778,12 +772,11 @@
 				for(var/obj/item/weapon/cloaking_device/S in M)
 					S.active = 0
 					S.icon_state = "shield0"
-					//Foreach goto(72)
 			if ((get_dist(M, T) <= 2 || src.loc == M.loc || src.loc == M))
 				flick("e_flash", M.flash)
 				M.stunned = 10
 				M.weakened = 3
-				M.client_mob() << "\red <B>BANG</B>"
+				M << "\red <B>BANG</B>"
 				if ((prob(14) || (M == src.loc && prob(70))))
 					M.ear_damage += rand(10, 20)
 				else
@@ -822,7 +815,7 @@
 						else
 							if (!( M.paralysis ))
 								M.eye_stat += rand(1, 3)
-					M.client_mob() << "\red <B>BANG</B>"
+					M << "\red <B>BANG</B>"
 				else
 					if (!( istype(M, /mob/human) ))
 						flick("flash", M.flash)
@@ -847,7 +840,6 @@
 			else
 				if (M.ear_damage >= 5)
 					M << "\red Your ears start to ring!"
-
 	//SN src = null
 
 	for(var/obj/blob/B in view(8,T))
@@ -863,7 +855,7 @@
 /obj/item/weapon/flashbang/attack_self(mob/user)
 
 	if (!( src.state ))
-		user.client_mob() << "\red You prime the flashbang! [det_time/10] seconds!"
+		user << "\red You prime the flashbang! [det_time/10] seconds!"
 		src.state = 1
 		src.icon_state = "flashbang1"
 		add_fingerprint(user)
@@ -873,6 +865,7 @@
 	return
 
 /obj/item/weapon/flash/attack(mob/M, mob/user)
+
 	if (src.shots > 0)
 		var/safety = null
 		if (istype(M, /mob/human))
@@ -884,14 +877,13 @@
 
 		if (!( safety ))
 			M.weakened = 10
-			if (M.hasClient())
-				var/mob/CM = M.client_mob()
+			if (M.client)
 				if (!( safety ))
 					if ((M.eye_stat > 15 && prob(M.eye_stat + 50)))
-						flick("e_flash", CM.flash)
+						flick("e_flash", M.flash)
 						M.eye_stat += rand(1, 2)
 					else
-						flick("flash", CM.flash)
+						flick("flash", M.flash)
 						M.eye_stat += rand(0, 2)
 					if (M.eye_stat >= 20)
 						M << "\red You eyes start to burn badly!"
@@ -912,10 +904,9 @@
 	if (src.shots < 1)
 		user.show_message("\red *click* *click*", 2)
 		return
-	if ((!( istype(user, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
-		if (!istype(user, /mob/drone))
-			user.client_mob() << "\red You don't have the dexterity to do this!"
-			return
+	if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
+		user << "\red You don't have the dexterity to do this!"
+		return
 	src.l_time = world.time
 	add_fingerprint(user)
 	src.shots--
@@ -928,16 +919,14 @@
 						for(var/obj/item/weapon/cloaking_device/S in M)
 							S.active = 0
 							S.icon_state = "shield0"
-							//Foreach goto(201)
-				if (M.hasClient())
-					var/mob/CM = M.client_mob()
+				if (M.client)
 					var/safety = null
 					if (istype(M, /mob/human))
 						var/mob/human/H = M
 						if (istype(H.glasses, /obj/item/weapon/clothing/glasses/sunglasses))
 							safety = 1
 					if (!( safety ))
-						flick("flash", CM.flash)
+						flick("flash", M.flash)
 	return
 
 /obj/item/weapon/locator/attack_self(mob/user)
@@ -948,7 +937,7 @@
 		dat = text("[]<BR><BR><A href='?src=\ref[];temp=1'>Clear</A>", src.temp, src)
 	else
 		dat = text("<B>Persistent Signal Locator</B><HR>\nFrequency: <A href='?src=\ref[];freq=-1'>-</A><A href='?src=\ref[];freq=-0.2'>-</A> [] <A href='?src=\ref[];freq=0.2'>+</A><A href='?src=\ref[];freq=1'>+</A><BR>\n<A href='?src=\ref[];refresh=1'>Refresh</A>", src, src, src.freq, src, src, src)
-	user.client_mob() << browse(dat, "window=radio")
+	user << browse(dat, "window=radio")
 	return
 
 /obj/item/weapon/locator/Topic(href, href_list)
@@ -1020,7 +1009,7 @@
 			attack_self(src.loc)
 		else
 			for(var/mob/M in viewers(1, src))
-				if (M.hasClient())
+				if (M.client)
 					src.attack_self(M)
 				//Foreach goto(749)
 	return
@@ -1060,7 +1049,7 @@
 			dat = text("[]<BR><BR><A href='?src=\ref[];temp=1'>Clear</A>", src.temp, src)
 		else
 			dat = text("<B>Syndicate Uplink Console:</B><HR>\nTele-Crystals left: []<BR>\n<B>Request item:</B> (uses 1 tele-crystal)<BR>\n<A href='?src=\ref[];item_emag=1'>Electromagnet Card</A><BR>\n<A href='?src=\ref[];item_sleepypen=1'>Sleepy Pen</A><BR>\n<A href='?src=\ref[];item_cyanide=1'>Cyanide Pill</A><BR>\n<A href='?src=\ref[];item_cloak=1'>Cloaking Device</A><BR>\n<A href='?src=\ref[];item_revolver=1'>Revolver</A><BR>\n<A href='?src=\ref[];item_imp_freedom=1'>Implant- Freedom (with injector)</A><BR>\n<HR>\n<A href='?src=\ref[];selfdestruct=1'>Self-Destruct</A>", src.uses, src, src, src, src, src, src, src)
-	user.client_mob() << browse(dat, "window=radio")
+	user << browse(dat, "window=radio")
 	return
 
 /obj/item/weapon/syndicate_uplink/Topic(href, href_list)
@@ -1118,7 +1107,7 @@
 			attack_self(src.loc)
 		else
 			for(var/mob/M in viewers(1, src))
-				if (M.hasClient())
+				if (M.client)
 					src.attack_self(M)
 				//Foreach goto(488)
 	return
@@ -1134,12 +1123,12 @@
 
 	src.active = !( src.active )
 	if (src.active)
-		user.client_mob() << "\blue The sword is now active."
+		user << "\blue The sword is now active."
 		src.force = 40
 		src.icon_state = "sword1"
 		src.w_class = 4
 	else
-		user.client_mob() << "\blue The sword can now be concealed."
+		user << "\blue The sword can now be concealed."
 		src.force = 3
 		src.icon_state = "sword0"
 		src.w_class = 2
@@ -1150,11 +1139,11 @@
 
 	src.active = !( src.active )
 	if (src.active)
-		user.client_mob() << "\blue The shield is now active."
+		user << "\blue The shield is now active."
 		src.force = 40
 		src.icon_state = "shield1"
 	else
-		user.client_mob() << "\blue The shield is now inactive."
+		user << "\blue The shield is now inactive."
 		src.force = 3
 		src.icon_state = "shield0"
 	src.add_fingerprint(user)
@@ -1164,11 +1153,11 @@
 
 	src.active = !( src.active )
 	if (src.active)
-		user.client_mob() << "\blue The cloaking device is now active."
+		user << "\blue The cloaking device is now active."
 		src.force = 40
 		src.icon_state = "shield1"
 	else
-		user.client_mob() << "\blue The cloaking device is now inactive."
+		user << "\blue The cloaking device is now inactive."
 		src.force = 3
 		src.icon_state = "shield0"
 	src.add_fingerprint(user)
@@ -1195,17 +1184,17 @@
 
 	if (istype(A, /obj/item/weapon/ammo/a357))
 		if (src.bullets >= 7)
-			user.client_mob() << "\blue It's already fully loaded!"
+			user << "\blue It's already fully loaded!"
 			return 1
 		if (A.amount_left <= 0)
-			user.client_mob() << "\red There is no more bullets!"
+			user << "\red There is no more bullets!"
 			return 1
 		if (A.amount_left < (7 - src.bullets))
 			src.bullets += A.amount_left
-			user.client_mob() << text("\red You reload [] bullet\s!", A.amount_left)
+			user << text("\red You reload [] bullet\s!", A.amount_left)
 			A.amount_left = 0
 		else
-			user.client_mob() << text("\red You reload [] bullet\s!", 7 - src.bullets)
+			user << text("\red You reload [] bullet\s!", 7 - src.bullets)
 			A.amount_left -= 7 - src.bullets
 			src.bullets = 7
 		A.update_icon()
@@ -1216,10 +1205,9 @@
 
 	if (flag)
 		return
-	if ((!( istype(user, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
-		if (!istype(user, /mob/drone))
-			user.client_mob() << "\red You don't have the dexterity to do this!"
-			return
+	if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
+		user << "\red You don't have the dexterity to do this!"
+		return
 	src.add_fingerprint(user)
 	if (src.bullets < 1)
 		user.show_message("\red *click* *click*", 2)
@@ -1276,7 +1264,7 @@
 	// ******* Check
 
 		if ((istype(H, /mob/human) && istype(H, /obj/item/weapon/clothing/head) && H.flags & 8 && prob(80)))
-			M.client_mob() << "\red The helmet protects you from being hit hard in the head!"
+			M << "\red The helmet protects you from being hit hard in the head!"
 			return
 		if ((user.a_intent == "hurt" && src.bullets > 0))
 			if (prob(20))
@@ -1306,7 +1294,7 @@
 			if (M.stat<2)
 				M.stat = 1
 				for(var/mob/O in viewers(M, null))
-					if ((O.hasClient() && !( O.blinded )))
+					if ((O.client && !( O.blinded )))
 						O.show_message(text("\red <B>[] has been pistol whipped by []!</B>", M, user), 1, "\red You hear someone fall", 2)
 
 	return
@@ -1322,10 +1310,9 @@
 
 	if (flag)
 		return
-	if ((!( istype(user, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
-		if (!istype(user, /mob/drone))
-			user.client_mob() << "\red You don't have the dexterity to do this!"
-			return
+	if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
+		user << "\red You don't have the dexterity to do this!"
+		return
 	src.add_fingerprint(user)
 	if (src.charges < 1)
 		user.show_message("\red *click* *click*", 2)
@@ -1366,7 +1353,7 @@
 
 // ******* Check
 		if ((istype(H, /mob/human) && istype(H, /obj/item/weapon/clothing/head) && H.flags & 8 && prob(80)))
-			M.client_mob() << "\red The helmet protects you from being hit hard in the head!"
+			M << "\red The helmet protects you from being hit hard in the head!"
 			return
 		var/time = rand(10, 120)
 		if (prob(90))
@@ -1393,10 +1380,9 @@
 
 	if (flag)
 		return
-	if ((!( istype(user, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
-		if (!istype(user, /mob/drone))
-			user.client_mob() << "\red You don't have the dexterity to do this!"
-			return
+	if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
+		user << "\red You don't have the dexterity to do this!"
+		return
 	src.add_fingerprint(user)
 	if (src.charges < 1)
 		user.show_message("\red *click* *click*", 2)
@@ -1447,7 +1433,7 @@
 
 		// ******* Check
 		if ((istype(H, /mob/human) && istype(H, /obj/item/weapon/clothing/head) && H.flags & 8 && prob(80)))
-			M.client_mob() << "\red The helmet protects you from being hit hard in the head!"
+			M << "\red The helmet protects you from being hit hard in the head!"
 			return
 		if (src.charges >= 1)
 			if (user.a_intent == "hurt")
@@ -1476,7 +1462,7 @@
 				if (M.stat<2)
 					M.stat = 1
 					for(var/mob/O in viewers(M, null))
-						if ((O.hasClient() && !( O.blinded )))
+						if ((O.client && !( O.blinded )))
 							O.show_message(text("\red <B>[] has been stunned with the taser gun by []!</B>", M, user), 1, "\red You hear someone fall", 2)
 						//Foreach goto(309)
 			src.charges--
@@ -1554,9 +1540,9 @@
 		for(var/obj/item/weapon/m_pill/M in src)
 			pills += M.amount
 			//Foreach goto(39)
-		usr.client_mob() << text("\blue There are [] pills inside!", pills)
+		usr << text("\blue There are [] pills inside!", pills)
 	else
-		usr.client_mob() << "\blue It looks empty!"
+		usr << "\blue It looks empty!"
 	return
 
 /obj/item/weapon/pill_canister/attack_paw(mob/user)
@@ -1594,7 +1580,7 @@
 			pills += M.amount
 			//Foreach goto(34)
 		if (pills > 30)
-			usr.client_mob() << "\blue There are too many pills inside!"
+			usr << "\blue There are too many pills inside!"
 			return
 		for(var/obj/item/weapon/m_pill/M in src)
 			if (M.type == W.type)
@@ -1753,7 +1739,7 @@
 	set src in view(1)
 
 	..()
-	usr.client_mob() << text("\blue There are [] pills left on the stack!", src.amount)
+	usr << text("\blue There are [] pills left on the stack!", src.amount)
 	return
 
 /obj/item/weapon/m_pill/attackby(obj/item/weapon/m_pill/W, mob/user)
@@ -1774,10 +1760,9 @@
 
 /obj/item/weapon/handcuffs/attack(mob/M, mob/user)
 
-	if ((!( istype(user, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
-		if (!istype(user, /mob/drone))
-			user.client_mob() << "\red You don't have the dexterity to do this!"
-			return
+	if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
+		user << "\red You don't have the dexterity to do this!"
+		return
 	if (istype(M, /mob/human))
 		var/obj/equip_e/human/O = new /obj/equip_e/human(  )
 		O.source = user
@@ -1803,7 +1788,7 @@
 			O.process()
 			return
 	else
-		user.client_mob() << "You can't handcuff [M]."
+		user << "You can't handcuff [M]."
 	return
 
 /obj/item/weapon/throwing(t_dir, rs)
@@ -1829,7 +1814,7 @@
 		if(5.0)
 			t = "huge"
 		else
-	usr.client_mob() << text("This is a \icon[][]. It is a [] item.", src, src.name, t)
+	usr << text("This is a \icon[][]. It is a [] item.", src, src.name, t)
 	..()
 	return
 
@@ -1838,7 +1823,8 @@
 	if (istype(src.loc, /obj/item/weapon/storage))
 		for(var/mob/M in range(1, src.loc))
 			if (M.s_active == src.loc)
-				M.eitherScreenRemove(src)
+				if (M.client)
+					M.client.screen -= src
 			//Foreach goto(34)
 	src.throwing = 0
 	if (src.loc == user)
@@ -1858,7 +1844,8 @@
 	if (istype(src.loc, /obj/item/weapon/storage))
 		for(var/mob/M in range(1, src.loc))
 			if (M.s_active == src.loc)
-				M.eitherScreenRemove(src)
+				if (M.client)
+					M.client.screen -= src
 			//Foreach goto(34)
 	src.throwing = 0
 	if (src.loc == user)
@@ -1886,9 +1873,9 @@
 
 	if (src.laying)
 		src.laying = 0
-		user.client_mob() << "\blue You're done laying wire!"
+		user << "\blue Your done laying wire!"
 	else
-		user.client_mob() << "\blue You are not using this to lay wire..."
+		user << "\blue You are not using this to lay wire..."
 	return
 
 /obj/item/weapon/card/data/verb/label(t as text)
@@ -1912,8 +1899,8 @@
 /obj/item/weapon/card/id/verb/read()
 	set src in usr
 
-	usr.client_mob() << text("\icon[] []: The current assignment on the card is [].", src, src.name, src.assignment)
-	usr.client_mob() << "\blue The rubric for the 4 access numbers is: general>lab-engine-systems"
+	usr << text("\icon[] []: The current assignment on the card is [].", src, src.name, src.assignment)
+	usr << "\blue The rubric for the 4 access numbers is: general>lab-engine-systems"
 	return
 
 // new check_access for ID cards
@@ -1993,7 +1980,7 @@
 	set src in view(1)
 
 	..()
-	usr.client_mob() << text("There are [] rod\s left on the stack.", src.amount)
+	usr << text("There are [] rod\s left on the stack.", src.amount)
 	return
 
 /obj/item/weapon/rods/attack_self(mob/user)
@@ -2062,7 +2049,7 @@
 	set src in view(1)
 
 	..()
-	usr.client_mob() << text("There are [] metal sheet\s on the stack.", src.amount)
+	usr << text("There are [] metal sheet\s on the stack.", src.amount)
 	return
 
 /obj/item/weapon/sheet/metal/attack_self(mob/user)
@@ -2090,7 +2077,7 @@
 			t1 += "<BR>"
 		//Foreach goto(186)
 	t1 += "</TT></HTML>"
-	user.client_mob() << browse(t1, "window=met_sheet")
+	user << browse(t1, "window=met_sheet")
 	return
 
 /obj/item/weapon/sheet/metal/Topic(href, href_list)
@@ -2238,7 +2225,10 @@
 
 
 		if(V.amount == 1)
-			user.eitherScreenRemove(V)
+
+			if(user.client)
+				user.client.screen -= V
+
 			user.u_equip(W)
 			del(W)
 		else
@@ -2262,17 +2252,16 @@
 	set src in view(1)
 
 	..()
-	usr.client_mob() << text("There are [] glass sheet\s on the stack.", src.amount)
+	usr << text("There are [] glass sheet\s on the stack.", src.amount)
 	return
 
 /obj/item/weapon/sheet/glass/attack_self(mob/user)
 
-	if (!( istype(user.loc, /turf/station) ))
+	if (!( istype(usr.loc, /turf/station) ))
 		return
-	if ((!( istype(user, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
-		if (!istype(user, /mob/drone))
-			user.client_mob() << "\red You don't have the dexterity to do this!"
-			return
+	if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
+		user << "\red You don't have the dexterity to do this!"
+		return
 	switch(alert("Sheet-Glass", "Would you like full tile glass or one direction?", "one direct", "full (2 sheets)", "cancel", null))
 		if("one direct")
 			var/obj/window/W = new /obj/window( usr.loc )
@@ -2338,17 +2327,16 @@
 	set src in view(1)
 
 	..()
-	usr.client_mob() << text("There are [] reinforced glass sheet\s on the stack.", src.amount)
+	usr << text("There are [] reinforced glass sheet\s on the stack.", src.amount)
 	return
 
 /obj/item/weapon/sheet/rglass/attack_self(mob/user)
 
-	if (!( istype(user.loc, /turf/station) ))
+	if (!( istype(usr.loc, /turf/station) ))
 		return
-	if ((!( istype(user, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
-		if (!istype(user, /mob/drone))
-			user.client_mob() << "\red You don't have the dexterity to do this!"
-			return
+	if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
+		user << "\red You don't have the dexterity to do this!"
+		return
 	switch(alert("Sheet Reinf. Glass", "Would you like full tile glass or one direction?", "one direct", "full (2 sheets)", "cancel", null))
 		if("one direct")
 			var/obj/window/W = new /obj/window( usr.loc, 1 )
@@ -2383,7 +2371,7 @@
 	for(var/obj/item/weapon/paper/P in src)
 		dat += text("<A href='?src=\ref[];read=\ref[]'>[]</A> <A href='?src=\ref[];write=\ref[]'>Write</A> <A href='?src=\ref[];remove=\ref[]'>Remove</A><BR>", src, P, P.name, src, P, src, P)
 		//Foreach goto(42)
-	user.client_mob() << browse(dat, "window=clipboard")
+	user << browse(dat, "window=clipboard")
 	return
 
 /obj/item/weapon/clipboard/Topic(href, href_list)
@@ -2442,9 +2430,9 @@
 			var/obj/item/weapon/paper/P = locate(href_list["read"])
 			if ((P && P.loc == src))
 				if (!( istype(usr, /mob/human) ))
-					usr.client_mob() << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", P.name, stars(P.info)), text("window=[]", P.name))
+					usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", P.name, stars(P.info)), text("window=[]", P.name))
 				else
-					usr.client_mob() << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", P.name, P.info), text("window=[]", P.name))
+					usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", P.name, P.info), text("window=[]", P.name))
 		if (ismob(src.loc))
 			var/mob/M = src.loc
 			if (M.machine == src)
@@ -2494,7 +2482,7 @@
 				if (ctf)
 					ctf.check_win(src)
 		else
-			user.client_mob() << "\blue Not enough space!!!"
+			user << "\blue Not enough space!!!"
 	else
 		if (istype(P, /obj/item/weapon/pen))
 			if (!( src.pen ))
@@ -2520,7 +2508,7 @@
 	for(var/obj/item/weapon/f_card/P in src)
 		dat += text("<A href='?src=\ref[];read=\ref[]'>[]</A> <A href='?src=\ref[];remove=\ref[]'>Remove</A><BR>", src, P, P.name, src, P)
 		//Foreach goto(23)
-	user.client_mob() << browse(dat, "window=fcardholder")
+	user << browse(dat, "window=fcardholder")
 	return
 
 /obj/item/weapon/fcardholder/Topic(href, href_list)
@@ -2550,9 +2538,9 @@
 			var/obj/item/weapon/f_card/P = locate(href_list["read"])
 			if ((P && P.loc == src))
 				if (!( istype(usr, /mob/human) ))
-					usr.client_mob() << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", P.name, P.display()), text("window=[]", P.name))
+					usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", P.name, P.display()), text("window=[]", P.name))
 				else
-					usr.client_mob() << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", P.name, P.display()), text("window=[]", P.name))
+					usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", P.name, P.display()), text("window=[]", P.name))
 			src.add_fingerprint(usr)
 		if (ismob(src.loc))
 			var/mob/M = src.loc
@@ -2587,7 +2575,7 @@
 			add_fingerprint(user)
 			src.add_fingerprint(user)
 		else
-			user.client_mob() << "\blue Not enough space!!!"
+			user << "\blue Not enough space!!!"
 	else
 		if (istype(P, /obj/item/weapon/pen))
 			var/t = input(user, "Holder Label:", text("[]", src.name), null)  as text
@@ -2622,7 +2610,7 @@
 /obj/item/weapon/extinguisher/examine()
 	set src in usr
 
-	usr.client_mob() << text("\icon[] [] contains [] units of water left!", src, src.name, src.waterleft)
+	usr << text("\icon[] [] contains [] units of water left!", src, src.name, src.waterleft)
 	..()
 	return
 
@@ -2895,9 +2883,9 @@
 
 	..()
 	if (!( istype(usr, /mob/human) ))
-		usr.client_mob() << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", src.name, stars(src.info)), text("window=[]", src.name))
+		usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", src.name, stars(src.info)), text("window=[]", src.name))
 	else
-		usr.client_mob() << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", src.name, src.info), text("window=[]", src.name))
+		usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", src.name, src.info), text("window=[]", src.name))
 	return
 
 /obj/item/weapon/paper/Map/examine()
@@ -2905,11 +2893,11 @@
 
 	..()
 
-	usr.client_mob() << browse_rsc(map_graphic)
+	usr << browse_rsc(map_graphic)
 	if (!( istype(usr, /mob/human) ))
-		usr.client_mob() << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", src.name, stars(src.info)), text("window=[]", src.name))
+		usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", src.name, stars(src.info)), text("window=[]", src.name))
 	else
-		usr.client_mob() << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", src.name, src.info), text("window=[]", src.name))
+		usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", src.name, src.info), text("window=[]", src.name))
 	return
 
 
@@ -2917,8 +2905,8 @@
 	set src in view(2)
 
 	..()
-	usr.client_mob() << text("\blue There are [] on the stack!", src.amount)
-	usr.client_mob() << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", src.name, display()), text("window=[]", src.name))
+	usr << text("\blue There are [] on the stack!", src.amount)
+	usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", src.name, display()), text("window=[]", src.name))
 	return
 
 /obj/item/weapon/f_card/proc/display()
@@ -3029,11 +3017,11 @@
 /obj/item/weapon/f_print_scanner/attack(mob/human/M, mob/user)
 
 	if ((!( ismob(M) ) || !( istype(M.primary, /obj/dna) ) || !( istype(M, /mob/human) ) || M.gloves))
-		user.client_mob() << text("\blue Unable to locate any fingerprints on []!", M)
+		user << text("\blue Unable to locate any fingerprints on []!", M)
 		return 0
 	else
 		if ((src.amount < 1 && src.printing))
-			user.client_mob() << text("\blue Fingerprints scanned on []. Need more cards to print.", M)
+			user << text("\blue Fingerprints scanned on []. Need more cards to print.", M)
 			src.printing = 0
 	src.icon_state = text("f_print_scanner[]", src.printing)
 	if (src.printing)
@@ -3043,19 +3031,19 @@
 		F.fingerprints = md5(M.primary.uni_identity)
 		F.icon_state = "f_print_card1"
 		F.name = text("FPrintC- '[]'", M.name)
-		user.client_mob() << "\blue Done printing."
-	user.client_mob() << text("\blue []'s Fingerprints: []", M, md5(M.primary.uni_identity))
+		user << "\blue Done printing."
+	user << text("\blue []'s Fingerprints: []", M, md5(M.primary.uni_identity))
 	return
 
 /obj/item/weapon/f_print_scanner/afterattack(atom/A, mob/user)
 
 	src.add_fingerprint(user)
 	if (!( A.fingerprints ))
-		user.client_mob() << "\blue Unable to locate any fingerprints!"
+		user << "\blue Unable to locate any fingerprints!"
 		return 0
 	else
 		if ((src.amount < 1 && src.printing))
-			user.client_mob() << "\blue Fingerprints found. Need more cards to print."
+			user << "\blue Fingerprints found. Need more cards to print."
 			src.printing = 0
 	src.icon_state = text("f_print_scanner[]", src.printing)
 	if (src.printing)
@@ -3064,23 +3052,21 @@
 		F.amount = 1
 		F.fingerprints = A.fingerprints
 		F.icon_state = "f_print_card1"
-		user.client_mob() << "\blue Done printing."
+		user << "\blue Done printing."
 	var/list/L = params2list(A.fingerprints)
-	user.client_mob() << text("\blue Isolated [] fingerprints.", L.len)
+	user << text("\blue Isolated [] fingerprints.", L.len)
 	for(var/i in L)
-		user.client_mob() << text("\blue \t []", i)
+		user << text("\blue \t []", i)
 		//Foreach goto(186)
 	return
 
 /obj/item/weapon/healthanalyzer/attack(mob/M, mob/user)
 
-	if ((!( istype(user, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
-		if (!istype(user, /mob/drone))
-			user.client_mob() << "\red You don't have the dexterity to do this!"
-			return
+	if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
+		user << "\red You don't have the dexterity to do this!"
+		return
 
 	if (istype(M, /mob/human) || istype(M, /mob/monkey))
-
 		for (var/mob/O in viewers(M, null))
 			O.show_message("\red [user] has analyzed [M]'s vitals!", 1)
 
@@ -3096,22 +3082,19 @@
 			user.show_message("\blue Bloodstream Analysis located [M.antitoxs] units of toxic plasma chemicals.", 1)
 		// Not checked: r_epil, r_ch_cou, r_tourette
 
-		if (!M.hasClient())
+		if (!M.client)
 			user.show_message("\blue [M] has a vacant look in \his eyes.", 1)
-		else if (M.currentDrone!=null)
-			user.show_message("\blue [M] does not appear to notice you.", 1)
 	else
-		user.client_mob() << "You can't get any meaningful results about [M] from the analyzer."
+		user << "You can't get any meaningful results about [M] from the analyzer."
 	src.add_fingerprint(user)
 
 /obj/item/weapon/analyzer/attack_self(mob/user)
 
 	if (user.stat)
 		return
-	if ((!( istype(user, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
-		if (!istype(user, /mob/drone))
-			user.client_mob() << "\red You don't have the dexterity to do this!"
-			return
+	if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
+		user << "\red You don't have the dexterity to do this!"
+		return
 	var/turf/T = user.loc
 	if (!( istype(T, /turf) ))
 		return
@@ -3175,42 +3158,23 @@
 	return
 
 /obj/item/weapon/storage/proc/show_to(mob/user)
-	var/screen
-	if (user.client)
-		screen = user.client.screen
-	else if (user.currentDrone!=null)
-		var/client/client = user.alwaysClient()
-		if (client)
-			screen = client.screenOrBackup()
-		else
-			return
-	else
-		return
-	screen -= src.boxes
-	screen -= src.closer
-	screen -= src.contents
-	screen += src.boxes
-	screen += src.closer
-	screen += src.contents
-	
+
+	user.client.screen -= src.boxes
+	user.client.screen -= src.closer
+	user.client.screen -= src.contents
+	user.client.screen += src.boxes
+	user.client.screen += src.closer
+	user.client.screen += src.contents
 	user.s_active = src
 	return
 
 /obj/item/weapon/storage/proc/hide_from(mob/user)
-	var/screen
-	if (user.client)
-		screen = user.client.screen
-	else if (user.currentDrone!=null)
-		var/client/client = user.alwaysClient()
-		if (client)
-			screen = client.screenOrBackup()
-		else
-			return
-	else
+
+	if(!user.client)
 		return
-	screen -= src.boxes
-	screen -= src.closer
-	screen -= src.contents
+	user.client.screen -= src.boxes
+	user.client.screen -= src.closer
+	user.client.screen -= src.contents
 	return
 
 /obj/item/weapon/storage/proc/close(mob/user)
@@ -3406,7 +3370,7 @@
 		//Foreach goto(46)
 	t += W.w_class
 	if (t > 20)
-		user.client_mob() << "You cannot fit the item inside. (Remove larger classed items)"
+		user << "You cannot fit the item inside. (Remove larger classed items)"
 		return
 	user.u_equip(W)
 	W.loc = src
@@ -3509,7 +3473,7 @@
 	new /obj/item/weapon/wirecutters( src )
 	new /obj/item/weapon/t_scanner( src )
 	new /obj/item/weapon/crowbar( src )
-	new /obj/item/weapon/clothing/gloves/yellow( src )
+	new /obj/item/weapon/cable_coil( src )
 	new /obj/item/weapon/cable_coil( src )
 	new /obj/item/weapon/cable_coil( src )
 
@@ -3518,12 +3482,13 @@
 /obj/item/weapon/storage/toolbox/attack(mob/M, mob/user)
 
 	..()
-	if ((prob(30) && M.stat < 2) && ((istype(M, /mob/human) || istype(M, /mob/monkey))))
+	if ((prob(30) && M.stat < 2) && (!istype(M, /mob/ai)))
 		var/mob/H = M
 
 		// ******* Check
+
 		if ((istype(H, /mob/human) && istype(H, /obj/item/weapon/clothing/head) && H.flags & 8 && prob(80)))
-			M.client_mob() << "\red The helmet protects you from being hit hard in the head!"
+			M << "\red The helmet protects you from being hit hard in the head!"
 			return
 		var/time = rand(10, 120)
 		if (prob(90))
@@ -3654,12 +3619,12 @@
 		return
 	var/T = user.loc
 	if (!( istype(T, /turf) ))
-		user.client_mob() << "\blue You must be on the ground!"
+		user << "\blue You must be on the ground!"
 		return
 	else
 		var/S = T
 		if (!( istype(S, /turf/space) ))
-			user.client_mob() << "You cannot build on or repair this turf!"
+			user << "You cannot build on or repair this turf!"
 			return
 		else
 			src.build(S)
@@ -3693,12 +3658,11 @@
 	set src in view(1)
 
 	..()
-	usr.client_mob() << text("There are [] tile\s left on the stack.", src.amount)
+	usr << text("There are [] tile\s left on the stack.", src.amount)
 	return
 
 /obj/item/weapon/igniter/attackby(obj/item/weapon/W, mob/user)
 
-	var/client/client = user.alwaysClient()
 	if ((istype(W, /obj/item/weapon/radio/signaler) && !( src.status )))
 		var/obj/item/weapon/radio/signaler/S = W
 		if (!( S.b_stat ))
@@ -3707,14 +3671,9 @@
 		S.loc = R
 		R.part1 = S
 		S.layer = initial(S.layer)
-		if (client)
-			client.screenOrBackupRemove(S)
-			client.screen -= S
-		if (istype(user, /mob/drone))
-			if (user.equipped() == S)
-				user.u_equip(S)
-				user:grip(R)
-		else if (user.r_hand == S)
+		if (user.client)
+			user.client.screen -= S
+		if (user.r_hand == S)
 			user.u_equip(S)
 			user.r_hand = R
 		else
@@ -3724,9 +3683,8 @@
 		src.master = R
 		src.layer = initial(src.layer)
 		user.u_equip(src)
-		if (client)
-			client.screenOrBackupRemove(src)
-			client.screen -= src
+		if (user.client)
+			user.client.screen -= src
 		src.loc = R
 		R.part2 = src
 		R.layer = 20
@@ -3739,14 +3697,9 @@
 		W.loc = R
 		R.part1 = W
 		W.layer = initial(W.layer)
-		if (client)
-			client.screenOrBackupRemove(W)
-			client.screen -= W
-		if (istype(user, /mob/drone))
-			if (user.equipped() == W)
-				user.u_equip(W)
-				user:grip(R)
-		else if (user.r_hand == W)
+		if (user.client)
+			user.client.screen -= W
+		if (user.r_hand == W)
 			user.u_equip(W)
 			user.r_hand = R
 		else
@@ -3756,9 +3709,8 @@
 		src.master = R
 		src.layer = initial(src.layer)
 		user.u_equip(src)
-		if (client)
-			client.screenOrBackupRemove(src)
-			client.screen -= src
+		if (user.client)
+			user.client.screen -= src
 		src.loc = R
 		R.part2 = src
 		R.layer = 20
@@ -3771,14 +3723,9 @@
 		W.loc = R
 		R.part1 = W
 		W.layer = initial(W.layer)
-		if (client)
-			client.screenOrBackupRemove(W)
-			client.screen -= W
-		if (istype(user, /mob/drone))
-			if (user.equipped() == W)
-				user.u_equip(W)
-				user:grip(R)
-		else if (user.r_hand == W)
+		if (user.client)
+			user.client.screen -= W
+		if (user.r_hand == W)
 			user.u_equip(W)
 			user.r_hand = R
 		else
@@ -3788,9 +3735,8 @@
 		src.master = R
 		src.layer = initial(src.layer)
 		user.u_equip(src)
-		if (client)
-			client.screenOrBackupRemove(src)
-			client.screen -= src
+		if (user.client)
+			user.client.screen -= src
 		src.loc = R
 		R.part2 = src
 		R.layer = 20
@@ -3831,7 +3777,7 @@
 		else
 			if (!( istype(T, /turf) ))
 				return
-		if (T.firelevel < config.min_gas_for_fire)
+		if (T.firelevel < 900000.0)
 			T.firelevel = T.poison
 	return
 
@@ -3852,7 +3798,7 @@
 	..()
 	if ((get_dist(src, usr) <= 1 || src.loc == usr))
 		if (src.e_pads)
-			usr.client_mob() << "\blue The electric pads are exposed!"
+			usr << "\blue The electric pads are exposed!"
 	return
 
 /obj/item/weapon/radio/electropack/attack_paw(mob/user)
@@ -3863,7 +3809,7 @@
 /obj/item/weapon/radio/electropack/attack_hand(mob/user)
 
 	if (src == user.back)
-		user.client_mob() << "\blue You need help taking this off!"
+		user << "\blue You need help taking this off!"
 		return
 	else
 		..()
@@ -3871,7 +3817,6 @@
 
 /obj/item/weapon/radio/electropack/attackby(obj/item/weapon/W, mob/user)
 
-	var/client/client = user.alwaysClient()
 	if (istype(W, /obj/item/weapon/screwdriver))
 		src.e_pads = !( src.e_pads )
 		if (src.e_pads)
@@ -3885,14 +3830,9 @@
 			W.loc = A
 			A.part1 = W
 			W.layer = initial(W.layer)
-			if (client)
-				client.screenOrBackupRemove(W)
-				client.screen -= W
-			if (istype(user, /mob/drone))
-				if (user.equipped() == W)
-					user.u_equip(W)
-					user:grip(A)
-			else if (user.r_hand == W)
+			if (user.client)
+				user.client.screen -= W
+			if (user.r_hand == W)
 				user.u_equip(W)
 				user.r_hand = A
 			else
@@ -3902,9 +3842,8 @@
 			src.master = A
 			src.layer = initial(src.layer)
 			user.u_equip(src)
-			if (client)
-				client.screenOrBackupRemove(src)
-				client.screen -= src
+			if (user.client)
+				user.client.screen -= src
 			src.loc = A
 			A.part2 = src
 			A.layer = 20
@@ -3916,7 +3855,7 @@
 	//..() //Was causing double frequency changes -shadowlord13
 	if (usr.stat || usr.restrained())
 		return
-	if (((istype(usr, /mob/human) && ((!( ticker ) || (ticker && ticker.mode != "monkey") || (istype(usr, /mob/drone)) && usr.contents.Find(src))) || (usr.contents.Find(src.master) || (get_dist(src, usr) <= 1 && istype(src.loc, /turf))))))
+	if (((istype(usr, /mob/human) && ((!( ticker ) || (ticker && ticker.mode != "monkey")) && usr.contents.Find(src))) || (usr.contents.Find(src.master) || (get_dist(src, usr) <= 1 && istype(src.loc, /turf)))))
 		usr.machine = src
 		if (href_list["freq"])
 			src.freq += text2num(href_list["freq"])
@@ -3951,7 +3890,7 @@
 						src.attack_self(M)
 					//Foreach goto(384)
 	else
-		usr.client_mob() << browse(null, "window=radio")
+		usr << browse(null, "window=radio")
 		return
 	return
 
@@ -3990,7 +3929,7 @@
 		return
 	user.machine = src
 	var/dat = text("<TT><A href='?src=\ref[];power=1'>[]</A><BR>\n<B>Frequency/Code</B> for electropack:<BR>\nFrequency: <A href='?src=\ref[];freq=-1'>-</A><A href='?src=\ref[];freq=-0.2'>-</A> [] <A href='?src=\ref[];freq=0.2'>+</A><A href='?src=\ref[];freq=1'>+</A><BR>\nCode: <A href='?src=\ref[];code=-5'>-</A><A href='?src=\ref[];code=-1'>-</A> [] <A href='?src=\ref[];code=1'>+</A><A href='?src=\ref[];code=5'>+</A><BR>\n</TT>", src, (src.on ? "Turn Off" : "Turn On"), src, src, src.freq, src, src, src, src, src.code, src, src)
-	user.client_mob() << browse(dat, "window=radio")
+	user << browse(dat, "window=radio")
 	return
 
 /obj/item/weapon/radio/proc/accept_rad(obj/item/weapon/radio/R, message)
@@ -4098,7 +4037,7 @@
 	else
 		t1 = "-------"
 	var/dat = text("<TT>Speaker: []<BR>\n<A href='?src=\ref[];send=1'>Send Signal</A><BR>\n<B>Frequency/Code</B> for signaler:<BR>\nFrequency: <A href='?src=\ref[];freq=-1'>-</A><A href='?src=\ref[];freq=-0.2'>-</A> [] <A href='?src=\ref[];freq=0.2'>+</A><A href='?src=\ref[];freq=1'>+</A><BR>\nCode: <A href='?src=\ref[];code=-5'>-</A><A href='?src=\ref[];code=-1'>-</A> [] <A href='?src=\ref[];code=1'>+</A><A href='?src=\ref[];code=5'>+</A><BR>\n[]</TT>", (src.listening ? text("<A href='?src=\ref[];listen=0'>Engaged</A>", src) : text("<A href='?src=\ref[];listen=1'>Disengaged</A>", src)), src, src, src, src.freq, src, src, src, src, src.code, src, src, t1)
-	user.client_mob() << browse(dat, "window=radio")
+	user << browse(dat, "window=radio")
 	return
 
 /obj/item/weapon/radio/signaler/hear_talk()
@@ -4229,7 +4168,7 @@
 						src.attack_self(M)
 					//Foreach goto(577)
 	else
-		usr.client_mob() << browse(null, "window=radio")
+		usr << browse(null, "window=radio")
 		return
 	return
 
@@ -4276,7 +4215,7 @@
 	else
 		t1 = "-------"
 	var/dat = text("<TT>Microphone: []<BR>\nSpeaker: []<BR>\nFrequency: <A href='?src=\ref[];freq=-1'>-</A><A href='?src=\ref[];freq=-0.2'>-</A> [] <A href='?src=\ref[];freq=0.2'>+</A><A href='?src=\ref[];freq=1'>+</A><BR>\n[]</TT>", (src.broadcasting ? text("<A href='?src=\ref[];talk=0'>Engaged</A>", src) : text("<A href='?src=\ref[];talk=1'>Disengaged</A>", src)), (src.listening ? text("<A href='?src=\ref[];listen=0'>Engaged</A>", src) : text("<A href='?src=\ref[];listen=1'>Disengaged</A>", src)), src, src, src.freq, src, src, t1)
-	user.client_mob() << browse(dat, "window=radio")
+	user << browse(dat, "window=radio")
 	return
 
 /obj/item/weapon/radio/Topic(href, href_list)
@@ -4331,7 +4270,7 @@
 				src.updateDialog()
 		src.add_fingerprint(usr)
 	else
-		usr.client_mob() << browse(null, "window=radio")
+		usr << browse(null, "window=radio")
 		return
 	return
 
@@ -4537,10 +4476,9 @@
 
 	if (!( istype(M, /mob) ))
 		return
-	if ((!( istype(user, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
-		if (!istype(user, /mob/drone))
-			user.client_mob() << "\red You don't have the dexterity to do this!"
-			return
+	if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
+		user << "\red You don't have the dexterity to do this!"
+		return
 	if (user)
 		if (istype(M, /mob/human) || istype(M, /mob/monkey))
 			for(var/mob/O in viewers(M, null))
@@ -4551,7 +4489,7 @@
 			user.show_message(text("\red You drop [] units into []'s eyes. The dropper contains [] millimeters.", amount, M, src.chem.volume()))
 			src.add_fingerprint(user)
 		else
-			user.client_mob() << "\red You can't eyedrop [M]!"
+			user << "\red You can't eyedrop [M]!"
 	return
 
 /obj/item/weapon/implantcase/proc/update()
@@ -4664,7 +4602,7 @@
 			dat += "The implant casing is empty."
 	else
 		dat += "Please insert an implant casing!"
-	user.client_mob() << browse(dat, "window=implantpad")
+	user << browse(dat, "window=implantpad")
 	return
 
 /obj/item/weapon/implantpad/Topic(href, href_list)
@@ -4696,7 +4634,7 @@
 				//Foreach goto(290)
 		src.add_fingerprint(usr)
 	else
-		usr.client_mob() << browse(null, "window=implantpad")
+		usr << browse(null, "window=implantpad")
 		return
 	return
 
@@ -4815,10 +4753,9 @@
 
 	if (!( istype(M, /mob) ))
 		return
-	if ((!( istype(user, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
-		if (!istype(user, /mob/drone))
-			user.client_mob() << "\red You don't have the dexterity to do this!"
-			return
+	if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
+		user << "\red You don't have the dexterity to do this!"
+		return
 	if (user)
 		if (istype(M, /mob/human))
 			var/obj/equip_e/human/O = new /obj/equip_e/human(  )
@@ -4867,10 +4804,9 @@
 
 	if (M.health < 0)
 		return
-	if ((!( istype(user, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
-		if (!istype(user, /mob/drone))
-			user.client_mob() << "\red You don't have the dexterity to do this!"
-			return
+	if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
+		user << "\red You don't have the dexterity to do this!"
+		return
 	if (user)
 		for(var/mob/O in viewers(M, null))
 			O.show_message(text("\red [] has been applied with [] by []", M, src, user), 1)
@@ -4897,14 +4833,14 @@
 		M.health = 100 - M.oxyloss - M.toxloss - M.fireloss - M.bruteloss
 		src.amount--
 	else
-		usr.client_mob() << text("\red The [] only works on humans.", src)
+		user << text("\red The [] only works on humans.", src)
 	return
 
 /obj/item/weapon/brutepack/examine()
 	set src in view(1)
 
 	..()
-	usr.client_mob() << text("\blue there are [] bruise pack\s left on the stack!", src.amount)
+	usr << text("\blue there are [] bruise pack\s left on the stack!", src.amount)
 	if (src.amount <= 0)
 		//SN src = null
 		del(src)
@@ -4971,13 +4907,12 @@
 
 	if (M.health < 0)
 		return
-	if ((!( istype(user, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
-		if (!istype(user, /mob/drone))
-			user.client_mob() << "\red You don't have the dexterity to do this!"
-			return
+	if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
+		user << "\red You don't have the dexterity to do this!"
+		return
 	if (user)
 		for(var/mob/O in viewers(M, null))
-			if ((O.hasClient() && !( O.blinded )))
+			if ((O.client && !( O.blinded )))
 				O.show_message(text("\red [] has been applied with [] by []", M, src, user), 1)
 			//Foreach goto(89)
 	if (istype(M, /mob/human))
@@ -5005,13 +4940,13 @@
 			del(src)
 			return
 	else
-		user.client_mob() << text("The [] only works on humans.", src)
+		user << text("The [] only works on humans.", src)
 	return
 
 /obj/item/weapon/ointment/examine()
 	set src in view(1)
 
-	usr.client_mob() << text("\blue there are [] ointment pack\s left on the stack!", src.amount)
+	usr << text("\blue there are [] ointment pack\s left on the stack!", src.amount)
 	return
 
 /obj/item/weapon/ointment/attackby(obj/item/weapon/ointment/W, mob/user)
@@ -5033,7 +4968,7 @@
 /obj/item/weapon/bottle/examine()
 	set src in usr
 
-	usr.client_mob() << text("\blue The bottle \icon[] contains [] millimeters of chemicals", src, round(src.chem.volume(), 0.1))
+	usr << text("\blue The bottle \icon[] contains [] millimeters of chemicals", src, round(src.chem.volume(), 0.1))
 	return
 
 /obj/item/weapon/bottle/New()
@@ -5172,7 +5107,7 @@
 /obj/item/weapon/weldingtool/examine()
 	set src in usr
 
-	usr.client_mob() << text("\icon[] [] contains [] units of fuel left!", src, src.name, src.weldfuel)
+	usr << text("\icon[] [] contains [] units of fuel left!", src, src.name, src.weldfuel)
 	return
 
 /obj/item/weapon/weldingtool/afterattack(obj/O, mob/user)
@@ -5180,7 +5115,7 @@
 	if (src.welding)
 		src.weldfuel--
 		if (src.weldfuel <= 0)
-			usr.client_mob() << "\blue Need more fuel!"
+			usr << "\blue Need more fuel!"
 			src.welding = 0
 			src.force = 3
 			src.damtype = "brute"
@@ -5196,15 +5131,15 @@
 	src.welding = !( src.welding )
 	if (src.welding)
 		if (src.weldfuel <= 0)
-			user.client_mob() << "\blue Need more fuel!"
+			user << "\blue Need more fuel!"
 			src.welding = 0
 			return 0
-		user.client_mob() << "\blue You will now weld when you attack."
+		user << "\blue You will now weld when you attack."
 		src.force = 15
 		src.damtype = "fire"
 		src.icon_state = "welder1"
 	else
-		user.client_mob() << "\blue Not welding anymore."
+		user << "\blue Not welding anymore."
 		src.force = 3
 		src.damtype = "brute"
 		src.icon_state = "welder"
@@ -5268,12 +5203,12 @@
 	src.amount = round(src.amount)
 	if (src.amount <= 0)
 		src.amount = 0
-		usr.client_mob() << "There are no bed sheets in the bin."
+		usr << "There are no bed sheets in the bin."
 	else
 		if (src.amount == 1)
-			usr.client_mob() << "There is one bed sheet in the bin."
+			usr << "There is one bed sheet in the bin."
 		else
-			usr.client_mob() << text("There are [] bed sheets in the bin.", src.amount)
+			usr << text("There are [] bed sheets in the bin.", src.amount)
 	return
 
 /obj/table/ex_act(severity)
@@ -5328,8 +5263,6 @@
 
 	if ((!( istype(O, /obj/item/weapon) ) || user.equipped() != O))
 		return
-	if (!user.can_drop())
-		return
 	user.drop_item()
 	if (O.loc != src.loc)
 		step(O, get_dir(O, src))
@@ -5343,8 +5276,6 @@
 		//SN src = null
 		del(src)
 		return
-		return
-	if (!user.can_drop())
 		return
 	user.drop_item()
 	if (W.loc != src.loc)
@@ -5388,8 +5319,6 @@
 
 	if ((!( istype(O, /obj/item/weapon) ) || user.equipped() != O))
 		return
-	if (!user.can_drop())
-		return
 	user.drop_item()
 	if (O.loc != src.loc)
 		step(O, get_dir(O, src))
@@ -5404,8 +5333,6 @@
 		del(src)
 		return
 		return
-	if (!user.can_drop())
-		return
 	user.drop_item()
 	if (W.loc != src.loc)
 		step(W, get_dir(W, src))
@@ -5419,16 +5346,19 @@
 	return
 
 /obj/weldfueltank/attackby(obj/item/weapon/weldingtool/W, mob/user)
-	if (!istype(W, /obj/item/weapon/weldingtool))
+
+	if (!( istype(W, /obj/item/weapon/weldingtool) ))
 		return
 	W.weldfuel = 20
 	W.suffix = text("[][]", (W == src ? "equipped " : ""), W.weldfuel)
-	user.client_mob() << "\blue Welder refueled"
+	user << "\blue Welder refueled"
 	return
 
 /obj/weldfueltank/ex_act(severity)
+
 	switch(severity)
 		if(1.0)
+			//SN src = null
 			del(src)
 			return
 		if(2.0)
@@ -5442,6 +5372,7 @@
 				var/turf/T = src.loc
 				T.poison += 1600000
 				T.oxygen += 1600000
+				//SN src = null
 				del(src)
 				return
 		else
@@ -5455,25 +5386,30 @@
 		del(src)
 
 /obj/watertank/attackby(obj/item/weapon/extinguisher/W, mob/user)
-	if (!istype(W, /obj/item/weapon/extinguisher))
+
+	if (!( istype(W, /obj/item/weapon/extinguisher) ))
 		return
 	W.waterleft = 20
 	W.suffix = text("[][]", (user.equipped() == src ? "equipped " : ""), W.waterleft)
-	user.client_mob() << "\blue Extinguisher refueled"
+	user << "\blue Extinguisher refueled"
 	return
 
 /obj/watertank/ex_act(severity)
+
 	switch(severity)
 		if(1.0)
+			//SN src = null
 			del(src)
 			return
 		if(2.0)
 			if (prob(50))
+				//SN src = null
 				new /obj/effects/water(src.loc)
 				del(src)
 				return
 		if(3.0)
 			if (prob(5))
+				//SN src = null
 				new /obj/effects/water(src.loc)
 				del(src)
 				return
@@ -5483,49 +5419,81 @@
 /obj/watertank/blob_act()
 	if(prob(25))
 		new /obj/effects/water(src.loc)
+
 		del(src)
 
 /obj/d_girders/attackby(obj/item/weapon/W, mob/user)
+
 	if (istype(W, /obj/item/weapon/sheet/metal))
 		if (W:amount < 1)
+			//W = null
 			del(W)
 			return
-		new /obj/machinery/door/false_wall(src.loc)
+		new /obj/machinery/door/false_wall( src.loc )
 		W:amount--
 		if (W:amount < 1)
+			//W = null
 			del(W)
-		user.client_mob() << "\blue Keep in mind when you open it that it MAY be difficult to slide at first so keep trying."
+		user << "\blue Keep in mind when you open it that it MAY be difficult to sldie at first so keep trying."
+		//SN src = null
 		del(src)
-	else if (istype(W, /obj/item/weapon/screwdriver))
-		new /obj/item/weapon/sheet/metal(src.loc)
-		del(src)
+		return
+	else
+		if (istype(W, /obj/item/weapon/screwdriver))
+			new /obj/item/weapon/sheet/metal( src.loc )
+			//SN src = null
+			del(src)
+			return
+	return
 
 /obj/barrier/New()
+
 	var/t = 1800
 	if (ctf)
 		t = round(ctf.barriertime * 600)
-	spawn(t) del(src)
+	spawn( t )
+		//SN src = null
+		del(src)
+		return
+		return
+	return
 
 /obj/portal/Bumped(atom/movable/M)
-	spawn(0) src.teleport(M)
+
+	spawn( 0 )
+		src.teleport(M)
+		return
+	return
 
 /obj/portal/HasEntered(atom/movable/AM)
-	spawn(0) src.teleport(AM)
+
+	spawn( 0 )
+		src.teleport(AM)
+		return
+	return
 
 /obj/portal/New()
-	spawn(300) del(src)
+
+	spawn( 300 )
+		//SN src = null
+		del(src)
+		return
+		return
+	return
 
 /obj/portal/proc/teleport(atom/movable/M)
+
 	if (M.anchored)
 		return
 	if (src.icon_state == "portal1")
 		return
 	if (!( src.target ))
+		//SN src = null
 		del(src)
 		return
 	var/obj/effects/sparks/O = new /obj/effects/sparks( src.target )
 	O.dir = pick(1, 2, 4, 8)
-	spawn(0)
+	spawn( 0 )
 		O.Life()
 		return
 	if (istype(M, /atom/movable))
@@ -5538,41 +5506,55 @@
 			else
 				M.ex_act(1)
 		if (rand(1, 1000) <= 10)
-			if (istype(M, /mob))
-				M:client_mob() << ("\red You see a fainting blue light.")
+			M << "\red You see a fainting blue light."
 			M.loc = null
 		else
 			M.loc = locate(tx, ty, src.target.z)
+	return
 
 /obj/effects/water/New()
+
 	..()
 	var/turf/T = src.loc
 	if (istype(T, /turf))
 		T.firelevel = 0
-	spawn(70) del(src)
+	spawn( 70 )
+		//SN src = null
+		del(src)
+		return
+
+	return
 
 /obj/effects/water/Del()
+
 	var/turf/T = src.loc
 	if (istype(T, /turf))
 		T.firelevel = 0
 	..()
+	return
 
 /obj/effects/water/Move(turf/newloc)
+
 	var/turf/T = src.loc
 	if (istype(T, /turf))
 		T.firelevel = 0
 	if (--src.life < 1)
+		//SN src = null
 		del(src)
 	if(newloc.density)
 		return 0
+
+
 	.=..()
 
 /mob/attackby(obj/item/weapon/W, mob/user)
+
 	var/shielded = 0
 	for(var/obj/item/weapon/shield/S in src)
 		if (S.active)
 			shielded = 1
 		else
+			//Foreach continue //goto(22)
 	if (locate(/obj/item/weapon/grab, src))
 		var/mob/safe = null
 		if (istype(src.l_hand, /obj/item/weapon/grab))
@@ -5586,12 +5568,17 @@
 		if (safe)
 			return safe.attackby(W, user)
 	if ((!( shielded ) || !( W.flags ) & 32))
-		spawn(0) W.attack(src, user)
+		spawn( 0 )
+			W.attack(src, user)
+			return
+	return
 
 /atom/proc/MouseDrop_T()
+
 	return
 
 /atom/proc/attack_hand(mob/user)
+
 	return
 
 /atom/proc/attack_paw(mob/user)
@@ -5616,14 +5603,14 @@
 
 	if (istype(W, /obj/item/weapon/f_print_scanner))
 		for(var/mob/O in viewers(src, null))
-			if (!( O.blinded ))
-				O.client_mob() << text("\red [] has been scanned by [] with the []", src, user, W)
+			if ((O.client && !( O.blinded )))
+				O << text("\red [] has been scanned by [] with the []", src, user, W)
 			//Foreach goto(31)
 	else
 		if (!( istype(W, /obj/item/weapon/grab) ))
 			for(var/mob/O in viewers(src, null))
-				if (!( O.blinded ))
-					O.client_mob() << text("\red <B>[] has been hit by [] with []</B>", src, user, W)
+				if ((O.client && !( O.blinded )))
+					O << text("\red <B>[] has been hit by [] with []</B>", src, user, W)
 				//Foreach goto(102)
 	return
 
@@ -5655,94 +5642,88 @@
 	..()
 	return
 
-/atom/Click()
-	if (!usr.disable_one_click)
-		return DblClick()
+/*
+	Proc name: canReach
+	Purpose: To indicate whether something - a turf, a mob, an object, whatever - can be reached from the user's location.
+	Parameters:
+		user - the mob who will be doing the attempted touching
+		usingWeapon - the weapon the mob is using to reach src. This is important if they're actually trying to *shoot* someone.
+		ignoreNextMoveTime - Normally this would be 0, and if world.time wasn't < next_time, the proc would return 0. If it was < next_time, prev_time and next_time would be changed (next_time being set to world.time + 10).
+			If, instead, ignoreNextMoveTime is 1, next_time, world.time, and prev_time will not be examined or changed.
+	
+	Return value:
+		This returns 0 if, for some reason, the user can't reach src. If not, the return value is a set of 3 bitflags:
+		1: CANREACH_USINGWEAPON: If set, user is using a "weapon" (passed in as usingWeapon) on src. (This is - in this version - completely useless to check, since it will always be set if you passed something other than null in usingWeapon.)
+		2: CANREACH_CANTOUCH: If set, src can be touched by user (which was called t5 in DblClick). This is set if (get_dist(src, user) <= 1 || src.loc == user), or if the user is the AI, or if the user is a drone controlled by an AI using the AI interface tool.
+		4: CANREACH_ALLOWED: If set, src is reachable by user, or the attempt is allowed for another reason. This is always set if the return value is valid. This differs from cantouch because this will be set if the user is using a gun on someone distant, whereas cantouch will not be set in that case. It's also theoretically possible to have a return value which contains only 4 for some /obj/screen objects, if the code in /atom/DblClick wasn't just overly paranoid.
+		
+		Valid combinations of those are: 0, 4, 5, 6, or 7. (You won't ever have 1 or 2 set if 4 isn't set)
+	
+	Detail on what's checked:
+		The user has to be able to move unless they are an AI, and their stat has to be 0 (alive and awake).
+		If the src is not in user's inventory, we MIGHT return 0:
+			If src is not a turf, and it is not on a turf, and it is inside something else which is not in a turf:
+				We return 0, it cannot be reached.
+			If not, if the user is inside some item instead of on a turf, and src is not in the same place as the user, and src is not a screen object, and src is not inside an item in user's inventory:
+				We return 0, it cannot be reached.
+			(Otherwise we continue)
+		And some other difficult to explain stuff is done here.
+	
+		Either CANREACH_CANTOUCH will be true, or the user must be using a weapon which has flag 16 set, or src is an /obj/screen.
+		Checks to determine if there are obstacles in the way (windows, etc) are done unless src is an /obj/screen.
+*/
 
-/atom/DblClick()
-	if (world.time <= usr:lastDblClick+2)
-		return
-	else
-		usr:lastDblClick = world.time
+#define CANREACH_USINGWEAPON 1
+#define CANREACH_CANTOUCH 2
+#define CANREACH_ALLOWED 4
 
-	..()
-	// I changed everything in this function from using usr to user before I found out that you can actually change the value of usr.
-	var/mob/user = usr
-	if (user.currentDrone!=null)
-		user = user.currentDrone
-		usr = user
+/* Note: CANREACH_USINGWEAPON and CANREACH_CANTOUCH are not referenced in canReach because those are set by just a something&1 and a (something&1)<<1 */
 
-	var/obj/item/weapon/W = user.equipped()
-	if (user.stat == 0)
-		if (istype(user, /mob/drone))
-			//check to see if it's one of our tools or the boxes they're in
-			var/obj/item/weapon/tool = user:checkIsOurTool(src)
-			if (tool!=null)
-				if (tool==W)
-					user.client_mob() << "user clicked their active tool."
-					spawn(0)
-						W.attack_self(user)
-						user:updateToolIcon(W)
-					return
-				else
-					user.client_mob() << "user switched tools from [W] to [tool]"
-					user:selectTool(tool)
-					return
-			else
-				user.client_mob() << "That's not one of our tools"
-				user:pressIfDroneButton(src)
-		if (W == src)
-			user.client_mob() << "user clicked their active item."
-			spawn(0) W.attack_self(user)
-			return
-
+/atom/proc/canReach(mob/user, obj/item/weapon/usingWeapon, ignoreNextMoveTime)
 	if (((!user.canmove) && (!istype(user, /mob/ai))) || user.stat != 0)
-
-		return
+		return 0
+	/* This line broke my mental parser. --Stephen001 */
 	if ((!(src in user.contents) && (((!(isturf(src)) && (!(isturf(src.loc)) && (src.loc && !(isturf(src.loc.loc))))) || !(isturf(user.loc))) && (src.loc != user.loc && (!(istype(src, /obj/screen)) && !(user.contents.Find(src.loc)))))))
-		return
-	/* Breaks double-clicking on an equipment slot to place an item there, unfortunately. */
+		return 0
+	/* How's this? --shadowlord13 */
 	/*
-	// If the dclicked item is in our inventory
+	//If the dclicked item is not in our inventory
 	if (!(src in user.contents))
-		// If the item is not a turf, and it is not on a turf, and it is inside something else which is not in a turf
+		//If the item is not a turf, and it is not on a turf, and it is inside something else which is not in a turf
 		if (!(isturf(src)) && (!(isturf(src.loc)) && (src.loc && !(isturf(src.loc.loc)))))
 			return
-		// If not, if we are inside some item instead of on a turf, and the dclicked item is not in the same place as us, and the dclicked item is not a screen object,
-		// and the dclicked item is not inside an item in our inventory.
+		//If not, if we are inside some item instead of on a turf, and the dclicked item is not in the same place as us, and the dclicked item is not a screen object, and the dclicked item is not inside an item in our inventory.
 		else if	((!(isturf(user.loc))) && (src.loc != user.loc && (!(istype(src, /obj/screen)) && !(user.contents.Find(src.loc)))))
 			return
 	*/
 
-	/* That's checking to see if it's being held/worn or something like that, methinks. */
+
+	/* Surely src.loc == user is redundant? --Stephen001 */
+	/* That's checking to see if it's being held/worn or something like that, methinks --shadowlord13 */
 	var/t5 = (get_dist(src, user) <= 1 || src.loc == user)
 	if (istype(user, /mob/ai))
 		t5 = 1
-	else if (istype(user, /mob/drone))
-		if (user:selectedTool == user:aiInterface)
-			if (istype(user:controlledBy, /mob/ai))
-				t5 = 1
-				user = user:controlledBy
-				W = null
-
+	
 	if ((istype(src, /obj/item/weapon/organ) && src in user.contents))
 		var/mob/human/H = user
-		user.client_mob() << "Betchya think you're really smart trying to remove your own body parts aren't ya!"
 		if (istype(user, /mob/human))
 			if (!(src == H.l_store || src == H.r_store))
-				return
+				return 0
 		else
-			return
-	/* Suggested fix for Bug #1952091. */
+			return 0
+	/* Suggested fix by shadowlord13 for Bug #1952091. --Stephen001 */
 	var/turf/turfLoc = (istype(src, /turf) ? src : src.loc)
 	
-	/* flag 16 in this case apparently disables the distance check and the alternate 'is in contents' check in the var/t5 line.	It's used on guns, for instance. */
-	if (((t5 || (W && (W.flags & 16))) && !(istype(src, /obj/screen))))
-		if (user.next_move < world.time)
-			user.prev_move = user.next_move
-			user.next_move = world.time + 10
-		else
-			return
+	/* Seems like a pretty important expression. Dare I fathom what it checks? --Stephen001 */
+	/* flag 16 in this case apparently disables the distance check and the alternate 'is in contents' check in the var/t5 line.
+		It's used on guns, for instance. --shadowlord13 */
+	if (((t5 || (usingWeapon && (usingWeapon.flags & 16))) && !(istype(src, /obj/screen))))
+		if (ignoreNextMoveTime!=0)
+			if (user.next_move < world.time)
+				user.prev_move = user.next_move
+				user.next_move = world.time + 10
+			else
+				return 0
 		if ((turfLoc && (get_dist(src, user) < 2 || turfLoc == user.loc)))
 			var/direct = get_dir(user, src)
 			var/obj/item/weapon/dummy/D = new /obj/item/weapon/dummy(user.loc)
@@ -5820,72 +5801,108 @@
 			del(D)
 			if (!(ok))
 				return 0
-		if (!user.restrained())
-			if (W)
-				if (t5)
-					src.attackby(W, user)
-				if (W)
-					W.afterattack(src, user, (t5 ? 1 : 0))
-			else
-				if (istype(user, /mob/human) || istype(user, /mob/drone))
-					src.attack_hand(user, user.hand)
-				else
-					if (istype(user, /mob/monkey))
-						src.attack_paw(user, user.hand)
-					else
-						if (istype(user, /mob/ai))
-							src.attack_ai(user, user.hand)
-		else
-			if (istype(user, /mob/human))
-				src.hand_h(user, user.hand)
-			else
-				if (istype(user, /mob/monkey))
-					src.hand_p(user, user.hand)
-				else
-					if (istype(user, /mob/ai))
-						src.hand_a(user, user.hand)
-
+		//user << "Debug message: usingWeapon [usingWeapon] t5 [t5] src [src] user [user]"
+		
+		return (((t5!=0)&1)<<1) | ((usingWeapon!=0)&1) | CANREACH_ALLOWED
 	else
 		if (istype(src, /obj/screen))
-			user.prev_move = user.next_move
-			if (user.next_move < world.time)
-				user.next_move = world.time + 10
-			else
-				return
-			if (!( user.restrained() ))
-				if ((W && !( istype(src, /obj/screen) )))
-					src.attackby(W, user)
+			if (ignoreNextMoveTime!=0)
+				if (user.next_move < world.time)
+					user.prev_move = user.next_move
+					user.next_move = world.time + 10
+				else
+					return 0
+			return (((t5!=0)&1)<<1) | ((usingWeapon!=0)&1) | CANREACH_ALLOWED
+	return 0
+
+/atom/Click()
+	//world << "atom.Click() on [src] by [usr] : src.type is [src.type]"
+	if (!usr.disable_one_click)
+		return DblClick()
+
+/atom/DblClick()
+	if (world.time <= usr:lastDblClick+2)
+		//world << "BLOCKED atom.DblClick() on [src] by [usr] : src.type is [src.type]"
+		return
+	else
+		//world << "atom.DblClick() on [src] by [usr] : src.type is [src.type]"
+		usr:lastDblClick = world.time
+
+	..()
+	var/obj/item/weapon/W = usr.equipped()
+	if ((W == src && usr.stat == 0))
+		spawn(0) W.attack_self(usr)
+		return
+	var/retval = src.canReach(usr, W, 0)
+	
+	if (retval==0)
+		return
+
+	if (retval & CANREACH_ALLOWED)
+		if (!(istype(src, /obj/screen)))
+			if (!usr.restrained())
+				if (W)
+					if (retval & CANREACH_CANTOUCH)
+						src.attackby(W, usr)
 					if (W)
-						W.afterattack(src, user)
+						W.afterattack(src, usr, ((retval & CANREACH_CANTOUCH) ? 1 : 0))
 				else
-					if (istype(user, /mob/human))
-						src.attack_hand(user, user.hand)
+					if (istype(usr, /mob/human))
+						src.attack_hand(usr, usr.hand)
 					else
-						if (istype(user, /mob/monkey))
-							src.attack_paw(user, user.hand)
+						if (istype(usr, /mob/monkey))
+							src.attack_paw(usr, usr.hand)
+						else
+							if (istype(usr, /mob/ai))
+								src.attack_ai(usr, usr.hand)
 			else
-				if (istype(user, /mob/human))
-					src.hand_h(user, user.hand)
+				if (istype(usr, /mob/human))
+					src.hand_h(usr, usr.hand)
 				else
-					if (istype(user, /mob/monkey))
-						src.hand_p(user, user.hand)
+					if (istype(usr, /mob/monkey))
+						src.hand_p(usr, usr.hand)
+					else
+						if (istype(usr, /mob/ai))
+							src.hand_a(usr, usr.hand)
+	
+		else
+			if (!( usr.restrained() ))
+				if ((W && !( istype(src, /obj/screen) )))
+					src.attackby(W, usr)
+
+					if (W)
+						W.afterattack(src, usr)
+				else
+					if (istype(usr, /mob/human))
+						src.attack_hand(usr, usr.hand)
+					else
+						if (istype(usr, /mob/monkey))
+							src.attack_paw(usr, usr.hand)
+			else
+				if (istype(usr, /mob/human))
+					src.hand_h(usr, usr.hand)
+				else
+					if (istype(usr, /mob/monkey))
+						src.hand_p(usr, usr.hand)
 	return
 
 
-/obj/proc/updateDialog()
+/obj/proc/updateUsrDialog()
 	var/list/nearby = viewers(1, src)
-	var/skipAI = 0
 	for(var/mob/M in nearby)
 		if ((M.client && M.machine == src))
 			src.attack_hand(M)
-		else if (istype(M, /mob/drone) && M.machine==src)
-			if (M:controlledBy!=null)
-				if ((!istype(M:controlledBy, /mob/ai)) || (!istype(M:equipped(), /obj/item/weapon/drone/aiInterface)))
-					src.attack_hand(M)
-					if (istype(M:controlledBy, /mob/ai))
-						skipAI = 1
-	if (!skipAI)
-		AutoUpdateAI(src, 0)
+	if (istype(usr, /mob/ai))
+		if (!(usr in nearby))
+			if (usr.client && usr.machine==src) // && M.machine == src is omitted because if we triggered this by using the dialog, it doesn't matter if our machine changed in between triggering it and this - the dialog is probably still supposed to refresh.
+				src.attack_ai(usr)
+
+/obj/proc/updateDialog()
+	var/list/nearby = viewers(1, src)
+	for(var/mob/M in nearby)
+		if ((M.client && M.machine == src))
+			src.attack_hand(M)
+	AutoUpdateAI(src, 0)
 
 //Used for air tanks only at the moment, maybe other things later
 /obj/proc/updateEquippedDialog()
@@ -5893,4 +5910,10 @@
 	for(var/mob/M in nearby)
 		if ((M.client && M.machine == src))
 			src:attack_self(M)
-	AutoUpdateAI(src, 1)
+
+//Used for infra_sensor, etc
+/obj/proc/updateSelfDialog(atom/origin)
+	var/list/nearby = viewers(1, origin)
+	for(var/mob/M in nearby)
+		if (M.client)
+			src:attack_self(M)

@@ -186,15 +186,10 @@
 	return
 
 /turf/space/updatecell()
-	if (config.air_pressure_flow)
-		if ((src.linkN && src.linkN.firelevel && src.linkN.firelevel > 0) || (src.linkS && src.linkS.firelevel && src.linkS.firelevel > 0) || (src.linkE && src.linkE.firelevel && src.linkE.firelevel > 0) || (src.linkW && src.linkW.firelevel && src.linkW.firelevel > 0))
-			..()
+
 	return
 
 /turf/space/conduction()
-	if (config.air_pressure_flow)
-		if ((src.linkN && src.linkN.firelevel && src.linkN.firelevel > 0) || (src.linkS && src.linkS.firelevel && src.linkS.firelevel > 0) || (src.linkE && src.linkE.firelevel && src.linkE.firelevel > 0) || (src.linkW && src.linkW.firelevel && src.linkW.firelevel > 0))
-			..()
 	return
 
 /turf/space/Entered(atom/movable/A as mob|obj)
@@ -247,7 +242,7 @@
 			t1 = round(t1)
 			if (t1 < 5)
 				if (prob(t1))
-					M.client_mob() << "\blue <B>You slipped!</B>"
+					M << "\blue <B>You slipped!</B>"
 				else
 					spawn( 5 )
 						if (src == A.loc)
@@ -282,7 +277,7 @@
 		return
 	
 	if( ticker.mode == "blob" )
-		user.client_mob() << "Under directive 7-10, SS13 is quarantined until further notice."
+		user << "Under directive 7-10, SS13 is quarantined until further notice."
 		return
 
 	world << "\blue <B>Alert: The emergency shuttle has been called. It will arrive in T-10:00 minutes.</B>"

@@ -40,7 +40,9 @@
 			return
 		use_power(250)
 
-		src.updateDialog()
+		for(var/mob/M in viewers(1, src))
+			if ((M.client && M.machine == src))
+				src.attack_hand(M)
 
 
 	// Attackby object - pass through to interact
@@ -83,7 +85,7 @@
 				dat = "<B>Engine Ejection Module</B><HR>\nStatus: Ejecting<BR>\n<BR>\nCountdown: [engine_eject_control.timeleft]/60 \[Reset\]<BR>\n<BR>\n<A href='?src=\ref[src];stop=1'>Stop Ejection</A><BR>\n<BR>\n<A href='?src=\ref[user];mach_close=computer'>Close</A>"
 			else
 				dat = "<B>Engine Ejection Module</B><HR>\nStatus: Ejected<BR>\n<BR>\nCountdown: N/60 \[Reset\]<BR>\n<BR>\nEngine Ejected!<BR>\n<BR>\n<A href='?src=\ref[user];mach_close=computer'>Close</A>"
-		user.client_mob() << browse(dat, "window=computer;size=400x500")
+		user << browse(dat, "window=computer;size=400x500")
 
 
 	// Handle topic links from interaction window
@@ -92,9 +94,8 @@
 		..()
 		if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
 			if (!istype(usr, /mob/ai))
-				if (!istype(usr, /mob/drone))
-					usr.client_mob() << "\red You don't have the dexterity to do this!"
-					return
+				usr << "\red You don't have the dexterity to do this!"
+				return
 		if ((usr.stat || usr.restrained()))
 			if (!istype(usr, /mob/ai))
 				return
@@ -113,7 +114,7 @@
 							engine_eject_control.ejectstart()
 							src.temp = null
 					else
-						usr.client_mob() << "\red Access Denied."
+						usr << "\red Access Denied."
 			else if (href_list["stop"])
 				if (engine_eject_control.status > 0)
 					src.temp = text("Stop Ejection?<BR><BR><A href='?src=\ref[];stop2=1'>Yes</A><BR><A href='?src=\ref[];temp=1'>No</A>", src, src)

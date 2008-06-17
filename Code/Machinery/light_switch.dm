@@ -54,7 +54,7 @@ obj/machinery/light_switch
 	examine()
 		set src in oview(1)
 		if(usr && !usr.stat)
-			usr.client_mob() << "A light switch. It is [on? "on" : "off"]."
+			usr << "A light switch. It is [on? "on" : "off"]."
 
 
 	// Monkey interact same as human

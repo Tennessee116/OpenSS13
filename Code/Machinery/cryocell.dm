@@ -172,15 +172,14 @@ obj/machinery/cryo_cell
 		if (usr.stat != 0 || stat & NOPOWER)
 			return
 		if (src.occupant)
-			usr.client_mob() << "\blue <B>The cell is already occupied!</B>"
+			usr << "\blue <B>The cell is already occupied!</B>"
 			return
 		if (usr.abiotic())
-			usr.client_mob() << "Subject may not have abiotic items on."
+			usr << "Subject may not have abiotic items on."
 			return
 		usr.pulling = null
-		if (usr.client)
-			usr.client.perspective = EYE_PERSPECTIVE
-			usr.client.eye = src
+		usr.client.perspective = EYE_PERSPECTIVE
+		usr.client.eye = src
 		usr.loc = src
 		src.occupant = usr
 		src.icon_state = "celltop_1"
@@ -201,10 +200,10 @@ obj/machinery/cryo_cell
 		if ((!( istype(G, /obj/item/weapon/grab) ) || !( ismob(G.affecting) )))
 			return
 		if (src.occupant)
-			user.client_mob() << "\blue <B>The cell is already occupied!</B>"
+			user << "\blue <B>The cell is already occupied!</B>"
 			return
 		if (G.affecting.abiotic())
-			user.client_mob() << "Subject may not have abiotic items on."
+			user << "Subject may not have abiotic items on."
 			return
 		var/mob/M = G.affecting
 		if (M.client)
@@ -267,7 +266,7 @@ obj/machinery/cryo_cell
 				dat += text("[]\t-Toxin Content %: []</FONT><BR>", (src.occupant.toxloss < 60 ? "<font color='blue'>" : "<font color='red'>"), src.occupant.toxloss)
 				dat += text("[]\t-Burn Severity %: []</FONT>", (src.occupant.fireloss < 60 ? "<font color='blue'>" : "<font color='red'>"), src.occupant.fireloss)
 			dat += text("<BR><BR><A href='?src=\ref[];mach_close=cryo'>Close</A>", user)
-			user.client_mob() << browse(dat, "window=cryo;size=400x500")
+			user << browse(dat, "window=cryo;size=400x500")
 		else
 			var/dat = text("<font color='blue'> <B>[]</B></FONT><BR>", stars("System Statistics:"))
 			if (src.gas.temperature > T0C)
@@ -298,16 +297,15 @@ obj/machinery/cryo_cell
 				dat += text("[]\t[]</FONT><BR>", (src.occupant.toxloss < 60 ? "<font color='blue'>" : "<font color='red'>"), stars(text("-Toxin Content %: []", src.occupant.toxloss)))
 				dat += text("[]\t[]</FONT>", (src.occupant.fireloss < 60 ? "<font color='blue'>" : "<font color='red'>"), stars(text("-Burn Severity %: []", src.occupant.fireloss)))
 			dat += text("<BR><BR><A href='?src=\ref[];mach_close=cryo'>Close</A>", user)
-			user.client_mob() << browse(dat, "window=cryo;size=400x500")
+			user << browse(dat, "window=cryo;size=400x500")
 
 	//This is for the emergency drain feature, for draining the cryo cell back into the freezer -shadowlord13
 	Topic(href, href_list)
 		..()
 		if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
 			if (!istype(usr, /mob/ai))
-				if (!istype(usr, /mob/drone))
-					usr.client_mob() << "\red You don't have the dexterity to do this!"
-					return
+				usr << "\red You don't have the dexterity to do this!"
+				return
 		if ((usr.stat || usr.restrained()))
 			return
 		if ((usr.contents.Find(src) || (get_dist(src, usr) <= 1 && istype(src.loc, /turf))) || (istype(usr, /mob/ai)))
@@ -345,7 +343,7 @@ obj/machinery/cryo_cell
 					leak_to_turf()
 			src.add_fingerprint(usr)
 		else
-			usr.client_mob() << "User too far?"
+			usr << "User too far?"
 		return
 		
 	// Called to remove the occupant of a cell

@@ -46,15 +46,14 @@ obj/machinery/sleeper
 		if (usr.stat != 0)
 			return
 		if (src.occupant)
-			usr.client_mob() << "\blue <B>The sleeper is already occupied!</B>"
+			usr << "\blue <B>The sleeper is already occupied!</B>"
 			return
 		if (usr.abiotic())
-			usr.client_mob() << "Subject may not have abiotic items on."
+			usr << "Subject may not have abiotic items on."
 			return
 		usr.pulling = null
-		if (usr.client)
-			usr.client.perspective = EYE_PERSPECTIVE
-			usr.client.eye = src
+		usr.client.perspective = EYE_PERSPECTIVE
+		usr.client.eye = src
 		usr.loc = src
 		src.occupant = usr
 		src.icon_state = "sleeper_1"
@@ -72,10 +71,10 @@ obj/machinery/sleeper
 		if ((!( istype(G, /obj/item/weapon/grab) ) || !( ismob(G.affecting) )))
 			return
 		if (src.occupant)
-			user.client_mob() << "\blue <B>The sleeper is already occupied!</B>"
+			user << "\blue <B>The sleeper is already occupied!</B>"
 			return
 		if (G.affecting.abiotic())
-			user.client_mob() << "Subject may not have abiotic items on."
+			user << "Subject may not have abiotic items on."
 			return
 		var/mob/M = G.affecting
 		if (M.client)
@@ -117,9 +116,9 @@ obj/machinery/sleeper
 		if (src.occupant)
 			if (src.occupant.rejuv < 60)
 				src.occupant.rejuv = 60
-			user.client_mob() << text("Occupant now has [] units of rejuvenation in his/her bloodstream.", src.occupant.rejuv)
+			user << text("Occupant now has [] units of rejuvenation in his/her bloodstream.", src.occupant.rejuv)
 		else
-			user.client_mob() << "No occupant!"
+			user << "No occupant!"
 
 
 	// Shows the health statistics of the occupant
@@ -127,7 +126,7 @@ obj/machinery/sleeper
 
 	proc/check(mob/user)
 		if (src.occupant)
-			user.client_mob() << "\blue <B>Occupant ([src.occupant]) Statistics:</B>"
+			user << "\blue <B>Occupant ([src.occupant]) Statistics:</B>"
 			var/t1
 			switch(src.occupant.stat)
 				if(0.0)
@@ -137,14 +136,14 @@ obj/machinery/sleeper
 				if(2.0)
 					t1 = "*dead*"
 				else
-			user.client_mob() << "[(src.occupant.health > 50 ? "\blue " : "\red ")]\t Health %: [src.occupant.health] ([t1])"
-			user.client_mob() << "[(src.occupant.oxyloss < 60 ? "\blue " : "\red ")]\t -Respiratory Damage %: [src.occupant.oxyloss]"
-			user.client_mob() << "[(src.occupant.toxloss < 60 ? "\blue " : "\red ")]\t -Toxin Content %: [src.occupant.toxloss]"
-			user.client_mob() << "[(src.occupant.fireloss < 60 ? "\blue " : "\red ")]\t -Burn Severity %: [src.occupant.fireloss]"
-			user.client_mob() << "\blue Expected time till occupant can safely awake: (note: If health is below 20% these times are inaccurate)"
-			user.client_mob() << "\blue \t [src.occupant.paralysis / 5] second\s (if around 1 or 2 the sleeper is keeping them asleep.)"
+			user << "[(src.occupant.health > 50 ? "\blue " : "\red ")]\t Health %: [src.occupant.health] ([t1])"
+			user << "[(src.occupant.oxyloss < 60 ? "\blue " : "\red ")]\t -Respiratory Damage %: [src.occupant.oxyloss]"
+			user << "[(src.occupant.toxloss < 60 ? "\blue " : "\red ")]\t -Toxin Content %: [src.occupant.toxloss]"
+			user << "[(src.occupant.fireloss < 60 ? "\blue " : "\red ")]\t -Burn Severity %: [src.occupant.fireloss]"
+			user << "\blue Expected time till occupant can safely awake: (note: If health is below 20% these times are inaccurate)"
+			user << "\blue \t [src.occupant.paralysis / 5] second\s (if around 1 or 2 the sleeper is keeping them asleep.)"
 		else
-			user.client_mob() << "\blue There is no one inside!"
+			user << "\blue There is no one inside!"
 		return
 
 
@@ -273,7 +272,7 @@ obj/machinery/computer/sleep_console
 			else
 				dat += "The sleeper is empty."
 			dat += "<BR><BR><A href='?src=\ref[user];mach_close=sleeper'>Close</A>"
-			user.client_mob() << browse(dat, "window=sleeper;size=400x500")
+			user << browse(dat, "window=sleeper;size=400x500")
 
 
 	// Handle topic links from interaction window

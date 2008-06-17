@@ -59,7 +59,7 @@ obj/machinery/computer/atmosphere
 			if(stat & NOPOWER)	return
 			if (usr.stat)
 				return
-			usr.client_mob() << "Starting all siphon systems."
+			usr << "Starting all siphon systems."
 			for(var/obj/machinery/atmoalter/siphs/S in src.returnarea())
 				S.reset(1, 0)
 			src.add_fingerprint(usr)
@@ -72,7 +72,7 @@ obj/machinery/computer/atmosphere
 			if(stat & NOPOWER)	return
 			if (usr.stat)
 				return
-			usr.client_mob() << "Stopping all siphon systems."
+			usr << "Stopping all siphon systems."
 			for(var/obj/machinery/atmoalter/siphs/S in src.returnarea())
 				S.reset(0, 0)
 			src.add_fingerprint(usr)
@@ -85,7 +85,7 @@ obj/machinery/computer/atmosphere
 			if(stat & NOPOWER)	return
 			if (usr.stat)
 				return
-			usr.client_mob() << "Starting automatic air control systems."
+			usr << "Starting automatic air control systems."
 			for(var/obj/machinery/atmoalter/siphs/S in src.returnarea())
 				S.reset(0, 1)
 			src.add_fingerprint(usr)
@@ -99,7 +99,7 @@ obj/machinery/computer/atmosphere
 			if(stat & NOPOWER)	return
 			if (usr.stat)
 				return
-			usr.client_mob() << "Releasing all scrubber toxins."
+			usr << "Releasing all scrubber toxins."
 			for(var/obj/machinery/atmoalter/siphs/scrubbers/S in src.returnarea())
 				S.reset(-1.0, 0)
 			src.add_fingerprint(usr)
@@ -112,7 +112,7 @@ obj/machinery/computer/atmosphere
 			if(stat & NOPOWER)	return
 			if (usr.stat)
 				return
-			usr.client_mob() << "Releasing all stored air."
+			usr << "Releasing all stored air."
 			for(var/obj/machinery/atmoalter/siphs/S in src.returnarea())
 				S.reset(-1.0, 0)
 			src.add_fingerprint(usr)

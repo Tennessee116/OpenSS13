@@ -52,17 +52,14 @@ obj/machinery/meter
 	// If the meter is clicked on, report the flow rate and temperature of the gas
 
 	Click()
-		var/mob/user = usr
-		if (user.currentDrone!=null)
-			user = user.currentDrone
-		
-		if (get_dist(user, src) <= 3)
+
+		if (get_dist(usr, src) <= 3)
 			if (src.target)
-				user.client_mob() << text("\blue <B>Results:\nMass flow []%\nTemperature [] K</B>", round(100*abs(average)/6e6, 0.1), round(target.pl.gas.temperature,0.1))
+				usr << text("\blue <B>Results:\nMass flow []%\nTemperature [] K</B>", round(100*abs(average)/6e6, 0.1), round(target.pl.gas.temperature,0.1))
 			else
-				user.client_mob() << "\blue <B>Results: Connection Error!</B>"
+				usr << "\blue <B>Results: Connection Error!</B>"
 		else
-			user.client_mob() << "\blue <B>You are too far away.</B>"
+			usr << "\blue <B>You are too far away.</B>"
 		return
 
 // Disabled routines
@@ -86,6 +83,6 @@ obj/machinery/meter
 	else
 		t += "It is not functioning."
 
-	usr.client_mob() << t
+	usr << t
 
 */
