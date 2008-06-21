@@ -155,8 +155,11 @@ obj/machinery/cryo_cell
 
 	verb/move_eject()
 		set src in oview(1)
-
 		if (usr.stat != 0)
+			return
+		var/result = src.canReach(usr, null, 1)
+		if (result==0)
+			usr << "You can't reach [src]."
 			return
 		src.go_out()
 		add_fingerprint(usr)
@@ -168,8 +171,11 @@ obj/machinery/cryo_cell
 
 	verb/move_inside()
 		set src in oview(1)
-
 		if (usr.stat != 0 || stat & NOPOWER)
+			return
+		var/result = src.canReach(usr, null, 1)
+		if (result==0)
+			usr << "You can't reach [src]."
 			return
 		if (src.occupant)
 			usr << "\blue <B>The cell is already occupied!</B>"
@@ -196,8 +202,11 @@ obj/machinery/cryo_cell
 	attackby(obj/item/weapon/grab/G, mob/user)
 
 		if (stat & NOPOWER) return
-
 		if ((!( istype(G, /obj/item/weapon/grab) ) || !( ismob(G.affecting) )))
+			return
+		var/result = src.canReach(user, null, 1)
+		if (result==0)
+			user << "You can't reach [src]."
 			return
 		if (src.occupant)
 			user << "\blue <B>The cell is already occupied!</B>"
