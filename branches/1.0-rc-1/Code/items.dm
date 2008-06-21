@@ -5718,7 +5718,7 @@
 	/* flag 16 in this case apparently disables the distance check and the alternate 'is in contents' check in the var/t5 line.
 		It's used on guns, for instance. --shadowlord13 */
 	if (((t5 || (usingWeapon && (usingWeapon.flags & 16))) && !(istype(src, /obj/screen))))
-		if (ignoreNextMoveTime!=0)
+		if (ignoreNextMoveTime==0)
 			if (user.next_move < world.time)
 				user.prev_move = user.next_move
 				user.next_move = world.time + 10
@@ -5806,7 +5806,7 @@
 		return (((t5!=0)&1)<<1) | ((usingWeapon!=0)&1) | CANREACH_ALLOWED
 	else
 		if (istype(src, /obj/screen))
-			if (ignoreNextMoveTime!=0)
+			if (ignoreNextMoveTime==0)
 				if (user.next_move < world.time)
 					user.prev_move = user.next_move
 					user.next_move = world.time + 10
@@ -5838,53 +5838,28 @@
 	if (retval==0)
 		return
 
-	if (retval & CANREACH_ALLOWED)
-		if (!(istype(src, /obj/screen)))
-			if (!usr.restrained())
-				if (W)
-					if (retval & CANREACH_CANTOUCH)
-						src.attackby(W, usr)
-					if (W)
-						W.afterattack(src, usr, ((retval & CANREACH_CANTOUCH) ? 1 : 0))
-				else
-					if (istype(usr, /mob/human))
-						src.attack_hand(usr, usr.hand)
-					else
-						if (istype(usr, /mob/monkey))
-							src.attack_paw(usr, usr.hand)
-						else
-							if (istype(usr, /mob/ai))
-								src.attack_ai(usr, usr.hand)
-			else
-				if (istype(usr, /mob/human))
-					src.hand_h(usr, usr.hand)
-				else
-					if (istype(usr, /mob/monkey))
-						src.hand_p(usr, usr.hand)
-					else
-						if (istype(usr, /mob/ai))
-							src.hand_a(usr, usr.hand)
+	if (!(retval & CANREACH_USINGWEAPON))
+		W = null
 	
-		else
-			if (!( usr.restrained() ))
-				if ((W && !( istype(src, /obj/screen) )))
-					src.attackby(W, usr)
-
-					if (W)
-						W.afterattack(src, usr)
-				else
-					if (istype(usr, /mob/human))
-						src.attack_hand(usr, usr.hand)
-					else
-						if (istype(usr, /mob/monkey))
-							src.attack_paw(usr, usr.hand)
+	if (retval & CANREACH_ALLOWED)
+		if (!( user.restrained() ))
+			if ((W && !( istype(src, /obj/screen) )))
+				src.attackby(W, user)
+				if (W)
+					W.afterattack(src, user)
 			else
-				if (istype(usr, /mob/human))
-					src.hand_h(usr, usr.hand)
+				if (istype(user, /mob/human))
+					src.attack_hand(user, user.hand)
 				else
-					if (istype(usr, /mob/monkey))
-						src.hand_p(usr, usr.hand)
-	return
+					if (istype(user, /mob/monkey))
+						src.attack_paw(user, user.hand)
+		else
+			if (istype(user, /mob/human))
+				src.hand_h(user, user.hand)
+			else
+				if (istype(user, /mob/monkey))
+					src.hand_p(user, user.hand)
+			
 
 
 /obj/proc/updateUsrDialog()
