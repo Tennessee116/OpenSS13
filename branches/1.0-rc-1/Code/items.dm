@@ -5650,15 +5650,15 @@
 		usingWeapon - the weapon the mob is using to reach src. This is important if they're actually trying to *shoot* someone.
 		ignoreNextMoveTime - Normally this would be 0, and if world.time wasn't < next_time, the proc would return 0. If it was < next_time, prev_time and next_time would be changed (next_time being set to world.time + 10).
 			If, instead, ignoreNextMoveTime is 1, next_time, world.time, and prev_time will not be examined or changed.
-	
+
 	Return value:
 		This returns 0 if, for some reason, the user can't reach src. If not, the return value is a set of 3 bitflags:
 		1: CANREACH_USINGWEAPON: If set, user is using a "weapon" (passed in as usingWeapon) on src. (This is - in this version - completely useless to check, since it will always be set if you passed something other than null in usingWeapon.)
 		2: CANREACH_CANTOUCH: If set, src can be touched by user (which was called t5 in DblClick). This is set if (get_dist(src, user) <= 1 || src.loc == user), or if the user is the AI, or if the user is a drone controlled by an AI using the AI interface tool.
 		4: CANREACH_ALLOWED: If set, src is reachable by user, or the attempt is allowed for another reason. This is always set if the return value is valid. This differs from cantouch because this will be set if the user is using a gun on someone distant, whereas cantouch will not be set in that case. It's also theoretically possible to have a return value which contains only 4 for some /obj/screen objects, if the code in /atom/DblClick wasn't just overly paranoid.
-		
+
 		Valid combinations of those are: 0, 4, 5, 6, or 7. (You won't ever have 1 or 2 set if 4 isn't set)
-	
+
 	Detail on what's checked:
 		The user has to be able to move unless they are an AI, and their stat has to be 0 (alive and awake).
 		If the src is not in user's inventory, we MIGHT return 0:
@@ -5668,7 +5668,7 @@
 				We return 0, it cannot be reached.
 			(Otherwise we continue)
 		And some other difficult to explain stuff is done here.
-	
+
 		Either CANREACH_CANTOUCH will be true, or the user must be using a weapon which has flag 16 set, or src is an /obj/screen.
 		Checks to determine if there are obstacles in the way (windows, etc) are done unless src is an /obj/screen.
 */
@@ -5703,7 +5703,7 @@
 	var/t5 = (get_dist(src, user) <= 1 || src.loc == user)
 	if (istype(user, /mob/ai))
 		t5 = 1
-	
+
 	if ((istype(src, /obj/item/weapon/organ) && src in user.contents))
 		var/mob/human/H = user
 		if (istype(user, /mob/human))
@@ -5713,7 +5713,7 @@
 			return 0
 	/* Suggested fix by shadowlord13 for Bug #1952091. --Stephen001 */
 	var/turf/turfLoc = (istype(src, /turf) ? src : src.loc)
-	
+
 	/* Seems like a pretty important expression. Dare I fathom what it checks? --Stephen001 */
 	/* flag 16 in this case apparently disables the distance check and the alternate 'is in contents' check in the var/t5 line.
 		It's used on guns, for instance. --shadowlord13 */
@@ -5802,7 +5802,7 @@
 			if (!(ok))
 				return 0
 		//user << "Debug message: usingWeapon [usingWeapon] t5 [t5] src [src] user [user]"
-		
+
 		return (((t5!=0)&1)<<1) | ((usingWeapon!=0)&1) | CANREACH_ALLOWED
 	else
 		if (istype(src, /obj/screen))
@@ -5834,32 +5834,32 @@
 		spawn(0) W.attack_self(usr)
 		return
 	var/retval = src.canReach(usr, W, 0)
-	
+
 	if (retval==0)
 		return
 
 	if (!(retval & CANREACH_USINGWEAPON))
 		W = null
-	
+
 	if (retval & CANREACH_ALLOWED)
-		if (!( user.restrained() ))
+		if (!( usr.restrained() ))
 			if ((W && !( istype(src, /obj/screen) )))
-				src.attackby(W, user)
+				src.attackby(W, usr)
 				if (W)
-					W.afterattack(src, user)
+					W.afterattack(src, usr)
 			else
-				if (istype(user, /mob/human))
-					src.attack_hand(user, user.hand)
+				if (istype(usr, /mob/human))
+					src.attack_hand(usr, usr.hand)
 				else
-					if (istype(user, /mob/monkey))
-						src.attack_paw(user, user.hand)
+					if (istype(usr, /mob/monkey))
+						src.attack_paw(usr, usr.hand)
 		else
-			if (istype(user, /mob/human))
-				src.hand_h(user, user.hand)
+			if (istype(usr, /mob/human))
+				src.hand_h(usr, usr.hand)
 			else
-				if (istype(user, /mob/monkey))
-					src.hand_p(user, user.hand)
-			
+				if (istype(usr, /mob/monkey))
+					src.hand_p(usr, usr.hand)
+
 
 
 /obj/proc/updateUsrDialog()
