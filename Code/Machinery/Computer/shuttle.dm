@@ -16,15 +16,11 @@ obj/machinery/computer/shuttle
 		access = "2000"						// ID card access level needed to authorize
 
 
-	// Restabilize verb
+	// Restabalize verb
 	// Set all shuttle locations to standard atmosphere
 
-	verb/restabilize()
+	verb/restabalize()
 		set src in oview(1)
-		var/result = src.canReach(usr, null, 1)
-		if (result==0)
-			usr.client_mob() << "You can't reach [src]."
-			return
 
 		world << "\red <B>Restabilizing shuttle atmosphere!</B>"
 		var/A = locate(/area/shuttle)
@@ -59,10 +55,6 @@ obj/machinery/computer/shuttle
 
 	verb/hijack()
 		set src in oview(1)
-		var/result = src.canReach(usr, null, 1)
-		if (result==0)
-			usr.client_mob() << "You can't reach [src]."
-			return
 
 		if ((!( ticker ) || ticker.shuttle_location != shuttle_z))
 			return
@@ -83,7 +75,7 @@ obj/machinery/computer/shuttle
 		if ((!( istype(W, /obj/item/weapon/card/id) ) || !( ticker ) || ticker.shuttle_location == shuttle_z || !( user )))
 			return
 		if (!W.check_access(access, allowed))
-			user.client_mob() << text("The access level ([]) of [] card is not high enough. ", W.access_level, W.registered)
+			user << text("The access level ([]) of [] card is not high enough. ", W.access_level, W.registered)
 			return
 		var/choice = alert(user, text("Would you like to (un)authorize a shortened launch time? [] authorization\s are still needed. Use abort to cancel all authorizations.", src.auth_need - src.authorized.len), "Shuttle Launch", "Authorize", "Repeal", "Abort")
 		switch(choice)

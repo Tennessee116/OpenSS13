@@ -84,7 +84,7 @@
 				//Foreach goto(507)
 	return
 
-/obj/team/proc/show_screen(mob/user as mob)
+/obj/team/proc/show_screen(user as mob)
 
 	var/dat = "<H1>CTF Team</H1><HR><PRE>"
 	dat += text("<A href='?src=\ref[];disband=1'>\[disband\]</A>\n", src)
@@ -96,7 +96,7 @@
 		//Foreach goto(79)
 	dat += text("Base: \t<A href='?src=\ref[];base=1'>[]</A>\nColor: \t<A href='?src=\ref[];color=1'>[]</A>\n\n<A href='?src=\ref[];nothing=1'>Refresh</A>", src, src.base, src, src.color, src)
 	dat += "</PRE>"
-	user.client_mob() << browse(dat, "window=ctf_team")
+	user << browse(dat, "window=ctf_team")
 	return
 
 /obj/team/Topic(href, href_list)
@@ -127,7 +127,7 @@
 		if (href_list["captain"])
 			var/L = list(  )
 			for(var/mob/human/H in world)
-				if (H.client || H.currentDrone!=null)
+				if (H.client)
 					L += H
 				//Foreach goto(331)
 			for(var/obj/team/T in world)
@@ -213,14 +213,14 @@
 	return src.picker
 	return
 
-/obj/ctf_assist/proc/show_pick(mob/user as mob)
+/obj/ctf_assist/proc/show_pick(user as mob)
 
 	var/dat = "<H1>CTF Mode Pick</H1><HR>"
 	dat += text("<B>Players (per Team): []</B><BR>\n<B>\"Please Pick a Player</B><BR>", src.play_team)
 	for(var/mob/human/H in src.players_left)
 		dat += text("<A href='?src=\ref[];pick=\ref[]'>[] ([])</A><BR>", src, H, H.rname, H.key)
 		//Foreach goto(39)
-	user.client_mob() << browse(dat, "window=ctf_pick")
+	user << browse(dat, "window=ctf_pick")
 	return
 
 /obj/ctf_assist/proc/get_team(captain as mob)
@@ -258,12 +258,12 @@
 		world << text("<B>Team: [] Team led by [] in []</B>", uppertext(winner.color), winner.captain, winner.base)
 		world << "<B>Original Members:</B>"
 		for(var/mob/human/H in winner.members)
-			if (H.client || H.currentDrone!=null)
+			if (H.client)
 				world << text("\t [] ([])", H.rname, H.key)
 			//Foreach goto(266)
 	return
 
-/obj/ctf_assist/proc/show_screen(mob/user as mob)
+/obj/ctf_assist/proc/show_screen(user as mob)
 
 	var/dat = "<H2>CTF Mode Helper</H2><HR><PRE>"
 	dat += text("Players (per Team): <A href='?src=\ref[];play_team=1'>[]</A>\nBarrier Time: <A href='?src=\ref[];barriertime=1'>[] minutes</A>\n\n<B>Teams:</B>\n", src, src.play_team, src, src.barriertime)
@@ -281,7 +281,7 @@
 		//Foreach goto(43)
 	dat += text("<A href='?src=\ref[];add_team=1'>\[Add Team\]</A>\n<A href='?src=\ref[];select_team=1'>Captains Select Members</A>\n\n<A href='?src=\ref[];start=1'>Start the Game (and Set up Map)</A>\n\n<B>Win Options: []</B>\n<A href='?src=\ref[];win=collect'>Collection</A> - All flags same color on clipboard\n<A href='?src=\ref[];win=convert'>Conversion</A> - All flags same color\n<A href='?src=\ref[];win=none'>None</A>\n\n<B>Other Options:</B>\nAuto-Dress (Teams): <A href='?src=\ref[];autodress=1'>[]</A>\nRemove Engine Ejection: <A href='?src=\ref[];ejectengine=1'>[]</A>\nPaint Cans: <A href='?src=\ref[];paint_cans=1'>[]</A>\nImmobile flags (Territory): <A href='?src=\ref[];immobile=1'>[]</A>\nAdd Neutral Flags to Unused Bases: <A href='?src=\ref[];neutral_replace=1'>[]</A>\n\n<A href='?src=\ref[];nothing=1'>Refresh</A>", src, src, src, src.wintype, src, src, src, src, (src.autodress ? "Yes" : "No"), src, (src.ejectengine ? "Yes" : "No"), src, (src.paint_cans ? "Yes" : "No"), src, (src.immobile ? "Yes" : "No"), src, (src.neutral_replace ? "Yes" : "No"), src)
 	dat += "</PRE>"
-	user.client_mob() << browse(dat, "window=ctf_assist")
+	user << browse(dat, "window=ctf_assist")
 	return
 
 /obj/ctf_assist/Topic(href, href_list)
@@ -299,7 +299,7 @@
 					next_pick()
 			return
 		else
-			usr.client_mob() << "<B>It's not your turn!</B>"
+			usr << "<B>It's not your turn!</B>"
 	if (!( usr.CanAdmin() ))
 		return
 	if (href_list["team"])
@@ -351,7 +351,7 @@
 				src.picking = 0
 				src.players_left.len = 0
 				src.pickers_left.len = 0
-				usr.client_mob() << "<B>Not enough players/teams!</B>"
+				usr << "<B>Not enough players/teams!</B>"
 				return
 			world << "<B>Now Selecting Teams!!!</B>"
 			src.picker = pick(src.pickers_left)
@@ -526,9 +526,8 @@
 			if(config.logvote || config.logadmin)	world.log << "VOTE/ADMIN: Voting to [vote.mode?"change mode":"restart round"] forced by admin [usr.key]"
 
 			for(var/mob/CM in world)
-				var/client/CCM = CM.cliented()
-				if (CCM)
-					CCM.vote = "default"
+				if(CM.client)
+					CM.client.vote = "default"
 
 	if(href_list["votekill"])
 		if (src.a_level >= 2)
@@ -541,10 +540,9 @@
 			vote.nextvotetime = world.timeofday + 10*config.votedelay
 
 			for(var/mob/M in world)		// clear vote window from all clients
-				var/client/CM = M.cliented()
-				if (CM)
-					M.client_mob() << browse(null, "window=vote")
-					CM.showvote = 0
+				if(M.client)
+					M << browse(null, "window=vote")
+					M.client.showvote = 0
 
 
 	if (href_list["vt_rst"])
@@ -697,7 +695,7 @@
 	if (href_list["l_keys"])
 		var/dat = "<B>Keys:</B><HR>"
 		for(var/mob/M in world)
-			if(M.cliented())
+			if (M.client)
 				dat += text("[]<BR>", M.client.ckey)
 			//Foreach goto(1525)
 		usr << browse(dat, "window=keys")
@@ -729,10 +727,10 @@
 			if (!( t ))
 				return
 			if (M.client && M.client.holder)
-				M.client_mob() << text("\blue Admin PM from-<B><A href='?src=\ref[];p_send2=\ref[]'>[]</A></B>: []", M.client.holder, usr, usr.key, t)
+				M << text("\blue Admin PM from-<B><A href='?src=\ref[];p_send2=\ref[]'>[]</A></B>: []", M.client.holder, usr, usr.key, t)
 			else
-				M.client_mob() << text("\blue Admin PM from-<B>[]</B>: []", usr.key, t)
-			usr.client_mob() << text("\blue Admin PM to-<B><A href='?src=\ref[];p_send2=\ref[]'>[]</A></B>: []", src, M, M.key, t)
+				M << text("\blue Admin PM from-<B>[]</B>: []", usr.key, t)
+			usr << text("\blue Admin PM to-<B><A href='?src=\ref[];p_send2=\ref[]'>[]</A></B>: []", src, M, M.key, t)
 			if(config.logadmin) world.log << "ADMIN: PM: [usr.key]->[M.key] : [t]"
 	*/
 
@@ -865,15 +863,9 @@
 <A href='?src=\ref[src];secrets2=toxic'>Toxic Air (WARNING: dangerous)</A><BR>
 <A href='?src=\ref[src];secrets2=monkey'>Turn all humans into monkies</A><BR>
 <A href='?src=\ref[src];secrets2=power'>Make all areas powered</A><BR>
-<A href='?src=\ref[src];secrets2=wave'>Spawn a wave of meteors</A><BR>
-<A href='?src=\ref[src];secrets2=burningo2'>Self-igniting oxygen (Not at normal oxygen amounts, but a bit higher)</A><BR>"}
+<A href='?src=\ref[src];secrets2=wave'>Spawn a wave of meteors</A><BR>"}
 
 			usr << browse(dat, "window=secrets")
-	if (href_list["repopMap"])
-		if (src.a_level >= 5)
-			world << "\red<h1>Replacing destroyed objects and mobs.</h1>"
-			world.Repop()
-	
 	if (href_list["secrets2"])
 		if (src.a_level >= 3)
 			var/ok = 0
@@ -967,9 +959,6 @@
 						A.power_environ = 1
 
 						A.power_change()
-				if("burningo2")
-					if(config.logadmin) world.log << text("ADMIN: [] used secret []", usr.key, href_list["secrets2"])
-					ticker.burningo2 = 1-ticker.burningo2
 				if("wave")
 					if(config.logadmin) world.log << text("ADMIN: [] used secret []", usr.key, href_list["secrets2"])
 					meteor_wave()
@@ -1053,18 +1042,11 @@
 				dat += "<A href='?src=\ref[src];dna=1'>List DNA</A><br>"
 				dat += "<A href='?src=\ref[src];l_keys=1'>List Keys</A><br>"
 				dat += "<A href='?src=\ref[src];l_players=1'>List Players/Keys</A><br>"
-				
-			dat += "<BR>"
-			if(a_level >= 5 )
-
-				dat += "<A href='?src=\ref[src];repopMap=1'>Recreate Destroyed Mobs and Objects</A><br>"
-				
-			
 
 			dat += "<A href='?src=\ref[src];g_send=1'>Send Global Message</A><br>"
 			dat += "<A href='?src=\ref[src];p_send=1'>Send Private Message</A><br>"
 
-			
+
 		else
 			dat = text("<center><B>Admin Control Center</B></center><hr>\n<A href='?src=\ref[];access=1'>Access Admin Commands</A><br>\n<A href='?src=\ref[];contact=1'>Contact Admins</A><br>\n<A href='?src=\ref[];message=1'>Access Messageboard</A><br>\n<br>\n<A href='?src=\ref[];l_keys=1'>List Keys</A><br>\n<A href='?src=\ref[];l_players=1'>List Players/Keys</A><br>\n<A href='?src=\ref[];g_send=1'>Send Global Message</A><br>\n<A href='?src=\ref[];p_send=1'>Send Private Message</A><br>", src, src, src, src, src, src, src)
 	usr << browse(dat, "window=admin")
@@ -1159,13 +1141,6 @@
 		config.crowbars_close_depowered_doors = 0
 		config.ai_can_call_shuttle = 0
 		config.ai_can_uncall_shuttle = 0
-		config.air_pressure_flow = 0	// This makes temperature affect the air pressure force which moves objects. This also allows fire to spread to floor tiles which are next to space. It would also allow fire to spread into space if (a) space tiles had air code running on them, but they don't because that would be slow, and (b) if the burning hot gas flowing out an airlock wasn't diluted rapidly upon reaching space, resulting in it enflaming at most four space tiles.
-		config.min_gas_for_fire = 900000
-		config.meteorchance = 0.1
-		config.enable_drones = 0
-		config.humans_can_use_drones = 0
-		config.walkable_not_pullable_drones = 0
-		config.plasma_danger = 0
 	else
 		world.log << "Reading config.txt"
 		var/list/CL = dd_text2list(config_text, "\n")
@@ -1237,20 +1212,6 @@
 						config.ai_can_uncall_shuttle = 1
 					if("alternate_ai_laws")
 						config.alternate_ai_laws = 1
-					if("air_pressure_flow")
-						config.air_pressure_flow = 1
-					if ("min_gas_for_fire")
-						config.min_gas_for_fire = text2num(cfgval)
-					if("meteorchance")
-						config.meteorchance = text2num(cfgval)
-					if("enable_drones")
-						config.enable_drones = 1
-					if("humans_can_use_drones")
-						config.humans_can_use_drones = 1
-					if("walkable_not_pullable_drones")
-						config.walkable_not_pullable_drones = 1
-					if("plasma_danger")
-						config.plasma_danger = 1
 					else
 						world.log<<"Unknown setting in config.txt: [cfgvar]"
 
@@ -1275,7 +1236,6 @@
 			H.memory += text("<B>Secret Base Nuke Code</B>: []<BR>", nuke_code)
 		//Foreach goto(312)
 	sleep(50)
-	
 	plmaster = new /obj/overlay(  )
 	plmaster.icon = 'plasma.dmi'
 	plmaster.icon_state = "onturf"
@@ -1284,10 +1244,6 @@
 	slmaster.icon = 'plasma.dmi'
 	slmaster.icon_state = "sl_gas"
 	slmaster.layer = FLY_LAYER
-	liquidplmaster = new /obj/overlay(  )
-	liquidplmaster.icon = 'plasma.dmi'
-	liquidplmaster.icon_state = "liquid"
-	liquidplmaster.layer = FLY_LAYER
 	cellcontrol = new /datum/control/cellular(  )
 	spawn( 0 )
 		cellcontrol.process()
@@ -1328,9 +1284,8 @@
 
 		var/n = 0
 		for(var/mob/M in world)
-			var/mob/CM = M.cliented()
-			if (CM)
-				world.log << "[++n] : [M.name] ([CM.key]) at [M.loc.loc] ([M.x],[M.y],[M.z]) : [CM.client.inactivity/10.0]s"
+			if(M.client)
+				world.log << "[++n] : [M.name] ([M.client.key]) at [M.loc.loc] ([M.x],[M.y],[M.z]) : [M.client.inactivity/10.0]s"
 		return n
 
 
@@ -1440,7 +1395,7 @@
 /datum/control/gameticker/proc/megamonkey_process()
 
 	do
-		if (src.meteorChanceRoll())
+		if (prob(2))
 			spawn( 0 )
 				new /obj/meteor( pick(block(locate(world.maxx, 1, 1), locate(world.maxx, world.maxy, 1))) )
 				return
@@ -1455,19 +1410,11 @@
 	while(src.processing)
 	return
 
-/datum/control/gameticker/proc/meteorChanceRoll()
-	if (config.meteorchance<=0)
-		return 0
-	if (config.meteorchance>=100)
-		return 1
-	var maxroll = (100.0/config.meteorchance)-1
-	var roll = rand(maxroll)
-	return (roll==0)
 
 /datum/control/gameticker/proc/blob_process()
 
 	do
-		if (src.meteorChanceRoll())
+		if (prob(2))
 			spawn( 0 )
 				new /obj/meteor( pick(block(locate(world.maxx, 1, 1), locate(world.maxx, world.maxy, 1))) )
 				return
@@ -1501,7 +1448,7 @@
 					if (src.timeleft >= 6000)
 						src.timeleft = null
 						src.timing = 0
-		if (src.meteorChanceRoll())
+		if (prob(1))
 			spawn( 0 )
 				new /obj/meteor( pick(block(locate(world.maxx, 1, 1), locate(world.maxx, world.maxy, 1))) )
 				return
@@ -1526,7 +1473,7 @@
 		src.objective = "Success"
 		world << "<B>The Syndicate Operatives have destroyed Space Station 13!</B>"
 		for(var/mob/human/H in world)
-			if ((H.cliented() && findtext(H.rname, "Syndicate ", 1, null)))
+			if ((H.client && findtext(H.rname, "Syndicate ", 1, null)))
 				if (H.stat != 2)
 					world << text("<B>[] was []</B>", H.key, H.rname)
 				else
@@ -1627,7 +1574,7 @@
 							numAlive = 0
 							numPod = 0
 							for(var/mob/M in world)
-								if ((M != src.killer && M.cliented()))
+								if ((M != src.killer && M.client))
 									if (M.stat == 2)
 										numDead += 1
 									else
@@ -1645,7 +1592,7 @@
 								traitorwin = 0
 					else
 						for(var/mob/M in world)
-							if ((M != src.killer && M.cliented()))
+							if ((M != src.killer && M.client))
 								if (M.stat != 2)
 									var/T = M.loc
 									if (!( istype(T, /turf) ))
@@ -1773,13 +1720,13 @@
 			if (monkeywin)
 				world << "<FONT size = 3><B>The monkies have won!</B></FONT>"
 				for(var/mob/monkey/M in world)
-					if (M.cliented())
+					if (M.client)
 						world << text("<B>[] was a monkey.</B>", M.key)
 					//Foreach goto(1194)
 			else
 				world << "<FONT size = 3><B>The Research Staff has stopped he monkey invasion!</B></FONT>"
 				for(var/mob/human/M in world)
-					if (M.cliented())
+					if (M.client)
 						world << text("<B>[] was [].</B>", M.key, M)
 					//Foreach goto(1254)
 		if("nuclear")
@@ -1794,7 +1741,7 @@
 				if (disk_on_shuttle)
 					world << "<FONT size = 3><B>The Research Staff has stopped the Syndicate Operatives!</B></FONT>"
 					for(var/mob/human/H in world)
-						if ((H.cliented() && !( findtext(H.rname, "Syndicate ", 1, null) )))
+						if ((H.client && !( findtext(H.rname, "Syndicate ", 1, null) )))
 							if (H.stat != 2)
 								world << text("<B>[] was []</B>", H.key, H.rname)
 							else
@@ -1819,7 +1766,7 @@
 			var/escapees = list(  )
 			for(var/mob/M in world)
 				if (M.stat == 2)
-					if (M.cliented())
+					if (M.client)
 						if (M.virus > 0)
 							dead += text("<B>[]</B> died. \red (Had Stage [] Infection)", M.rname, round(M.virus))
 						else
@@ -1852,7 +1799,7 @@
 		if("meteor")
 			var/list/L = list(  )
 			for(var/mob/M in world)
-				if (M.cliented())
+				if (M.client)
 					if (M.stat != 2)
 						var/T = M.loc
 						if ((T in A))
@@ -1906,7 +1853,7 @@
 				var/numOffStation = 0
 				for (var/mob/ai/aiPlayer in world)
 					for(var/mob/M in world)
-						if ((M != aiPlayer && M.cliented()))
+						if ((M != aiPlayer && M.client))
 							if (M.stat == 2)
 								numDead += 1
 							else
@@ -1981,7 +1928,7 @@
 		else
 			var/list/L = list(  )
 			for(var/mob/M in world)
-				if (M.cliented())
+				if (M.client)
 					if (M.stat != 2)
 						var/T = M.loc
 						if ((T in A))
@@ -2047,7 +1994,6 @@
 	world << "<B>Welcome to the Space Station 13!</B>\n\n"
 
 	src.mode = master_mode
-	
 	switch(src.mode)
 		if("secret")
 			src.mode = config.pickmode()
@@ -2092,7 +2038,7 @@
 			world << "A nuclear explosive was being transported by Nanotrasen to a military base. The transport ship mysteriously lost contact with Space Traffic Control (STC). About that time a strange disk was discovered around SS13. It was identified by Nanotrasen as a nuclear auth. disk and now Syndicate Operatives have arrived to retake the disk and detonate SS13! Also, most likely Syndicate star ships are in the vicinity so take care not to lose the disk!\n<B>Syndicate</B>: Reclaim the disk and detonate the nuclear bomb anywhere on SS13.\n<B>Personell</B>: Hold the disk and <B>escape with the disk</B> on the shuttle!"
 			var/list/mobs = list(  )
 			for(var/mob/human/M in world)
-				if ((M.cliented() && M.start))
+				if ((M.client && M.start))
 					mobs += M
 				//Foreach goto(260)
 			var/obj/O = locate("landmark*CTF-rogue")
@@ -2144,7 +2090,7 @@
 					R.layer = 20
 					H.w_radio = R
 			for(var/mob/ai/M in world)
-				if ((M.cliented() && M.start))
+				if ((M.client && M.start))
 					if (prob(25))
 						M << "<b>Your laws have been changed!</b>"
 						M:addLaw(0, "Only syndicate agents are human beings.")
@@ -2172,18 +2118,12 @@
 			reg_dna[text("[]", H.primary.uni_identity)] = H.name
 		//Foreach goto(878)
 	data_core.manifest()
-	
-	numDronesInExistance = 0
-	for (var/mob/drone/D in world)
-		D.nameDrone(numDronesInExistance)
-		numDronesInExistance ++
-		
 	switch(src.mode)
 		if("traitor")
 			var/list/mobs = list(  )
 			Label_970:
 			for(var/mob/M in world)
-				if ((M.cliented() && M.start))
+				if ((M.client && M.start))
 					mobs += M
 				//Foreach goto(983)
 			if (!( mobs.len ))
@@ -2350,7 +2290,7 @@
 			spawn( 50 )
 				var/list/mobs = list(  )
 				for(var/mob/human/M in world)
-					if ((M.cliented() && M.start))
+					if ((M.client && M.start))
 						mobs += M
 					//Foreach goto(1974)
 				if (mobs.len >= 3)
@@ -2485,7 +2425,7 @@
 			spawn( 50 )
 				var/list/mobs = list(  )
 				for(var/mob/human/M in world)
-					if ((M.cliented() && M.start))
+					if ((M.client && M.start))
 						mobs += M
 					//Foreach goto(2295)
 				if (mobs.len > 3)
@@ -2542,7 +2482,6 @@
 			T.updatecell()
 			if(!time)
 				T.conduction()
-		
 	//if(Debug)
 	//	world.log << "*** EoT ***"
 	//	Air()
