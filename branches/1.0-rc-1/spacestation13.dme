@@ -4,8 +4,8 @@
 
 // BEGIN_INTERNALS
 /*
-FILE: Code\items.dm
-DIR: Code
+FILE: Interface\skin.dmf
+DIR: Code Interface
 MAP_ICON_TYPE: 0
 AUTO_FILE_DIR: ON
 */

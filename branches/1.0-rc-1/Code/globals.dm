@@ -2,7 +2,7 @@ var
 
 	world_message = "Welcome to OpenSS13!"
 	savefile_ver = "4"
-	SS13_version = "1.0 RC 1"
+	SS13_version = "1.0 RC 2"
 	changes = {"<FONT color='blue'><B>Changes from previous version.</B></FONT><BR>
 <HR><PRE>
 Features
@@ -13,6 +13,12 @@ Added an AI role to the station, with suitable equipment.
 Bug-fixes
 =========
 Submitted By	Fixed By	Description
+Cecilff2	Stephen001	Grab stages would not advance past passive.
+Kurper		Stephen001	DNA Add would not append data properly.
+Animay		Trafalgar	Attack delays were removed.
+Trafalgar	Trafalgar	Disconnecting cameras would not cut off viewers.
+Trafalgar	Trafalgar	Humans and AI could open each others inventory window.
+Murrawhip	Stephen001	You could move into many objects through obstacles.
 Darkman1920	Stephen001	Inventory Windows would not close on URL-unsafe names.
 Animay		Murrawhip	Monkeys could talk while sleeping.
 Animay		Trafalgar	Closets could be used to bypass window doors.
