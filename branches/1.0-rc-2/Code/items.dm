@@ -5104,46 +5104,6 @@
 	src.pixel_x = rand(-8.0, 8)
 	return
 
-/obj/item/weapon/weldingtool/examine()
-	set src in usr
-
-	usr << text("\icon[] [] contains [] units of fuel left!", src, src.name, src.weldfuel)
-	return
-
-/obj/item/weapon/weldingtool/afterattack(obj/O, mob/user)
-
-	if (src.welding)
-		src.weldfuel--
-		if (src.weldfuel <= 0)
-			usr << "\blue Need more fuel!"
-			src.welding = 0
-			src.force = 3
-			src.damtype = "brute"
-			src.icon_state = "welder"
-		var/turf/location = user.loc
-		if (!( istype(location, /turf) ))
-			return
-		location.firelevel = location.poison + 1
-	return
-
-/obj/item/weapon/weldingtool/attack_self(mob/user)
-
-	src.welding = !( src.welding )
-	if (src.welding)
-		if (src.weldfuel <= 0)
-			user << "\blue Need more fuel!"
-			src.welding = 0
-			return 0
-		user << "\blue You will now weld when you attack."
-		src.force = 15
-		src.damtype = "fire"
-		src.icon_state = "welder1"
-	else
-		user << "\blue Not welding anymore."
-		src.force = 3
-		src.damtype = "brute"
-		src.icon_state = "welder"
-	return
 
 /obj/manifest/New()
 

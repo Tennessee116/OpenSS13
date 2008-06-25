@@ -4,8 +4,8 @@
 
 // BEGIN_INTERNALS
 /*
-FILE: Interface\skin.dmf
-DIR: Code Interface
+FILE: Code\items.dm
+DIR: Code Code\Item Code\Item\Weapon Code\Machinery Code\Machinery\Atmoalter Interface
 MAP_ICON_TYPE: 0
 AUTO_FILE_DIR: ON
 */
@@ -26,6 +26,7 @@ AUTO_FILE_DIR: ON
 // END_FILE_DIR
 
 // BEGIN_PREFERENCES
+#define DEBUG
 // END_PREFERENCES
 
 // BEGIN_INCLUDE
@@ -68,6 +69,7 @@ AUTO_FILE_DIR: ON
 #include "Code\weapons.dm"
 #include "Code\Item\Weapon\aimodules.dm"
 #include "Code\Item\Weapon\multitool.dm"
+#include "Code\Item\Weapon\weldingtool.dm"
 #include "Code\Machinery\_machinery.dm"
 #include "Code\Machinery\_pipe_misc.dm"
 #include "Code\Machinery\alarm.dm"
