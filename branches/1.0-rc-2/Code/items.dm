@@ -5848,11 +5848,18 @@
 				if (W)
 					W.afterattack(src, usr)
 			else
-				if (istype(usr, /mob/human))
-					src.attack_hand(usr, usr.hand)
+				if (istype(usr, /mob/ai)) /*The AI couldn't activate computers, this should fix that problem*/
+					//The AI was also able to control objects when the AI didn't have power.. BAD
+					if(usr:aiRestorePowerRoutine == 0)
+						src.attack_ai(usr, usr.hand)
+					else
+						usr << "You currently do not have the power to preform this task"
 				else
-					if (istype(usr, /mob/monkey))
-						src.attack_paw(usr, usr.hand)
+					if (istype(usr, /mob/human))
+						src.attack_hand(usr, usr.hand)
+					else
+						if (istype(usr, /mob/monkey))
+							src.attack_paw(usr, usr.hand)
 		else
 			if (istype(usr, /mob/human))
 				src.hand_h(usr, usr.hand)

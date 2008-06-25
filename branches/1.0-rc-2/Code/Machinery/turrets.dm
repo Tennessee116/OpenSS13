@@ -9,7 +9,7 @@
 			if (target:stat==2)
 				if (target in turretTargets)
 					src.Exited(target)
-	
+
 
 /area/turret_protected/Entered(atom/movable/O)
 	if (istype(O, /mob))
@@ -20,7 +20,7 @@
 			//else
 				//O << "You're already in our target list!"
 	return 1
-	
+
 /area/turret_protected/Exited(atom/movable/O)
 	if (istype(O, /mob))
 		if (!istype(O, /mob/ai))
@@ -31,9 +31,9 @@
 				//O << "You aren't in our target list!"
 			if (turretTargets.len == 0)
 				popDownTurrets()
-			
+
 	return 1
-	
+
 /area/turret_protected/proc/popDownTurrets()
 	for (var/obj/machinery/turret/aTurret in src)
 		aTurret.popDown()
@@ -90,7 +90,7 @@
 /obj/machinery/turret/proc/setState(var/enabled, var/lethal)
 	src.enabled = enabled
 	src.lasers = lethal
-	
+
 	src.power_change()
 
 /obj/machinery/turret/process()
@@ -107,13 +107,14 @@
 		loc = loc:loc
 	if (!istype(loc, /area))
 		world << text("Badly positioned turret - loc.loc is [].", loc)
+		src.die() //Added to stop Turret Spam
 		return
 	var/area/area = loc
 	if (istype(area, /area))
 		if (istype(loc, /area/turret_protected))
 			src.wasvalid = 1
 			var/area/turret_protected/tarea = loc
-			
+
 			if (tarea.turretTargets.len>0)
 				if (!isPopping())
 					if (isDown())
@@ -126,13 +127,13 @@
 								src.shootAt(target)
 							else
 								tarea.subjectDied(target)
-					
+
 		else
 			if (src.wasvalid)
 				src.die()
 			else
 				world << text("ERROR: Turret at [], [], [] is NOT in a turret-protected area!", x, y, z)
-
+				src.die() //added to stop Turret Spam
 /obj/machinery/turret/proc/isDown()
 	return (invisibility!=0)
 
@@ -145,7 +146,7 @@
 			src.cover.icon_state = "openTurretCover"
 		spawn(10)
 			if (popping==1) popping = 0
-	
+
 /obj/machinery/turret/proc/popDown()
 	if ((!isPopping()) || src.popping==1)
 		popping = -1
@@ -153,11 +154,11 @@
 			flick("popdown", src.cover)
 			src.cover.icon_state = "turretCover"
 		spawn(10)
-			if (popping==-1) 
+			if (popping==-1)
 				invisibility = 2
 				popping = 0
-	
-		
+
+
 /obj/machinery/turret/proc/shootAt(var/mob/target)
 	var/turf/T = loc
 	var/atom/U = (istype(target, /atom/movable) ? target.loc : target)
@@ -167,15 +168,15 @@
 		U = U.loc
 	if (!( istype(T, /turf) ))
 		return
-	
-	var/obj/beam/a_laser/A 
+
+	var/obj/beam/a_laser/A
 	if (src.lasers)
 		A = new /obj/beam/a_laser( loc )
 		use_power(50)
 	else
 		A = new /obj/beam/a_laser/s_laser( loc )
 		use_power(100)
-	
+
 	if (!( istype(U, /turf) ))
 		//A = null
 		del(A)
@@ -196,7 +197,7 @@
 		//src.health -= 1
 	else
 		src.health -= 2
-	
+
 	if (src.health <= 0)
 		src.die()
 	return
@@ -215,7 +216,7 @@
 	flick("explosion", src)
 	spawn(14)
 		del(src)
-	
+
 /obj/machinery/turretid
 	name = "Turret deactivation control"
 	icon = 'items.dmi'
@@ -227,7 +228,7 @@
 	var/locked = 1
 	var/access = "5555"
 	var/allowed = null
-	
+
 /obj/machinery/turretid/attackby(obj/item/weapon/W, mob/user)
 	if(stat & BROKEN) return
 	if (istype(user, /mob/ai))
@@ -249,10 +250,10 @@
 
 /obj/machinery/turretid/attack_ai(mob/user as mob)
 	return attack_hand(user)
-	
+
 /obj/machinery/turretid/attack_hand(mob/user as mob)
 	if ( (get_dist(src, user) > 1 ))
-		if (!istype(user, /mob/ai))		
+		if (!istype(user, /mob/ai))
 			user << text("Too far away.")
 			user.machine = null
 			user << browse(null, "window=turretid")
@@ -273,7 +274,7 @@
 	else
 		t += text("Turrets [] - <A href='?src=\ref[];toggleOn=1'>[]?</a><br>\n", src.enabled?"activated":"deactivated", src, src.enabled?"Disable":"Enable")
 		t += text("Currently set for [] - <A href='?src=\ref[];toggleLethal=1'>Change to []?</a><br>\n", src.lethal?"lethal":"stun repeatedly", src,  src.lethal?"Stun repeatedly":"Lethal")
-	
+
 	user << browse(t, "window=turretid")
 
 /obj/machinery/turretid/Topic(href, href_list)
@@ -291,7 +292,7 @@
 		src.lethal = !src.lethal
 		src.updateTurrets()
 	src.attack_hand(usr)
-		
+
 /obj/machinery/turretid/proc/updateTurrets()
 	if (src.enabled)
 		if (src.lethal)
@@ -300,7 +301,7 @@
 			icon_state = "motion3"
 	else
 		icon_state = "motion0"
-	
+
 	var/loc = src.loc
 	if (istype(loc, /turf))
 		loc = loc:loc
@@ -308,6 +309,6 @@
 		world << text("Turret badly positioned - loc.loc is [].", loc)
 		return
 	var/area/area = loc
-	
+
 	for (var/obj/machinery/turret/aTurret in area)
 		aTurret.setState(enabled, lethal)

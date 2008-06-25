@@ -2931,7 +2931,7 @@
 					world.log << "LOGIN NOTICE: [src.key] has same IP address as [M.key]."
 			else if (M.lastKnownCKey && M.lastKnownIP)
 				if (M.lastKnownIP == src.client.address && M.lastKnownCKey!=src.ckey)
-					world.log << "LOGIN NOTICE: [src.key] has same IP address as [M.lastKnownCKey] did (M.lastKnownCKey is no longer logged in)."
+					world.log << "LOGIN NOTICE: [src.key] has same IP address as [M.lastKnownCKey] did ([M.lastKnownCKey] is no longer logged in)."
 					if (M.lastKnownCKey in banned)
 						world.log << "FURTHER NOTE: [M.lastKnownCKey] was banned."
 
