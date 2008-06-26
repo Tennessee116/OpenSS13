@@ -7,9 +7,12 @@ Bug-fixes
 =========
 Submitted By	Fixed By	Description
 Trafalgar		Hobnob	Made weldingtools ignite plasma when present.
+Zjm7891			Zjm7891		Attacking with certian items ignored range
 Cecilff2		Stephen001	Grab stages would not advance past passive.
-Kurper			Stephen001	DNA Add would not append data properly.
-Animay			Trafalgar	Attack delays were removed.
+Zjm7891      		Zjm7891		AI could no longer use equipment
+Cecilff2   		Stephen001	Grab stages would not advance past passive.
+Kurper      		Stephen001	DNA Add would not append data properly.
+Animay      		Trafalgar	Attack delays were removed.
 Trafalgar		Trafalgar	Disconnecting cameras would not cut off viewers.
 Trafalgar		Trafalgar	Humans and AI could open each others inventory window.
 Murrawhip		Stephen001	You could move into many objects through obstacles.
