@@ -5803,9 +5803,10 @@
 
 	if (retval & CANREACH_ALLOWED)
 		if (!( usr.restrained() ))
-			if ((W && !( istype(src, /obj/screen) )))
-				src.attackby(W, usr)
-				if (W)
+			if ((W && !( istype(src, /obj/screen))))
+				if (retval & CANREACH_CANTOUCH)
+					src.attackby(W, usr)
+				if ((retval & CANREACH_USINGWEAPON) && !(retval & CANREACH_CANTOUCH))
 					W.afterattack(src, usr)
 			else
 				if (istype(usr, /mob/ai)) /*The AI couldn't activate computers, this should fix that problem*/
