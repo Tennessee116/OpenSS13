@@ -26,7 +26,6 @@ AUTO_FILE_DIR: ON
 // END_FILE_DIR
 
 // BEGIN_PREFERENCES
-#define DEBUG
 // END_PREFERENCES
 
 // BEGIN_INCLUDE
@@ -139,4 +138,5 @@ AUTO_FILE_DIR: ON
 #include "Code\Machinery\Power\turbine.dm"
 #include "Code\mob\ai.dm"
 // END_INCLUDE
+
 
