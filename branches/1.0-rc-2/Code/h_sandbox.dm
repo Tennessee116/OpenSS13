@@ -19,7 +19,7 @@ mob
 		datum/hSB/sandbox = null
 	proc
 		CanBuild()
-			if(master_mode == "sandbox")
+			if(master_mode == "sandbox" || src.client.holder)
 				sandbox = new/datum/hSB
 				sandbox.owner = src.ckey
 				if(src.client.holder)

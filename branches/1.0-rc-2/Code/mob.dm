@@ -2713,20 +2713,7 @@
 	return
 
 
-//*****RM
-/*
-/mob/verb/Heal()
-	set category = "Admin"
 
-	src.health = 100
-	src.oxyloss = 0
-	src.toxloss = 0
-	src.fireloss = 0
-	src.bruteloss = 0
-
-	src.sdisabilities = 0
-	src.stat = 0
-*/
 /mob/human/Move(a, b, flag)
 	//This should solve bug #1989294
 	if ((!( src.buckled ) || src.buckled.loc != src.loc))
@@ -7290,6 +7277,9 @@
 			if (src.holder)
 				src.holder.owner = src
 				src.verbs += /client/proc/show_panel
+				src.mob.CanBuild()
+				src.mob.verbs += new/mob/proc/sandbox_panel
+
 
 				if(src.holder.level ==5)
 					src.verbs += /proc/Vars
