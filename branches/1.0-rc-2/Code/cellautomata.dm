@@ -153,6 +153,9 @@
 /obj/ctf_assist/New()
 
 	..()
+
+	if (ticker)
+		return
 	going = 0
 	master_mode = "extended"
 	world << "<B>Capture the Flag Mode activated!</B>"
