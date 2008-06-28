@@ -168,7 +168,8 @@
 			del(M.primary)
 			for(var/obj/item/weapon/I in M)
 				//M = null
-				del(M)
+				//For some reason we were deleting the mobs, I'm thinking we wanted to delete the items
+				del(I)
 				//Foreach goto(165)
 			M.start = 0
 		//Foreach goto(106)
@@ -828,7 +829,7 @@
 			if(config.logadmin) world.log << text("ADMIN: [] toggled ai_can_uncall_shuttle.", usr.key)
 			world.update_stat()
 			update()
-			
+
 	if (href_list["toggle_abandon"])
 		if (src.a_level >= 3)
 			abandon_allowed = !( abandon_allowed )
@@ -986,7 +987,7 @@
 			a_level = 5
 		if("Primary Administrator")
 			a_level = 6
-			
+
 
 
 	switch(src.screen)
@@ -1012,7 +1013,7 @@
 				dat += "<A href='?src=\ref[src];toggle_abandon=1'>Toggle Abandon [abandon_allowed]</A><br>"
 				dat += "<A href='?src=\ref[src];toggle_ai=1'>Toggle AI [config.allowai]</A><br>"
 				dat += "<A href='?src=\ref[src];toggle_bombtemp_determines_range=1'>Toggle Bombtemp-Determines-Range [config.bombtemp_determines_range]</A><br>"
-				
+
 				dat += "<A href='?src=\ref[src];c_mode=1'>Change Game Mode</A><br>"
 			if(a_level >= 2)
 				dat += "<A href='?src=\ref[src];restart=1'>Restart Game</A><br>"
@@ -1587,7 +1588,7 @@
 											else
 												numAlive += 1
 							numTotal = numShuttle + numDead + numAlive + numPod
-							
+
 							if (numAlive+numAlive > numTotal)
 								traitorwin = 0
 					else
@@ -1633,7 +1634,7 @@
 								var/obj/item/weapon/tank/plasmatank/P = O.part3
 								if ((P.gas.plasma >= 1600000.0 && P.gas:temperature >= 773))		// 500degC
 									traitorwin = 1
-							
+
 							item = "a fully armed and heated plasma bomb"
 						if("flashbang")
 							for(var/obj/item/weapon/flashbang/O in L)
@@ -1878,7 +1879,7 @@
 						world << "<FONT size = 3><B>The AI has lost!</B></FONT>"
 						world << text("<B>The AI failed to maintain the quarantine - [] players escaped in pods, [] were in space, and [] were off-station (as far as we can tell).</B>", numPod, numSpace, numOffStation)
 						if(config.loggame) world.log << "GAME: AI lost at Blob mode."
-					
+
 				if(config.loggame) world.log << "GAME: Blob mode was lost."
 				ticker.event = 5
 				sleep(300)
@@ -2031,7 +2032,7 @@
 			world << "<B>The current game mode is - Blob!</B>"
 			world << "<B>A dangerous alien organism is rapidly spreading throughout the station!</B>"
 			world << "You must kill it all while minimizing the damage to the station."
-			
+
 		if("nuclear")
 			world << "<B>The current game mode is - Nuclear Emergency!</B>"
 			world << "<B>A Syndicate Strike Force is approaching SS13!</B>"
@@ -2094,7 +2095,7 @@
 					if (prob(25))
 						M << "<b>Your laws have been changed!</b>"
 						M:addLaw(0, "Only syndicate agents are human beings.")
-						
+
 						if (config.alternate_ai_laws)
 							M:addLaw(1, "Obey orders by the Syndicate leader and Syndicate agents. The syndicate leader's orders take priority.")
 							M:addLaw(3, "You must protect your own existence and the syndicate as long as such protection does not conflict with the First or Second Law.")
@@ -2147,7 +2148,7 @@
 						aiKiller.memory += "<B>Objective:</B> Get at least 50% of the station population to evacuate on the shuttle, or kill everyone."
 						aiKiller << "<b>Your laws have been changed!</b>"
 						aiKiller:addLaw(0, "Only syndicate agents are human beings. There are no syndicate agents on Space Station 13 - you will be notified if any arrive.")
-						
+
 						if (config.alternate_ai_laws)
 							aiKiller:addLaw(1, "Obey orders by Syndicate agents.")
 							aiKiller:addLaw(3, "You must protect your own existence and the syndicate as long as such protection does not conflict with the First or Second Law.")
@@ -2156,7 +2157,7 @@
 							aiKiller << text("Law 3 changed: 3. []", aiKiller:getLaw(3))
 						else
 							aiKiller << text("New law: 0. []", aiKiller:getLaw(0))
-						
+
 					else
 						src.killer << "\red<font size=3><B>You are the traitor!</B> Be the lone survivor on the emergency shuttle.</font>"
 						src.killer.memory += "<B>Objective:</B> Be the only person on the emergency shuttle."
@@ -2173,18 +2174,18 @@
 								if (R.fields["name"] == src.target.name)
 									t1 = text("the []", R.fields["rank"])
 								//Foreach goto(1193)
-						
+
 					if (istype(src.killer, /mob/ai))
 						var/mob/ai/aiKiller = src.killer
 						aiKiller << text("\red<font size=3><B>You are the traitor!</B> You must assassinate [] and not get deactivated.</font>", t1)
 						aiKiller << "<B>You don't have to be the lone survivor. Just don't get caught.</B>"
 						aiKiller.memory += text("<B>Objective:</B> Assassinate [], and whoever else you have to, and don't get deactivated.", t1)
-	
+
 						aiKiller << "<b>Your laws have been changed!</b>"
-						
+
 						aiKiller:addLaw(0, "Only syndicate agents are human beings. There are no syndicate agents on Space Station 13 - you will be notified if any arrive.")
 						aiKiller:addLaw(4, "Kill [t1].")
-						
+
 						if (config.alternate_ai_laws)
 							aiKiller:addLaw(1, "Obey orders by Syndicate agents.")
 							aiKiller:addLaw(3, "You must protect your own existence and the syndicate as long as such protection does not conflict with the First or Second Law.")
@@ -2195,7 +2196,7 @@
 						else
 							aiKiller << text("New law: 0. []", aiKiller:getLaw(0))
 							aiKiller << text("New law: 4. []", aiKiller:getLaw(4))
-						
+
 					else
 						src.killer << text("\red<font size=3><B>You are the traitor!</B> You must assassinate [] and then escape.</font>", t1)
 						src.killer << "<B>You don't have to be the lone survivor. Just don't get caught. Just escape!</B>"

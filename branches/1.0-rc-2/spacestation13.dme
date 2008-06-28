@@ -4,8 +4,8 @@
 
 // BEGIN_INTERNALS
 /*
-FILE: Code\mob.dm
-DIR: Code Code\Item Code\Item\Weapon Code\Machinery Code\Machinery\Atmoalter Code\Machinery\Door Interface
+FILE: Code\cellautomata.dm
+DIR: Code Code\Item Code\Item\Weapon Code\Machinery Code\Machinery\Atmoalter Code\Machinery\Door Code\mob Interface
 MAP_ICON_TYPE: 0
 AUTO_FILE_DIR: ON
 */
