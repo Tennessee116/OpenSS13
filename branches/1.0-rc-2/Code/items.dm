@@ -1111,14 +1111,7 @@
 					src.attack_self(M)
 				//Foreach goto(488)
 	return
-
-/obj/item/weapon/sword/attack(mob/target, mob/user)
-
-	..()
-	if (user.key == "Exadv1")
-		user.next_move = 1
-	return
-
+/*Removed an Exploit Exadv1 used with sword attacking */
 /obj/item/weapon/sword/attack_self(mob/user)
 
 	src.active = !( src.active )
