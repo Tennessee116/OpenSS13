@@ -2730,7 +2730,7 @@
 /mob/human/Move(a, b, flag)
 	//This should solve bug #1989294
 	if ((!( src.buckled ) || src.buckled.loc != src.loc))
-			src.buckled = null
+		src.buckled = null
 	//End of bugfix #198924
 	if (src.buckled)
 		return
