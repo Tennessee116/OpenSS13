@@ -5387,7 +5387,7 @@
 		if (W:amount < 1)
 			//W = null
 			del(W)
-		user << "\blue Keep in mind when you open it that it MAY be difficult to sldie at first so keep trying."
+		user << "\blue Keep in mind when you open it that it MAY be difficult to slide at first so keep trying."
 		//SN src = null
 		del(src)
 		return
