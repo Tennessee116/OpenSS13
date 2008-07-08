@@ -1289,7 +1289,10 @@
 	return
 
 /obj/closet/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if ((src.opened || W.damtype != "fire" || !( istype(W, /obj/item/weapon/weldingtool) )))
+	if(istype(W, /obj/item/weapon/card/id))
+		src.attack_hand(user)
+		return
+	if ((src.opened || W.damtype != "fire" || !( istype(W, /obj/item/weapon/weldingtool))))
 		if (istype(W, /obj/item/weapon/grab))
 			src.MouseDrop_T(W:affecting, user)	//act like they were dragged onto the closet
 		else:
@@ -1710,10 +1713,11 @@
 	if (istype(W, /obj/item/weapon/wirecutters))
 		if(!shock(user, 100))
 			src.health = 0
-	else if ((istype(W, /obj/item/weapon/screwdriver) && (istype(src.loc, /turf/station) || src.anchored)))
+	else if ((istype(W, /obj/item/weapon/screwdriver) && (istype(src.loc, /turf/station) || locate(src.loc, /obj/move) || locate(src.loc, /obj/machinery) || src.anchored)))
 		if(!shock(user, 50))
 			src.anchored = !( src.anchored )
 			user << (src.anchored ? "You have fastened the grille to the floor." : "You have unfastened the grill.")
+			return
 	else if(istype(W, /obj/item/weapon/shard))	// can't get a shock by attacking with glass shard
 
 		src.health -= W.force * 0.1

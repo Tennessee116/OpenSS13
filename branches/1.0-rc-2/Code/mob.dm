@@ -3138,7 +3138,7 @@
 		spawn(50)
 			cancel = 0
 			for(var/mob/M in world)
-				if ((M.client && !( M.stat )))
+				if ((M.client && (M.stat > 1 )))
 					cancel = 1
 				//Foreach goto(67)
 			if (!( cancel ))

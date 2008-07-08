@@ -75,6 +75,7 @@ obj/machinery/power/apc
 		// Pixel offsets so that APC actually appears embedded in the wall
 		pixel_x = (tdir & 3)? 0 : (tdir == 4 ? 24 : -24)
 		pixel_y = (tdir & 3)? (tdir ==1 ? 24 : -24) : 0
+		layer = 3.1
 
 
 		// if starting with a power cell installed, create it and set its charge level
