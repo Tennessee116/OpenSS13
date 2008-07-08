@@ -58,19 +58,19 @@ obj/machinery/pod
 		if (user.stat)
 			return
 		if ((user in src))							// make sure player is inside this pod
+			if (!user.restrained())
+				if (direction & 1)						// North pressed
+					src.speed = max(src.speed - 1, 1)	// slow down to minimum speed (1)
 
-			if (direction & 1)						// North pressed
-				src.speed = max(src.speed - 1, 1)	// slow down to minimum speed (1)
+				else if (direction & 2)					// South pressed
+					src.speed++							// Increase speed up to maximum (10)
+					if (src.speed > 10)
+						src.speed = 10
+				if (direction & 4)						// East pressed
+					src.dir = turn(src.dir, -90.0)		// Turn clockwise
 
-			else if (direction & 2)					// South pressed
-				src.speed++							// Increase speed up to maximum (10)
-				if (src.speed > 10)
-					src.speed = 10
-			if (direction & 4)						// East pressed
-				src.dir = turn(src.dir, -90.0)		// Turn clockwise
-
-			else if (direction & 8)					// West pressed
-				src.dir = turn(src.dir, 90)			// Turn anticlockwise
+				else if (direction & 8)					// West pressed
+					src.dir = turn(src.dir, 90)			// Turn anticlockwise
 
 
 
@@ -81,7 +81,8 @@ obj/machinery/pod
 
 	verb/eject()
 		set src = usr.loc
-
+		if (!(usr in src) || usr.restrained())
+			return
 		if (usr.stat)
 			return
 		var/mob/M = usr
@@ -97,6 +98,8 @@ obj/machinery/pod
 	verb/board()
 		set src in oview(1)
 
+		if (usr.restrained())
+			return
 		var/result = src.canReach(usr, null, 1)
 		if (result==0)
 			usr << "You can't reach [src]."
@@ -113,7 +116,8 @@ obj/machinery/pod
 
 	verb/load()
 		set src in oview(1)
-
+		if (usr.restrained())
+			return
 		if (usr.stat)
 			return
 		if (( ( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
@@ -153,7 +157,7 @@ obj/machinery/pod
 		if (usr.stat)
 			return
 		var/result = src.canReach(usr, null, 1)
-		if (result==0)
+		if (result==0 && usr!=A)
 			usr << "You can't reach [src]."
 			return
 
