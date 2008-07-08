@@ -69,7 +69,8 @@ obj/machinery/computer/prison_shuttle
 
 	verb/restabalize()
 		set src in oview(1)
-
+		if ((usr.stat || usr.restrained()))
+			return
 		viewers(null, null) << "\red <B>Restabilizing prison shuttle atmosphere!</B>"
 		var/A = locate(/area/shuttle_prison)
 		for(var/obj/move/T in A)

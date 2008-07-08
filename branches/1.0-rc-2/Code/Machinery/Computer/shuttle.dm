@@ -21,7 +21,8 @@ obj/machinery/computer/shuttle
 
 	verb/restabalize()
 		set src in oview(1)
-
+		if ((usr.stat || usr.restrained()))
+			return
 		world << "\red <B>Restabilizing shuttle atmosphere!</B>"
 		var/A = locate(/area/shuttle)
 		for(var/obj/move/T in A)
@@ -55,7 +56,8 @@ obj/machinery/computer/shuttle
 
 	verb/hijack()
 		set src in oview(1)
-
+		if ((usr.stat || usr.restrained()))
+			return
 		if ((!( ticker ) || ticker.shuttle_location != shuttle_z))
 			return
 		if (usr != ticker.killer)

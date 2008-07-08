@@ -96,7 +96,7 @@
 	return
 
 /obj/item/weapon/tank/attack(mob/M as mob, mob/user as mob)
-	
+
 	..()
 	if ((prob(30) && M.stat < 2))
 		if (istype(M, /mob/human) || istype(M, /mob/monkey))
@@ -166,7 +166,8 @@
 	return
 
 /obj/item/weapon/tank/jetpack/verb/toggle()
-
+	if ((usr.stat || usr.restrained()))
+		return
 	src.on = !( src.on )
 	src.icon_state = text("jetpack[]", src.on)
 	return
@@ -312,20 +313,20 @@
 	var/med = extended_range * 2
 	var/max = extended_range * 3
 	var/u_max = m_range * 4
-	
+
 	var/turf/sw = locate(max(T.x - u_max, 1), max(T.y - u_max, 1), T.z)
 	var/turf/ne = locate(min(T.x + u_max, world.maxx), min(T.y + u_max, world.maxy), T.z)
 
 	defer_powernet_rebuild = 1
-	
+
 	//If m_range is <= 12, then we are going to calculate the squared distance between tiles and ground zero. To avoid complicating comparisons in the for loop with additional if statements, we are going to square max, med, and min. You wouldn't be able to subtract tileRange (squared) from max, med, or min and get a useful distance, but this works fine for comparing the range to max, med, or min, without caring about how far between them it is. -Trafalgar
-	
+
 	if (m_range<=12)
 		max *= max
 		med *= med
 		min *= min
 		u_max *= u_max
-	
+
 	for(var/turf/U in block(sw, ne))
 		var tileRange = 0
 		var/zone = 4
@@ -334,7 +335,7 @@
 			tileRange = (U.y-T.y)*(U.y-T.y) + (U.x-T.x)*(U.x-T.x)
 		else
 			tileRange = max(abs(U.y-T.y), abs(U.x-T.x))
-			
+
 
 		if (tileRange <= u_max)
 			//If this were, say, c++, then this would be faster than the commented out code (for one it isn't doing calculations 3 times over for no reason, for two it's an if-elseif-elseif instead of three ifs which all would get evaluated. It might be slightly faster if we did if (tileRange>max) first, then else if (tileRange > med), then else if (tileRange > min), then else (due to performance increases from having if/elseif/elses's ordered with the choices sorted from most likely at the top to least likely at the end, but who knows if this even applies to BYOND games since the performance benefit is the result of how the CPU processes comparisons and branching and such). -Trafalgar
@@ -1045,7 +1046,7 @@
 	var/obj/item/weapon/syndicate_uplink/U = new /obj/item/weapon/syndicate_uplink( src )
 	U.uses = 5
 	return
-	
+
 /obj/closet/syndicate/personal/New()
 
 	..()
@@ -1588,7 +1589,8 @@
 
 /obj/stool/chair/verb/rotate()
 	set src in oview(1)
-
+	if ((usr.restrained()))
+		return
 	src.dir = turn(src.dir, 90)
 	if (src.dir == NORTH)
 		src.layer = FLY_LAYER
@@ -1918,7 +1920,8 @@
 
 /obj/window/verb/rotate()
 	set src in oview(1)
-
+	if ((usr.stat !=0 || usr.restrained()))
+		return
 	if (src.anchored)
 		usr << "It is fastened to the floor; therefore, you can't rotate it!"
 		return 0

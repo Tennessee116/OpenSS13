@@ -1328,7 +1328,6 @@
 
 /atom/verb/point()
 	set src in oview()
-
 	if ((!( usr ) || !( isturf(usr.loc) )) || isarea(src))		// can't point to areas anymore
 		return
 	if ((usr.stat == 0 && !( usr.restrained() )))

@@ -51,6 +51,8 @@ obj/machinery/valve
 
 	examine()
 		set src in oview(1)
+		if (usr.restrained())
+			return
 		if(usr.stat)
 			return
 

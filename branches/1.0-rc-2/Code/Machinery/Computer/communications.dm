@@ -14,6 +14,8 @@ obj/machinery/computer/communications
 
 	verb/call_shuttle()
 		set src in oview(1)
+		if (usr.restrained())
+			return
 		src.add_fingerprint(usr)
 		if(stat & NOPOWER) return
 		call_shuttle_proc(usr)
@@ -22,7 +24,9 @@ obj/machinery/computer/communications
 
 	verb/cancel_call()
 		set src in oview(1)
+		if (usr.restrained())
+			return
 		src.add_fingerprint(usr)
 		if(stat & NOPOWER) return
 		cancel_call_proc(usr)
-		
+

@@ -57,6 +57,8 @@ obj/machinery/computer/atmosphere
 		verb/siphon_all()
 			set src in oview(1)
 			if(stat & NOPOWER)	return
+			if (usr.restrained())
+				return
 			if (usr.stat)
 				return
 			usr << "Starting all siphon systems."
@@ -72,6 +74,8 @@ obj/machinery/computer/atmosphere
 			if(stat & NOPOWER)	return
 			if (usr.stat)
 				return
+			if (usr.restrained())
+				return
 			usr << "Stopping all siphon systems."
 			for(var/obj/machinery/atmoalter/siphs/S in src.returnarea())
 				S.reset(0, 0)
@@ -83,6 +87,8 @@ obj/machinery/computer/atmosphere
 		verb/auto_on()
 			set src in oview(1)
 			if(stat & NOPOWER)	return
+			if (usr.restrained())
+				return
 			if (usr.stat)
 				return
 			usr << "Starting automatic air control systems."
@@ -95,7 +101,8 @@ obj/machinery/computer/atmosphere
 
 		verb/release_scrubbers()
 			set src in oview(1)
-
+			if (usr.restrained())
+				return
 			if(stat & NOPOWER)	return
 			if (usr.stat)
 				return
@@ -111,6 +118,8 @@ obj/machinery/computer/atmosphere
 			set src in oview(1)
 			if(stat & NOPOWER)	return
 			if (usr.stat)
+				return
+			if (usr.restrained())
 				return
 			usr << "Releasing all stored air."
 			for(var/obj/machinery/atmoalter/siphs/S in src.returnarea())

@@ -237,7 +237,8 @@
 
 /obj/machinery/dna_scanner/verb/eject()
 	set src in oview(1)
-
+	if ((usr.stat != 0 || usr.restrained()))
+		return
 	if (usr.stat != 0)
 		return
 	src.go_out()
@@ -247,6 +248,8 @@
 /obj/machinery/dna_scanner/verb/move_inside()
 	set src in oview(1)
 	if (usr.stat != 0)
+		return
+	if ((usr.restrained()))
 		return
 	var/result = src.canReach(usr, null, 1)
 	if (result==0)
@@ -656,7 +659,7 @@
 /obj/machinery/scan_console/Topic(href, href_list)
 	..()
 	if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
-		if (!istype(usr, /mob/ai))		
+		if (!istype(usr, /mob/ai))
 			usr << "\red You don't have the dexterity to do this!"
 			return
 	if ((usr.stat || usr.restrained()))
@@ -709,6 +712,8 @@
 
 /obj/machinery/restruct/verb/eject()
 	set src in oview(1)
+	if (( usr.restrained()))
+		return
 	if (usr.stat != 0)
 		return
 	var/result = src.canReach(usr, null, 1)
@@ -721,7 +726,8 @@
 
 /obj/machinery/restruct/verb/operate()
 	set src in oview(1)
-
+	if ((usr.stat || usr.restrained()))
+		return
 	src.add_fingerprint(usr)
 	if ((src.occupant && src.occupant.primary))
 		switch(src.occupant.primary.spec_identity)
@@ -869,7 +875,8 @@
 
 /obj/machinery/restruct/verb/move_inside()
 	set src in oview(1)
-
+	if (usr.restrained())
+		return
 	if (usr.stat != 0)
 		return
 	var/result = src.canReach(usr, null, 1)
