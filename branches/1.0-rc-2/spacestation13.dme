@@ -4,7 +4,7 @@
 
 // BEGIN_INTERNALS
 /*
-FILE: Code\mob.dm
+FILE: Code\globals.dm
 DIR: Code Code\Machinery Code\Machinery\Atmoalter Code\Machinery\Computer Code\mob
 MAP_ICON_TYPE: 0
 AUTO_FILE_DIR: ON
