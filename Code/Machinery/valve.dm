@@ -51,10 +51,12 @@ obj/machinery/valve
 
 	examine()
 		set src in oview(1)
+		if (usr.restrained())
+			return
 		if(usr.stat)
 			return
 
-		usr.client_mob() << "[desc] It is [ open? "open" : "closed"]."
+		usr << "[desc] It is [ open? "open" : "closed"]."
 
 
 	// Find the connected nodes

@@ -75,9 +75,9 @@
 			return
 
 		if(connected)
-			usr.client_mob() << "A pipe connector for gas equipment. It is connected to \an [connected.name]."
+			usr << "A pipe connector for gas equipment. It is connected to \an [connected.name]."
 		else
-			usr.client_mob() << "A pipe connector for gas equipment. It is unconnected."
+			usr << "A pipe connector for gas equipment. It is unconnected."
 
 
 

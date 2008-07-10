@@ -189,7 +189,7 @@ obj/machinery/power/turbine
 
 		if ( (get_dist(src, user) > 1 ) || (stat & (NOPOWER|BROKEN)) && (!istype(user, /mob/ai)) )
 			user.machine = null
-			user.client_mob() << browse(null, "window=turbine")
+			user << browse(null, "window=turbine")
 			return
 
 		user.machine = src
@@ -208,7 +208,7 @@ obj/machinery/power/turbine
 		t += "</PRE><HR><A href='?src=\ref[src];close=1'>Close</A>"
 
 		t += "</TT>"
-		user.client_mob() << browse(t, "window=turbine")
+		user << browse(t, "window=turbine")
 
 		return
 
@@ -223,15 +223,14 @@ obj/machinery/power/turbine
 			return
 		if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
 			if (!istype(usr, /mob/ai))		
-				if (!istype(usr, /mob/drone))
-					usr.client_mob() << "\red You don't have the dexterity to do this!"
-					return
+				usr << "\red You don't have the dexterity to do this!"
+				return
 
 		if (( usr.machine==src && (get_dist(src, usr) <= 1 && istype(src.loc, /turf))) || (istype(usr, /mob/ai)))
 
 
 			if( href_list["close"] )
-				usr.client_mob() << browse(null, "window=turbine")
+				usr << browse(null, "window=turbine")
 				usr.machine = null
 				return
 
@@ -242,7 +241,7 @@ obj/machinery/power/turbine
 				src.updateDialog()
 
 		else
-			usr.client_mob() << browse(null, "window=turbine")
+			usr << browse(null, "window=turbine")
 			usr.machine = null
 
 		return

@@ -109,7 +109,7 @@ About the new airlock wires panel:
 				if (src.locked!=1)
 					src.locked = 1
 				else
-					usr.client_mob() << "You hear a click from the bottom of the door."
+					usr << "You hear a click from the bottom of the door."
 			if (AIRLOCK_WIRE_BACKUP_POWER1 || AIRLOCK_WIRE_BACKUP_POWER2)
 				//two wires for backup power. Sending a pulse through either one causes a breaker to trip, but this does not disable it unless main power is down too (in which case it is disabled for 1 minute or however long it takes main power to come back, whichever is shorter). 
 				src.loseBackupPower()
@@ -132,7 +132,7 @@ About the new airlock wires panel:
 						src.locked=0
 						src.updateDialog()
 					else
-						usr.client_mob() << "You hear a click or thump sound from inside the door."
+						usr << "You hear a click or thump sound from inside the door."
 			if (AIRLOCK_WIRE_ELECTRIFY)
 				//one wire for electrifying the door. Sending a pulse through this electrifies the door for 30 seconds.
 				if (src.secondsElectrified!=-1)
@@ -289,6 +289,21 @@ About the new airlock wires panel:
 	proc/get_connection()
 		var/turf/T = src.loc
 		if(!istype(T, /turf/station/floor))
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 			return
 	
 		for(var/obj/cable/C in T)
@@ -409,7 +424,7 @@ About the new airlock wires panel:
 					t1 += text("Cannot close door due to power failure.<br>\n")
 		
 		t1 += text("<p><a href='?src=\ref[];close=1'>Close</a></p>\n", src)
-		user.client_mob() << browse(t1, "window=airlock")
+		user << browse(t1, "window=airlock")
 	
 	//aiDisable - 1 idscan, 2 disrupt main power, 3 disrupt backup power, 4 drop door bolts, 5 un-electrify door, 7 close door
 	//aiEnable - 1 idscan, 4 raise door bolts, 5 electrify door for 30 seconds, 6 electrify door indefinitely, 7 open door
@@ -511,7 +526,7 @@ About the new airlock wires panel:
 			
 			t1 += text("<p><a href='?src=\ref[];close=1'>Close</a></p>\n", src)
 				
-			user.client_mob() << browse(t1, "window=airlock")
+			user << browse(t1, "window=airlock")
 		else
 			..(user)
 		return
@@ -524,7 +539,7 @@ About the new airlock wires panel:
 		if (usr.stat || usr.restrained() )
 			return
 		if (href_list["close"])
-			usr.client_mob() << browse(null, "window=airlock")
+			usr << browse(null, "window=airlock")
 			if (usr.machine==src)
 				usr.machine = null
 				return
@@ -534,7 +549,7 @@ About the new airlock wires panel:
 				if (href_list["wires"])
 					var/t1 = text2num(href_list["wires"])
 					if (!( istype(usr.equipped(), /obj/item/weapon/wirecutters) ))
-						alert(usr.client_mob(), "You need wirecutters!")
+						usr << alert("You need wirecutters!", null, null, null, null, null)
 						return
 					if (!( src.p_open ))
 						return
@@ -545,19 +560,19 @@ About the new airlock wires panel:
 				else if (href_list["pulse"])
 					var/t1 = text2num(href_list["pulse"])
 					if (!( istype(usr.equipped(), /obj/item/weapon/multitool) ))
-						alert(usr.client_mob(), "You need a multitool!")
+						usr << alert("You need a multitool!", null, null, null, null, null)
 						return
 					if ((stat & NOPOWER))
-						usr.client_mob() << "Due to a power failure, nothing happens."
+						usr << "Due to a power failure, nothing happens."
 						return
 					if (!src.arePowerSystemsOn())
-						usr.client_mob() << "Due to power being disrupted, nothing happens."
+						usr << "Due to power being disrupted, nothing happens."
 						return
 					if (!( src.p_open ))
-						usr.client_mob() << "You can't pulse it because the panel is closed."
+						usr << "You can't pulse it because the panel is closed."
 						return
 					if (src.isWireColorCut(t1))
-						usr.client_mob() << "You can't pulse that wire - it being cut means a signal can't travel properly in it."
+						usr << "You can't pulse that wire - it being cut means a signal can't travel properly in it."
 						return
 	
 	
@@ -569,7 +584,7 @@ About the new airlock wires panel:
 		else
 			//AI
 			if (!src.canAIControl())
-				usr.client_mob() << "Airlock control connection failure!"
+				usr << "Airlock control connection failure!"
 				return
 			//aiDisable - 1 idscan, 2 disrupt main power, 3 disrupt backup power, 4 drop door bolts, 5 un-electrify door, 7 close door
 			//aiEnable - 1 idscan, 4 raise door bolts, 5 electrify door for 30 seconds, 6 electrify door indefinitely, 7 open door
@@ -579,30 +594,30 @@ About the new airlock wires panel:
 					if (1)
 						//disable idscan
 						if (src.isWireCut(AIRLOCK_WIRE_IDSCAN))
-							usr.client_mob() << "The IdScan wire has been cut - So, you can't disable it, but it is already disabled anyways."
+							usr << "The IdScan wire has been cut - So, you can't disable it, but it is already disabled anyways."
 						else if (src.aiDisabledIdScanner)
-							usr.client_mob() << "You've already disabled the IdScan feature."
+							usr << "You've already disabled the IdScan feature."
 						else
 							if (src.arePowerSystemsOn() && (!(stat & NOPOWER)))
 								src.aiDisabledIdScanner = 1
 							else
-								usr.client_mob() << "Unable to disable ID Scanner due to power failure."
+								usr << "Unable to disable ID Scanner due to power failure."
 					if (2)
 						//disrupt main power
 						if (src.secondsMainPowerLost == 0)
 							src.loseMainPower()
 						else
-							usr.client_mob() << "Main power is already offline."
+							usr << "Main power is already offline."
 					if (3)
 						//disrupt backup power
 						if (src.secondsBackupPowerLost == 0)
 							src.loseBackupPower()
 						else
-							usr.client_mob() << "Backup power is already offline."
+							usr << "Backup power is already offline."
 					if (4)
 						//drop door bolts
 						if (src.isWireCut(AIRLOCK_WIRE_DOOR_BOLTS))
-							usr.client_mob() << "You can't drop the door bolts - The door bolt dropping wire has been cut."
+							usr << "You can't drop the door bolts - The door bolt dropping wire has been cut."
 						else if (src.locked!=1)
 							src.locked = 1
 					if (5)
@@ -616,16 +631,16 @@ About the new airlock wires panel:
 					if (7)
 						//close door
 						if (src.blocked)
-							usr.client_mob() << text("The airlock has been welded shut!<br>\n")
+							usr << text("The airlock has been welded shut!<br>\n")
 						else if (src.locked)
-							usr.client_mob() << text("The door bolts are down!<br>\n")
+							usr << text("The door bolts are down!<br>\n")
 						else if (!src.density)
 							if (src.arePowerSystemsOn() && (!(stat & NOPOWER)))
 								close()
 							else
-								usr.client_mob() << "Unable to close door due to power failure."
+								usr << "Unable to close door due to power failure."
 						else
-							usr.client_mob() << text("The airlock is already closed.<br>\n")
+							usr << text("The airlock is already closed.<br>\n")
 					
 			else if (href_list["aiEnable"])
 				var/code = text2num(href_list["aiEnable"])
@@ -633,36 +648,36 @@ About the new airlock wires panel:
 					if (1)
 						//enable idscan
 						if (src.isWireCut(AIRLOCK_WIRE_IDSCAN))
-							usr.client_mob() << "You can't enable IdScan - The IdScan wire has been cut."
+							usr << "You can't enable IdScan - The IdScan wire has been cut."
 						else if (src.aiDisabledIdScanner)
 							if (src.arePowerSystemsOn() && (!(stat & NOPOWER)))
 								src.aiDisabledIdScanner = 0
 							else
-								usr.client_mob() << "Unable to enable ID Scanner due to power failure."
+								usr << "Unable to enable ID Scanner due to power failure."
 						else
-							usr.client_mob() << "The IdScan feature is not disabled."
+							usr << "The IdScan feature is not disabled."
 					if (4)
 						//raise door bolts
 						if (src.isWireCut(AIRLOCK_WIRE_DOOR_BOLTS))
-							usr.client_mob() << text("The door bolt drop wire is cut - you can't raise the door bolts.<br>\n")
+							usr << text("The door bolt drop wire is cut - you can't raise the door bolts.<br>\n")
 						else if (!src.locked)
-							usr.client_mob() << text("The door bolts are already up.<br>\n")
+							usr << text("The door bolts are already up.<br>\n")
 						else if (src.isWireCut(AIRLOCK_WIRE_POWER_ASSIST))
-							usr.client_mob() << text("The door bolts are not coming up - The power assist wire has been cut.<br>\n")
+							usr << text("The door bolts are not coming up - The power assist wire has been cut.<br>\n")
 						else
 							if (src.arePowerSystemsOn() && (!(stat & NOPOWER)))
 								src.locked = 0
 							else
-								usr.client_mob() << text("Cannot raise door bolts due to power failure.<br>\n")
+								usr << text("Cannot raise door bolts due to power failure.<br>\n")
 					
 					if (5)
 						//electrify door for 30 seconds
 						if (src.isWireCut(AIRLOCK_WIRE_ELECTRIFY))
-							usr.client_mob() << text("The electrification wire has been cut.<br>\n")
+							usr << text("The electrification wire has been cut.<br>\n")
 						else if (src.secondsElectrified==-1)
-							usr.client_mob() << text("The door is already indefinitely electrified. You'd have to un-electrify it before you can re-electrify it with a non-forever duration.<br>\n")
+							usr << text("The door is already indefinitely electrified. You'd have to un-electrify it before you can re-electrify it with a non-forever duration.<br>\n")
 						else if (src.secondsElectrified!=0)
-							usr.client_mob() << text("The door is already electrified. You can't re-electrify it while it's already electrified.<br>\n")
+							usr << text("The door is already electrified. You can't re-electrify it while it's already electrified.<br>\n")
 						else
 							src.secondsElectrified = 30
 							spawn(10)
@@ -675,26 +690,26 @@ About the new airlock wires panel:
 					if (6)
 						//electrify door indefinitely
 						if (src.isWireCut(AIRLOCK_WIRE_ELECTRIFY))
-							usr.client_mob() << text("The electrification wire has been cut.<br>\n")
+							usr << text("The electrification wire has been cut.<br>\n")
 						else if (src.secondsElectrified==-1)
-							usr.client_mob() << text("The door is already indefinitely electrified.<br>\n")
+							usr << text("The door is already indefinitely electrified.<br>\n")
 						else if (src.secondsElectrified!=0)
-							usr.client_mob() << text("The door is already electrified. You can't re-electrify it while it's already electrified.<br>\n")
+							usr << text("The door is already electrified. You can't re-electrify it while it's already electrified.<br>\n")
 						else
 							src.secondsElectrified = -1
 					if (7)
 						//open door
 						if (src.blocked)
-							usr.client_mob() << text("The airlock has been welded shut!<br>\n")
+							usr << text("The airlock has been welded shut!<br>\n")
 						else if (src.locked)
-							usr.client_mob() << text("The door bolts are down!<br>\n")
+							usr << text("The door bolts are down!<br>\n")
 						else if (src.density)
 							if (src.arePowerSystemsOn() && (!(stat & NOPOWER)))
 								open()
 							else
-								usr.client_mob() << "Unable to open door due to power failure."
+								usr << "Unable to open door due to power failure."
 						else
-							usr.client_mob() << text("The airlock is already opened.<br>\n")
+							usr << text("The airlock is already opened.<br>\n")
 				
 			src.updateIconState()
 			src.updateDialog()
@@ -722,7 +737,7 @@ About the new airlock wires panel:
 				if (W.weldfuel > 2)
 					W.weldfuel -= 2
 				else
-					user.client_mob() << "Need more welding fuel!"
+					user << "Need more welding fuel!"
 					return
 				if (!( src.blocked ))
 					src.blocked = 1
@@ -733,12 +748,12 @@ About the new airlock wires panel:
 		else if (istype(C, /obj/item/weapon/wrench))
 			if (src.p_open)
 				if (src.arePowerSystemsOn())
-					if (src.canBoltsBeRaisedManually() || istype(user, /mob/drone))
+					if (src.canBoltsBeRaisedManually())
 						src.locked = null
 					else
-						user.client_mob() << alert("You strain to try to raise the door bolts, but the door's power assist seems to be disabled!", null, null, null, null, null)
+						user << alert("You strain to try to raise the door bolts, but the door's power assist seems to be disabled!", null, null, null, null, null)
 				else
-					user.client_mob() << alert("You need power assist!", null, null, null, null, null)
+					user << alert("You need power assist!", null, null, null, null, null)
 			src.updateIconState()
 		else if (istype(C, /obj/item/weapon/screwdriver))
 			src.p_open = !( src.p_open )

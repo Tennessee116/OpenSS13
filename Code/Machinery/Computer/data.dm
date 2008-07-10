@@ -19,15 +19,11 @@ obj/machinery/computer/data
 
 	verb/display()
 		set src in oview(1)
-		var/result = src.canReach(usr, null, 1)
-		if (result==0)
-			usr.client_mob() << "You can't reach [src]."
-			return
 
 		for(var/x in src.topics)
-			usr.client_mob() << "[x], \..."
+			usr << "[x], \..."
 
-		usr.client_mob() << ""
+		usr << ""
 		src.add_fingerprint(usr)
 		return
 
@@ -36,15 +32,11 @@ obj/machinery/computer/data
 
 	verb/read(topic as text)
 		set src in oview(1)
-		var/result = src.canReach(usr, null, 1)
-		if (result==0)
-			usr.client_mob() << "You can't reach [src]."
-			return
 
 		if (src.topics[text("[]", topic)])
-			usr.client_mob() << "<B>[topic]</B>\n\t [src.topics["[topic]"]]"
+			usr << "<B>[topic]</B>\n\t [src.topics["[topic]"]]"
 		else
-			usr.client_mob() << "Unable to find- [topic]"
+			usr << "Unable to find- [topic]"
 		src.add_fingerprint(usr)
 		return
 
@@ -88,12 +80,8 @@ obj/machinery/computer/data
 
 			display()
 				set src in oview(1)
-				var/result = src.canReach(usr, null, 1)
-				if (result==0)
-					usr.client_mob() << "You can't reach [src]."
-					return
 
-				usr.client_mob() << "<B>Research Information:</B>"
+				usr << "<B>Research Information:</B>"
 				..()
 				return
 
@@ -119,12 +107,8 @@ obj/machinery/computer/data
 
 			display()
 				set src in oview(1)
-				var/result = src.canReach(usr, null, 1)
-				if (result==0)
-					usr.client_mob() << "You can't reach [src]."
-					return
 
-				usr.client_mob() << "<B>Research Log:</B>"
+				usr << "<B>Research Log:</B>"
 				..()
 				return
 

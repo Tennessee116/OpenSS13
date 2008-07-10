@@ -42,7 +42,7 @@
 					M.occupation2 = "Captain"
 				if (M.occupation3 == "AI")
 					M.occupation3 = "Captain"
-			
+
 			if (M.occupation1 != "No Preference")
 				occupations1[M.occupation1] += M
 				if (M.occupation2 != "No Preference")
@@ -70,7 +70,7 @@
 			final_occupations["Captain"] += captain_choice[1]
 			occupation_choices -= "Captain"
 			unassigned_mobs -= captain_choice[1]
-		
+
 	captain = final_occupations["Captain"]
 	if (captain.len==0)
 		captain_choice = occupations3["Captain"]
@@ -78,7 +78,7 @@
 			final_occupations["Captain"] += captain_choice[1]
 			occupation_choices -= "Captain"
 			unassigned_mobs -= captain_choice[1]
-		
+
 	captain = final_occupations["Captain"]
 	if (captain.len==0)
 		var/list/contenders = list(  )
@@ -214,8 +214,8 @@
 	for(var/mob/human/M in unassigned_mobs)
 		M.Assign_Rank(pick("Research Assistant", "Technical Assistant", "Medical Assistant", "Staff Assistant"))
 		//Foreach goto(2051)
-	for (var/mob/ai/aiPlayer in world)
-		spawn(0)
+	spawn(0) /*Fixed a bug that sometimes occurs where the AI holds up the game.. because the AI is evil? --Zjm7891*/
+		for (var/mob/ai/aiPlayer in world)
 			var/newname = input(aiPlayer, "You are the AI. Would you like to change your name to something else?", "Name change", aiPlayer.rname)
 			if (newname)
 				if (length(newname) >= 26)
@@ -223,9 +223,9 @@
 				newname = dd_replacetext(newname, ">", "'")
 				aiPlayer.rname = newname
 				aiPlayer.name = newname
-				
+
 			world << text("<b>[] is the AI!</b>", aiPlayer.rname)
-	
+
 	return
 
 /proc/shuffle(var/list/shufflelist)
@@ -621,4 +621,5 @@
 					subject.attack_ai(M)
 				else
 					subject:attack_self(M)
+
 

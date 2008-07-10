@@ -58,19 +58,19 @@ obj/machinery/pod
 		if (user.stat)
 			return
 		if ((user in src))							// make sure player is inside this pod
+			if (!user.restrained())
+				if (direction & 1)						// North pressed
+					src.speed = max(src.speed - 1, 1)	// slow down to minimum speed (1)
 
-			if (direction & 1)						// North pressed
-				src.speed = max(src.speed - 1, 1)	// slow down to minimum speed (1)
+				else if (direction & 2)					// South pressed
+					src.speed++							// Increase speed up to maximum (10)
+					if (src.speed > 10)
+						src.speed = 10
+				if (direction & 4)						// East pressed
+					src.dir = turn(src.dir, -90.0)		// Turn clockwise
 
-			else if (direction & 2)					// South pressed
-				src.speed++							// Increase speed up to maximum (10)
-				if (src.speed > 10)
-					src.speed = 10
-			if (direction & 4)						// East pressed
-				src.dir = turn(src.dir, -90.0)		// Turn clockwise
-
-			else if (direction & 8)					// West pressed
-				src.dir = turn(src.dir, 90)			// Turn anticlockwise
+				else if (direction & 8)					// West pressed
+					src.dir = turn(src.dir, 90)			// Turn anticlockwise
 
 
 
@@ -79,14 +79,11 @@ obj/machinery/pod
 
 	// Eject from pod - place player behind pod and restore view
 
-	//I left these all as regular .client since the verbs won't work if the mob doesn't have the client anyhow (a remote-controlled mob with no client won't be able to use the verbs). --shadowlord13
-
 	verb/eject()
 		set src = usr.loc
-
-		var/result = src.canReach(usr, null, 1)
-		if (result==0)
-			usr << "You can't reach [src]."
+		if (!(usr in src) || usr.restrained())
+			return
+		if (usr.stat)
 			return
 		var/mob/M = usr
 		M.loc = src.loc
@@ -101,6 +98,8 @@ obj/machinery/pod
 	verb/board()
 		set src in oview(1)
 
+		if (usr.restrained())
+			return
 		var/result = src.canReach(usr, null, 1)
 		if (result==0)
 			usr << "You can't reach [src]."
@@ -117,7 +116,8 @@ obj/machinery/pod
 
 	verb/load()
 		set src in oview(1)
-
+		if (usr.restrained())
+			return
 		if (usr.stat)
 			return
 		if (( ( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
@@ -142,8 +142,8 @@ obj/machinery/pod
 						M.client.perspective = EYE_PERSPECTIVE
 						M.client.eye = src
 				for(var/mob/O in viewers(src, null))
-					if (O.hasClient() && (!( O.blinded )))
-						O.client_mob() << text("\blue <B> [] loads [] into []!</B>", H, H.pulling, src)
+					if ((O.client && !( O.blinded )))
+						O << text("\blue <B> [] loads [] into []!</B>", H, H.pulling, src)
 				H.pulling = null
 		return
 
@@ -154,20 +154,18 @@ obj/machinery/pod
 	verb/unload(var/atom/movable/A in src.contents)
 		set src in oview(1)
 
-		var/result = src.canReach(usr, null, 1)
-		if (result==0)
-			usr << "You can't reach [src]."
+		if (usr.stat)
 			return
-		result = src.canReach(usr, null, 1)
-		if (result==0)
+		var/result = src.canReach(usr, null, 1)
+		if (result==0 && usr!=A)
 			usr << "You can't reach [src]."
 			return
 
 		if (istype(A, /atom/movable))
 			A.loc = src.loc
 			for(var/mob/O in viewers(src, null))
-				if (O.hasClient() && (!( O.blinded )))
-					O.client_mob() << text("\blue <B> [] unloads [] from []!</B>", usr, A, src)
+				if ((O.client && !( O.blinded )))
+					O << text("\blue <B> [] unloads [] from []!</B>", usr, A, src)
 				//Foreach goto(54)
 			if (ismob(A))
 				var/mob/M = A

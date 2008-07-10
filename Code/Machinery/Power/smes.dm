@@ -219,7 +219,7 @@
 		if ( (get_dist(src, user) > 1 ))
 			if (!istype(user, /mob/ai))
 				user.machine = null
-				user.client_mob() << browse(null, "window=smes")
+				user << browse(null, "window=smes")
 				return
 
 		user.machine = src
@@ -245,7 +245,7 @@
 		t += "<BR></PRE><HR><A href='?src=\ref[src];close=1'>Close</A>"
 
 		t += "</TT>"
-		user.client_mob() << browse(t, "window=smes;size=460x300")
+		user << browse(t, "window=smes;size=460x300")
 		return
 
 
@@ -258,9 +258,8 @@
 			return
 		if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
 			if (!istype(usr, /mob/ai))		
-				if (!istype(usr, /mob/drone))
-					usr.client_mob() << "\red You don't have the dexterity to do this!"
-					return
+				usr << "\red You don't have the dexterity to do this!"
+				return
 
 		//world << "[href] ; [href_list[href]]"
 
@@ -268,7 +267,7 @@
 
 
 			if( href_list["close"] )
-				usr.client_mob() << browse(null, "window=smes")
+				usr << browse(null, "window=smes")
 				usr.machine = null
 				return
 
@@ -338,7 +337,7 @@
 
 			src.updateDialog()
 		else
-			usr.client_mob() << browse(null, "window=smes")
+			usr << browse(null, "window=smes")
 			usr.machine = null
 
 		return

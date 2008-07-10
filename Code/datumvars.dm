@@ -3,7 +3,6 @@
 
 /proc/Vars(datum/D in view())
 	set category = "Debug"
-
 	var/dat = "<HEAD><TITLE>Vars for "
 
 	if(istype(D, /atom))						// if the datum is an atom
@@ -23,7 +22,7 @@
 		dat += variable(usr, V, D.vars[V])	 	//get the text for that variable
 
 	dat += "</BODY>"
-	usr.client_mob() << browse(dat, "window=\ref[D]")		// display the browser pop-up
+	usr << browse(dat, "window=\ref[D]")		// display the browser pop-up
 
 
 // return a HTML formatted string displaying a variable
@@ -45,7 +44,7 @@
 
 		#ifdef VARSICON
 		var/rnd = rand(1,10000)					// use random number in filename to avoid conflicts
-		user.client_mob() << browse_rsc(val, "tmp\ref[val][rnd].png")	// precache the icon image file
+		user << browse_rsc(val, "tmp\ref[val][rnd].png")	// precache the icon image file
 		t+="<IMG SRC=\"tmp\ref[val][rnd].png\">"			// and add the icon to the HTML
 		#endif
 
@@ -80,7 +79,6 @@
 
 /mob/proc/Delete(atom/A in view())
 	set category = "Debug"
-
 	switch( alert("Are you sure you wish to delete \the [A.name] at ([A.x],[A.y],[A.z]) ?", "Admin Delete Object","Yes","No") )
 		if("Yes")
 

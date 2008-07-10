@@ -33,6 +33,7 @@
 #define FPRINT 256			// takes a fingerprint
 #define WINDOW 512			// window or window/door (or injector)
 
+
 // channel numbers for power
 
 #define EQUIP 1
@@ -45,6 +46,8 @@
 #define NOPOWER 2
 #define POWEROFF 4		// tbd
 #define MAINT 8			// under maintaince
+
+
 
 /atom
 	layer = 2.0
@@ -158,7 +161,6 @@
 	var/mode = "random"
 	var/event_time = null
 	var/event = 0
-	var/burningo2 = 0
 
 /datum/control/poll
 	//name = "poll"
@@ -215,20 +217,13 @@
 		var/votenodefault = 0	// vote does not default to nochange/norestart (tbi)
 		var/votenodead = 0		// dead people can't vote (tbi)
 		var/list/modes = list("extended", "traitor", "meteor", "monkey", "blob", "nuclear")		// modes to choose between
-		var/list/pickprob = list()			// relative probability of each mode
+		var/list/pickprob = list()		// relative probability of each mode
 		var/allowai = 1 // allow ai job
 		var/bombtemp_determines_range = 0
 		var/crowbars_close_depowered_doors = 0
 		var/ai_can_call_shuttle = 0
 		var/ai_can_uncall_shuttle = 0
 		var/alternate_ai_laws = 0
-		var/air_pressure_flow = 0
-		var/min_gas_for_fire = 900000		// This sets the amount of gas needed for a fire in a tile to keep going, or for it to spread to another tile. The default is 900,000 units.
-		var/meteorchance = 0.1
-		var/enable_drones = 0
-		var/humans_can_use_drones = 0
-		var/walkable_not_pullable_drones = 0
-		var/plasma_danger = 0
 
 /datum/vote
 	var/voting = 0		// true if currently voting
@@ -351,10 +346,6 @@
 	var/start = null
 	var/disable_one_click = 0
 	var/favorite_hud = 0
-	var/currentDrone = null
-	var/droneTransitioning = 0
-	var/cameraFollow = null
-	var/now_pushing = null
 
 	var/list/organs = list(  )
 	var/list/grabbed_by = list(  )
@@ -406,6 +397,7 @@
 	var/obj/item/weapon/l_store = null
 	var/icon/stand_icon = null
 	var/icon/lying_icon = null
+	var/now_pushing = null
 	var/t_plasma = 0.0
 	var/t_oxygen = 0.0
 	var/last_b_state = 1.0
@@ -413,6 +405,7 @@
 	var/image/face2 = null
 	var/h_style_r = "hair_a"
 	weight = 2500000.0
+	var/cameraFollow = null
 
 	var/list/body_standing = list(  )
 	var/list/body_lying = list(  )
@@ -426,7 +419,9 @@
 	var/t_oxygen = null
 	var/t_sl_gas = null
 	var/t_n2 = null
+	var/now_pushing = null
 	flags = 258.0
+	var/cameraFollow = null
 
 /mob/megamonkey
 		name = "mutant monkey"
@@ -664,6 +659,14 @@
 	name = "ion trails"
 	icon_state = "ion_trails"
 	anchored = 1.0
+/obj/effects/water
+	name = "water"
+	icon = 'water.dmi'
+	icon_state = "extinguish"
+	var/life = 15.0
+	flags = 2.0
+	mouse_opacity = 0
+	weight = 1000
 /obj/equip_e
 	name = "equip e"
 	var/mob/source = null
@@ -2140,16 +2143,6 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	flags = 322.0
 	w_class = 2.0
 	s_istate = "electronic"
-/obj/item/weapon/weldingtool
-	name = "weldingtool"
-	icon_state = "welder"
-	var/welding = 0.0
-	var/weldfuel = 20.0
-	flags = 322.0
-	force = 3.0
-	throwforce = 5.0
-	throwspeed = 5.0
-	w_class = 2.0
 /obj/item/weapon/wire
 	desc = "This is just a simple piece of regular insulated wire."
 	name = "wire"
@@ -2463,6 +2456,14 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	icon = 'screen1.dmi'
 	icon_state = "arrow"
 	layer = 16.0
+/obj/portal
+	name = "portal"
+	icon = 'stationobjs.dmi'
+	icon_state = "portal"
+	density = 1
+	var/obj/target = null
+	anchored = 1.0
+
 /obj/rack
 	name = "rack"
 	icon = 'Icons.dmi'

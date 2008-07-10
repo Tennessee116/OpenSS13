@@ -107,6 +107,7 @@
 		loc = loc:loc
 	if (!istype(loc, /area))
 		world << text("Badly positioned turret - loc.loc is [].", loc)
+		src.die() //Added to stop Turret Spam
 		return
 	var/area/area = loc
 	if (istype(area, /area))
@@ -132,7 +133,7 @@
 				src.die()
 			else
 				world << text("ERROR: Turret at [], [], [] is NOT in a turret-protected area!", x, y, z)
-
+				src.die() //added to stop Turret Spam
 /obj/machinery/turret/proc/isDown()
 	return (invisibility!=0)
 
@@ -236,16 +237,16 @@
 		var/obj/item/weapon/card/id/I = W
 		if (I.check_access(access, allowed))
 			locked = !locked
-			user.client_mob() << "You [ locked ? "lock" : "unlock"] the panel."
+			user << "You [ locked ? "lock" : "unlock"] the panel."
 			if (locked)
 				if (user.machine==src)
 					user.machine = null
-					user.client_mob() << browse(null, "window=turretid")
+					user << browse(null, "window=turretid")
 			else
 				if (user.machine==src)
 					src.attack_hand(usr)
 		else
-			user.client_mob() << "\red Access denied."
+			user << "\red Access denied."
 
 /obj/machinery/turretid/attack_ai(mob/user as mob)
 	return attack_hand(user)
@@ -253,9 +254,9 @@
 /obj/machinery/turretid/attack_hand(mob/user as mob)
 	if ( (get_dist(src, user) > 1 ))
 		if (!istype(user, /mob/ai))
-			user.client_mob() << "Too far away."
+			user << text("Too far away.")
 			user.machine = null
-			user.client_mob() << browse(null, "window=turretid")
+			user << browse(null, "window=turretid")
 			return
 
 	user.machine = src
@@ -263,7 +264,7 @@
 	if (istype(loc, /turf))
 		loc = loc:loc
 	if (!istype(loc, /area))
-		user.client_mob() << text("Turret badly positioned - loc.loc is [].", loc)
+		user << text("Turret badly positioned - loc.loc is [].", loc)
 		return
 	var/area/area = loc
 	var/t = "<TT><B>Turret Control Panel</B> ([area.name])<HR>"
@@ -274,7 +275,7 @@
 		t += text("Turrets [] - <A href='?src=\ref[];toggleOn=1'>[]?</a><br>\n", src.enabled?"activated":"deactivated", src, src.enabled?"Disable":"Enable")
 		t += text("Currently set for [] - <A href='?src=\ref[];toggleLethal=1'>Change to []?</a><br>\n", src.lethal?"lethal":"stun repeatedly", src,  src.lethal?"Stun repeatedly":"Lethal")
 
-	user.client_mob() << browse(t, "window=turretid")
+	user << browse(t, "window=turretid")
 
 /obj/machinery/turretid/Topic(href, href_list)
 	..()
@@ -282,7 +283,7 @@
 		return
 	if (src.locked)
 		if (!istype(usr, /mob/ai))
-			usr.client_mob() << "Control panel is locked!"
+			usr << "Control panel is locked!"
 			return
 	if (href_list["toggleOn"])
 		src.enabled = !src.enabled

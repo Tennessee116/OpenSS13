@@ -75,6 +75,7 @@ obj/machinery/power/apc
 		// Pixel offsets so that APC actually appears embedded in the wall
 		pixel_x = (tdir & 3)? 0 : (tdir == 4 ? 24 : -24)
 		pixel_y = (tdir & 3)? (tdir ==1 ? 24 : -24) : 0
+		layer = 3.1
 
 
 		// if starting with a power cell installed, create it and set its charge level
@@ -110,11 +111,11 @@ obj/machinery/power/apc
 		if(stat & BROKEN) return
 
 		if(usr && !usr.stat)
-			usr.client_mob() << "A control terminal for the area electrical systems."
+			usr << "A control terminal for the area electrical systems."
 			if(opened)
-				usr.client_mob() << "The cover is open and the power cell is [ cell ? "installed" : "missing"]."
+				usr << "The cover is open and the power cell is [ cell ? "installed" : "missing"]."
 			else
-				usr.client_mob() << "The cover is closed."
+				usr << "The cover is closed."
 
 
 	// Update the APC icon to show the three base states (normal, opened with cell, opened without cell)
@@ -146,7 +147,7 @@ obj/machinery/power/apc
 	attackby(obj/item/weapon/W, mob/user)
 
 		if(stat & BROKEN) return
-		
+
 		if (istype(user, /mob/ai))
 			return src.attack_hand(user)
 
@@ -156,55 +157,55 @@ obj/machinery/power/apc
 				updateicon()
 			else
 				if(coverlocked)
-					user.client_mob() << "The cover is locked and cannot be opened."
+					user << "The cover is locked and cannot be opened."
 				else
 					opened = 1
 					updateicon()
 
 		else if	(istype(W, /obj/item/weapon/cell) && opened)	// trying to put a cell inside
 			if(cell)
-				user.client_mob() << "There is a power cell already installed."
+				user << "There is a power cell already installed."
 			else
 				user.drop_item()
 				W.loc = src
 				cell = W
-				user.client_mob() << "You insert the power cell."
+				user << "You insert the power cell."
 				chargecount = 0
 
 			updateicon()
 		else if (istype(W, /obj/item/weapon/card/id) )			// trying to unlock the interface with an ID card
 
 			if(opened)
-				user.client_mob() << "You must close the cover to swipe an ID card."
+				user << "You must close the cover to swipe an ID card."
 			else
 				var/obj/item/weapon/card/id/I = W
 				if (I.check_access(access, allowed))
 					locked = !locked
-					user.client_mob() << "You [ locked ? "lock" : "unlock"] the APC interface."
+					user << "You [ locked ? "lock" : "unlock"] the APC interface."
 					updateicon()
 				else
-					user.client_mob() << "\red Access denied."
+					user << "\red Access denied."
 
 		else if (istype(W, /obj/item/weapon/card/emag) )		// trying to unlock with an emag card
 
 			if(opened)
-				user.client_mob() << "You must close the cover to swipe an ID card."
+				user << "You must close the cover to swipe an ID card."
 			else
 				flick("apc-spark", src)
 				sleep(6)
 				if(prob(50))
 					locked = !locked
-					user.client_mob() << "You [ locked ? "lock" : "unlock"] the APC interface."
+					user << "You [ locked ? "lock" : "unlock"] the APC interface."
 					updateicon()
 				else
-					user.client_mob() << "You fail to [ locked ? "unlock" : "lock"] the APC interface."
+					user << "You fail to [ locked ? "unlock" : "lock"] the APC interface."
 
 
 	// Attack with hand - remove cell (if present and cover open) or interact with the APC
-	
+
 	attack_ai(mob/user)
 		return src.attack_hand(user)
-	
+
 	attack_hand(mob/user)
 
 		add_fingerprint(user)
@@ -215,16 +216,19 @@ obj/machinery/power/apc
 			if(cell)
 				cell.loc = usr
 				cell.layer = 20
+				//Added User.equipped() because apparently there is some bug where attach_hand gets called after attack_by().  --Zjm7891
 				if (user.hand )
-					user.l_hand = cell
+					if(!user.equipped())
+						user.l_hand = cell
 				else
-					user.r_hand = cell
+					if(!user.equipped())
+						user.r_hand = cell
 
 				cell.add_fingerprint(user)
 				cell.updateicon()
 
 				src.cell = null
-				user.client_mob() << "You remove the power cell."
+				user << "You remove the power cell."
 				charging = 0
 				src.updateicon()
 
@@ -240,7 +244,7 @@ obj/machinery/power/apc
 		if ( (get_dist(src, user) > 1 ))
 			if (!istype(user, /mob/ai))
 				user.machine = null
-				user.client_mob() << browse(null, "window=apc")
+				user << browse(null, "window=apc")
 				return
 
 		user.machine = src
@@ -267,7 +271,7 @@ obj/machinery/power/apc
 			t += "<HR>Cover lock: <B>[coverlocked ? "Engaged" : "Disengaged"]</B>"
 
 		else													// If interface is unlocked, show status and control links
-			if (!istype(user, /mob/ai))		
+			if (!istype(user, /mob/ai))
 				t += "<I>(Swipe ID card to lock interface.)</I><BR>"
 			t += "Main breaker: [operating ? "<B>On</B> <A href='?src=\ref[src];breaker=1'>Off</A>" : "<A href='?src=\ref[src];breaker=1'>On</A> <B>Off</B>" ]<BR>"
 			t += "External power : <B>[ main_status ? (main_status ==2 ? "<FONT COLOR=#004000>Good</FONT>" : "<FONT COLOR=#D09000>Low</FONT>") : "<FONT COLOR=#F00000>None</FONT>"]</B><BR>"
@@ -327,7 +331,7 @@ obj/machinery/power/apc
 		t += "<BR><HR><A href='?src=\ref[src];close=1'>Close</A>"
 
 		t += "</TT>"
-		user.client_mob() << browse(t, "window=apc")
+		user << browse(t, "window=apc")
 		return
 
 
@@ -365,8 +369,8 @@ obj/machinery/power/apc
 		if (usr.stat || usr.restrained() )
 			return
 		if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
-			if (!istype(usr, /mob/ai))		
-				usr.client_mob() << "\red You don't have the dexterity to do this!"
+			if (!istype(usr, /mob/ai))
+				usr << "\red You don't have the dexterity to do this!"
 				return
 
 		if (( (get_dist(src, usr) <= 1 && istype(src.loc, /turf))) || (istype(usr, /mob/ai)))
@@ -409,14 +413,14 @@ obj/machinery/power/apc
 				updateicon()
 				update()
 			else if( href_list["close"] )
-				usr.client_mob() << browse(null, "window=apc")
+				usr << browse(null, "window=apc")
 				usr.machine = null
 				return
 
 
 			src.updateDialog()
 		else
-			usr.client_mob() << browse(null, "window=apc")
+			usr << browse(null, "window=apc")
 			usr.machine = null
 
 		return

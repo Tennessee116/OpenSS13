@@ -88,7 +88,6 @@ obj/machinery/atmoalter/canister
 					var/t = src.t_per
 					if (src.t_per > t2)
 						t = t2
-					
 					src.holding.gas.transfer_from(src.gas, t)
 				else								// If not holding a tank, release gas into the turf
 					if (T)
@@ -246,15 +245,13 @@ Pipe Valve Status: [ct]<BR>
 <A href='?src=\ref[user];mach_close=canister'>Close</A><BR>
 </TT>"}
 
-		user.client_mob() << browse(dat, "window=canister;size=600x300")
+		user << browse(dat, "window=canister;size=600x300")
 		return
 
 
 	// Process topic link from interaction window
 
 	Topic(href, href_list)
-		//debug message: //usr.client_mob() << "Topic on canister, usr is [usr], src is [src], usr.client_mob() is [usr.client_mob()], href is ([href]), href_list is ([href_list])."
-	
 		..()
 		if (usr.stat || usr.restrained())
 			return
@@ -309,7 +306,7 @@ Pipe Valve Status: [ct]<BR>
 			update_icon()
 
 		else
-			usr.client_mob() << browse(null, "window=canister")
+			usr << browse(null, "window=canister")
 
 
 	// Attack by an object

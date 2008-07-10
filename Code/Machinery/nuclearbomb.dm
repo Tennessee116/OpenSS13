@@ -49,7 +49,9 @@ obj/machinery/nuclearbomb
 			if (src.timeleft <= 0)
 				explode()
 
-			src.updateDialog()
+			for(var/mob/M in viewers(1, src))
+				if ((M.client && M.machine == src))
+					src.attack_hand(M)
 
 
 	// Monkey interact same as human
@@ -137,7 +139,7 @@ Anchor: [(src.anchored ? "Engaged" : "Off")] Toggle<BR>
 <A href='?src=\ref[src];type=7'>7</A>-<A href='?src=\ref[src];type=8'>8</A>-<A href='?src=\ref[src];type=9'>9</A><BR>
 <A href='?src=\ref[src];type=R'>R</A>-<A href='?src=\ref[src];type=0'>0</A>-<A href='?src=\ref[src];type=E'>E</A><BR>
 </TT>"}
-			user.client_mob() << browse(dat, "window=nuclearbomb;size=300x400")
+			user << browse(dat, "window=nuclearbomb;size=300x400")
 
 		else					// Deploy and anchor the bomb.
 
@@ -155,9 +157,8 @@ Anchor: [(src.anchored ? "Engaged" : "Off")] Toggle<BR>
 		if (usr.stat || usr.restrained())
 			return
 		if ((!( istype(usr, /mob/human) ) && (!( ticker ) || (ticker && ticker.mode != "monkey"))))
-			if (!istype(usr, /mob/drone))
-				usr.client_mob() << "\red You don't have the dexterity to do this!"
-				return
+			usr << "\red You don't have the dexterity to do this!"
+			return
 		if ((usr.contents.Find(src) || (get_dist(src, usr) <= 1 && istype(src.loc, /turf))))
 			usr.machine = src
 
@@ -208,9 +209,11 @@ Anchor: [(src.anchored ? "Engaged" : "Off")] Toggle<BR>
 
 			src.add_fingerprint(usr)
 
-			src.updateDialog()
+			for(var/mob/M in viewers(1, src))
+				if ((M.client && M.machine == src))
+					src.attack_hand(M)
 		else
-			usr.client_mob() << browse(null, "window=nuclearbomb")
+			usr << browse(null, "window=nuclearbomb")
 			return
 
 

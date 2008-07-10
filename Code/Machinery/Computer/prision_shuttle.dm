@@ -18,9 +18,8 @@ obj/machinery/computer/prison_shuttle
 
 	verb/take_off()
 		set src in oview(1)
-		var/result = src.canReach(usr, null, 1)
-		if (result==0)
-			usr.client_mob() << "You can't reach [src]."
+
+		if ((usr.stat || usr.restrained()))
 			return
 		src.add_fingerprint(usr)
 
@@ -62,21 +61,17 @@ obj/machinery/computer/prison_shuttle
 						del(T)
 				prison_entered = 1
 			else
-				usr.client_mob() << "\blue There is an obstructing shuttle!"
+				usr << "\blue There is an obstructing shuttle!"
 
 
-	// Restabilize verb
+	// Restabalize verb
 	// Set all shuttle locations to standard atmosphere settings
 
-	verb/restabilize()
+	verb/restabalize()
 		set src in oview(1)
-		var/result = src.canReach(usr, null, 1)
-		if (result==0)
-			usr.client_mob() << "You can't reach [src]."
+		if ((usr.stat || usr.restrained()))
 			return
-		var/list/observers = viewers(null, null)
-		for (var/mob/who in observers)
-			who.client_mob() << "\red <B>Restabilizing prison shuttle atmosphere!</B>"
+		viewers(null, null) << "\red <B>Restabilizing prison shuttle atmosphere!</B>"
 		var/A = locate(/area/shuttle_prison)
 		for(var/obj/move/T in A)
 			T.firelevel = 0
@@ -99,7 +94,5 @@ obj/machinery/computer/prison_shuttle
 			T.otemp = T20C
 			T.ttemp = T20C
 
-		observers = viewers(null, null)
-		for (var/mob/who in observers)
-			who.client_mob() << "\red <B>Prison shuttle Restabilized!</B>"
+		viewers(null, null) << "\red <B>Prison shuttle Restabilized!</B>"
 		src.add_fingerprint(usr)
