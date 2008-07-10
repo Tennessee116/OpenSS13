@@ -3,7 +3,6 @@
 
 /proc/Vars(datum/D in view())
 	set category = "Debug"
-
 	var/dat = "<HEAD><TITLE>Vars for "
 
 	if(istype(D, /atom))						// if the datum is an atom
@@ -80,7 +79,6 @@
 
 /mob/proc/Delete(atom/A in view())
 	set category = "Debug"
-
 	switch( alert("Are you sure you wish to delete \the [A.name] at ([A.x],[A.y],[A.z]) ?", "Admin Delete Object","Yes","No") )
 		if("Yes")
 

@@ -3078,7 +3078,9 @@
 		src.verbs += /mob/proc/carboncopy
 		src.verbs += /mob/proc/toggle_alter
 		src.verbs += /mob/proc/list_dna
+		#ifdef SDEBUG
 		src.verbs += /proc/Vars
+		#endif
 	src << text("\blue <B>[]</B>", world_message)
 	src << browse(text("[]", changes), "window=changes")
 	if (!( isturf(src.loc) ))
@@ -6293,7 +6295,9 @@
 		src.verbs += /mob/proc/toggle_alter
 		src.verbs += /mob/proc/carboncopy
 		src.verbs += /mob/proc/list_dna
+		#ifdef SDEBUG
 		src.verbs += /proc/Vars
+		#endif
 	src << text("\blue <B>[]</B>", world_message)
 	if (!( isturf(src.loc) ))
 		src.client.eye = src.loc
@@ -7330,8 +7334,10 @@
 
 
 				if(src.holder.level ==5)
+					#ifdef SDEBUG
 					src.verbs += /proc/Vars
 					src.verbs += /mob/proc/Delete
+					#endif
 		return
 	return
 

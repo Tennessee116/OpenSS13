@@ -2,7 +2,7 @@ var
 
 	world_message = "Welcome to OpenSS13!"
 	savefile_ver = "4"
-	SS13_version = "1.0 RC 2"
+	SS13_version = "1.0"
 	changes = {"<FONT color='blue'><B>Changes from previous version.</B></FONT><BR>
 <HR><PRE>
 Features
@@ -13,6 +13,16 @@ Added an AI role to the station, with suitable equipment.
 Bug-fixes
 =========
 Submitted By	Fixed By	Description
+Stephen001	Stephen001	Fixed the Prison Station's map
+Zjm7891		Zjm7891		Fixed bug involving APC's without external power eating screwdriver
+Zjm7891		Zjm7891		Fixed bug #2002391
+Coral		Zjm7891		Fixed Emergency Close
+Animay3		Zjm7891		Fixed CTF mode crashing server.
+Nickr5		Zjm7891		Fixed closet/chair immobilisation bug
+Trafalgar	Hobnob		Made weldingtools ignite plasma when present.
+Zjm7891		Zjm7891		Attacking with certian items ignored range
+Cecilff2	Stephen001	Grab stages would not advance past passive.
+Zjm7891     Zjm7891		AI could no longer use equipment
 Cecilff2	Stephen001	Grab stages would not advance past passive.
 Kurper		Stephen001	DNA Add would not append data properly.
 Animay		Trafalgar	Attack delays were removed.
@@ -32,11 +42,6 @@ Trafalgar	Trafalgar	Ranks were not always consistent with access numbers.
 Trafalgar	Trafalgar	Fixed bad grammar on some admin messages.
 Trafalgar	Trafalgar	The AI could perform all the actions a human could.
 Trafalgar	Trafalgar	The AI could not see it's APC if the APC was turned off.
-Trafalgar	Trafalgar	The AI did not lose health below 0.
-Trafalgar	Trafalgar	Fixed typos with shuttle messages.
-Trafalgar	Trafalgar	The AI did not receive dialog updates.
-Trafalgar	Trafalgar	Monkeys could be attacked before the game started.
-Trafalgar	Trafalgar	Health equipment could be wasted on non-humans.
 </PRE>"}
 	datum/air_tunnel/air_tunnel1/SS13_airtunnel = null
 	datum/control/cellular/cellcontrol = null

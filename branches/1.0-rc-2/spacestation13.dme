@@ -4,8 +4,8 @@
 
 // BEGIN_INTERNALS
 /*
-FILE: Code\items.dm
-DIR: Code Code\Item Code\Item\Weapon Code\Machinery Code\Machinery\Atmoalter Code\Machinery\Computer Code\Machinery\Door Code\Machinery\Power Code\mob Interface
+FILE: Code\mob.dm
+DIR: Code Code\Machinery Code\Machinery\Atmoalter Code\Machinery\Computer Code\mob
 MAP_ICON_TYPE: 0
 AUTO_FILE_DIR: ON
 */
