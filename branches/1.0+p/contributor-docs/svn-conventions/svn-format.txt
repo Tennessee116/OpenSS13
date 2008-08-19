@@ -1,8 +1,0 @@
-Open SS13 SVN Formatting
-========================
-
-This one is pretty simple. All contributor made docs should either be txt or PDF. All files within the repository should have Windows style line ending where relevant. A script is provided for linux users, to convert directories to and from Windows line endings.
-
-All things under trunk, branches and tags are governed by the project's file name convention. Everything under contributor-docs should be all lower-case, txt only, with .txt file extension. No adding to management-scripts please! Just chat with me if you wanna add something there.
-
-Stephen001
