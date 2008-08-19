@@ -1,0 +1,8 @@
+Open SS13 SVN Locking
+=====================
+
+Locking is an important feature in SVN, it stops two contributors working on the same file at the same time. You can lock at several levels, folder or file. The process is the same for both. Right-click on what you want to lock, then do TortoiseSVN > Get Lock. When you go to commit the thing you locked, it should release the lock. If you for some reason need to maintain the lock (for instance, you have finalised some changes, but still have others to do on the file), the tick the 'keep lock' box when commiting. You may also decide you didn't need the lock at all, so simply Right-Click on the file, then do TortoiseSVN > Release Lock.
+
+Just a note: Be kind to your fellow contributor! Try to lock only the files you need to change, and release the locks as early as you can. If locks get stuck, contact me, I'll steal them.
+
+Stephen001
