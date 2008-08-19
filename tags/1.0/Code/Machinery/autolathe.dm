@@ -78,6 +78,7 @@ obj/machinery/autolathe
 			L["manif"] = "Pipe manifold (15000 cc)"
 			L["junct"] = "Pipe junction (10000 cc)"
 			L["vent"] = "Pipe vent (10000 cc)"
+			L["inlet"] = "Pipe inlet (10000 cc)"
 	/*		L["screwdriver"] = "Make Screwdriver {40 cc}"
 			L["wirecutters"] = "Make Wirecutters {80 cc}"
 			L["wrench"] = "Make Wrench {150 cc}"
@@ -128,6 +129,7 @@ obj/machinery/autolathe
 				C["manif"] = 15000
 				C["junct"] = 10000
 				C["vent"] = 10000
+				C["inlet"] = 10000
 
 				var/item = href_list["make"]
 				var/cost = C[item]
@@ -152,6 +154,9 @@ obj/machinery/autolathe
 							new /obj/item/weapon/pipe{ ptype = 6 }(src.loc)
 						if("vent")
 							new /obj/item/weapon/pipe{ ptype = 7 }(src.loc)
+						if("inlet")
+							new /obj/item/weapon/pipe{ ptype = 8 }(src.loc)
+
 
 
 

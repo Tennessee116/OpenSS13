@@ -228,10 +228,10 @@ heat is conserved between exchanges
 #define TURF_ADD_FRAC 0.95		//cooling due to release of gas into tile
 #define TURF_TAKE_FRAC 1.06		//heating due to pressurization into pipework
 
-// Not used?
+
 /obj/substance/gas/leak(T as turf)
 
-	turf_add(T, src.co2 + src.oxygen + src.plasma + src.n2)
+	turf_add(T, -1)
 	return
 
 /obj/substance/gas/proc/tot_gas()

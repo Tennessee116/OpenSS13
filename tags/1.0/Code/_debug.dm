@@ -472,3 +472,8 @@
 
 
 
+/mob/verb/Admins()
+	set category = "Debug"
+
+	for(var/A in admins)
+		world << "[A] = [admins[A]]"

@@ -91,6 +91,10 @@
 	for(var/obj/machinery/M in T.contents)
 		if(M.level == level)
 			if(M.p_dir & flip)
+				var/obj/machinery/pipes/P = M
+				if(istype(P))
+					if (P.stat & BROKEN)
+						continue
 				return M
 
 	return null
@@ -108,6 +112,10 @@
 	for(var/obj/machinery/M in T.contents)
 		if(M.level == level)
 			if(M.h_dir & flip)
+				var/obj/machinery/pipes/P = M
+				if(istype(P))
+					if (P.stat & BROKEN)
+						continue
 				return M
 
 	return null
@@ -168,3 +176,28 @@
 
 
 
+// Called by all pipe-related objects (except pipes themselves) when attack with a weldingtool
+// Create the relevant pipe fitting item from the pipe object
+// Returns true if succeeded, false otherwise
+
+/obj/machinery/proc/attack_welder(obj/item/weapon/weldingtool/WT, mob/user)
+
+	if(WT.welding)
+		if(WT.weldfuel > 3)
+			WT.weldfuel -=3
+
+			user << "\blue Removing the [name]. Stand still as this takes some time."
+			var/turf/T = user.loc
+			sleep(50)
+
+			if ((user.loc == T && user.equipped() == WT))
+				// make pipe fitting
+
+				var/obj/item/weapon/pipe/P = new(src.loc)
+				P.settype(src)
+
+				return 1
+		else
+			user << "\blue You need more welding fuel to remove the [name]."
+
+	return 0

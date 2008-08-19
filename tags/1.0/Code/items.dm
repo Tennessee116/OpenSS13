@@ -1019,6 +1019,8 @@
 	var/turf/T = get_turf(src.loc)
 	T.firelevel = T.poison
 	T.res_vars()
+	src.loc = null
+
 	var/sw = locate(max(T.x - 4, 1), max(T.y - 4, 1), T.z)
 	var/ne = locate(min(T.x + 4, world.maxx), min(T.y + 4, world.maxy), T.z)
 	for(var/turf/U in block(sw, ne))
@@ -5807,7 +5809,7 @@
 					if(usr:aiRestorePowerRoutine == 0)
 						src.attack_ai(usr, usr.hand)
 					else
-						usr << "You currently do not have the power to preform this task"
+						usr << "You currently do not have the power to perform this task"
 				else
 					if (istype(usr, /mob/human))
 						src.attack_hand(usr, usr.hand)

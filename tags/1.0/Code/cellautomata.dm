@@ -1118,6 +1118,7 @@
 				var/m_key = copytext(t, 1, t1)
 				var/a_lev = text("[]", copytext(t, t1 + 3, length(t) + 1))
 				admins[text("[]", m_key)] = text("[]", a_lev)
+
 		//Foreach goto(64)
 	admins["exadv1"] = "Primary Administrator"
 

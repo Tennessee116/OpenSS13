@@ -66,7 +66,8 @@ obj/machinery/cryo_cell
 		line_in = get_machine(level, T, p_dir )
 
 		if(line_in) vnode = line_in.getline()
-
+		else
+			vnode = null
 
 
 	// Called to set the object overlays to the stored values
@@ -235,9 +236,9 @@ obj/machinery/cryo_cell
 	// AI interact
 	attack_ai(mob/user)
 		return src.attack_hand(user)
-	
+
 	// Human interact, show status window of machine and occupant
-	
+
 	attack_hand(mob/user)
 
 		if(stat & NOPOWER)
@@ -354,7 +355,7 @@ obj/machinery/cryo_cell
 		else
 			usr << "User too far?"
 		return
-		
+
 	// Called to remove the occupant of a cell
 	// Reset the view back to normal
 
