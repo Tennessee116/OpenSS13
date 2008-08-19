@@ -44,6 +44,14 @@ obj/machinery/pipeline				// logical pipeline consisting of multiple /obj/machin
 		gasflowlist += src
 
 
+	// Delete a pipeline, remove from gasflowlist and pipeline list
+
+	Del()
+		gasflowlist -= src
+		plines -= src
+		..()
+
+
 	// Sets the vnode1 & vnode2 values to the machines connected at each end of the pipe
 	// Also orientates the pipes in the node list so that for each pipe, node1 points to previous entry, and node2 points to next
 
@@ -126,6 +134,11 @@ obj/machinery/pipeline				// logical pipeline consisting of multiple /obj/machin
 		if(tot_node>0.1)											// no pipe contents, don't heat
 			for(var/obj/machinery/pipes/P in src.nodes)				// for each segment of pipe
 				P.heat_exchange(ngas, tot_node, numnodes, gtemp) 	// exchange heat with its turf
+
+			if(tot_node * gtemp > PRESSURELIMIT)
+				var/obj/machinery/pipes/P = pick(nodes)
+				P.health--
+				P.healthcheck()
 
 
 		// now do standard gas flow proc

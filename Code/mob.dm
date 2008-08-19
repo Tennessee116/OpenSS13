@@ -7306,6 +7306,7 @@
 		if (admins.Find(src.ckey))
 			src.holder = new /obj/admins( src )
 			src.holder.rank = admins[text("[]", src.ckey)]
+
 			switch(admins[text("[]", src.ckey)])
 				if("Primary Administrator")
 					src.holder.level = 5
@@ -7326,7 +7327,11 @@
 				else
 					//src.holder = null
 					del(src.holder)
+
+
+
 			if (src.holder)
+				src << "You are \a [admins[ckey]]"
 				src.holder.owner = src
 				src.verbs += /client/proc/show_panel
 				src.mob.CanBuild()
@@ -7334,6 +7339,7 @@
 
 
 				if(src.holder.level ==5)
+					sleep(1)
 					#ifdef SDEBUG
 					src.verbs += /proc/Vars
 					src.verbs += /mob/proc/Delete

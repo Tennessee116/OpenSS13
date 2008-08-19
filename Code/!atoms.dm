@@ -10,6 +10,8 @@
 #define FIREQUOT 15000				//divisor to get target temp from firelevel
 #define FIRERATE 5					//divisor of temp difference rate of change
 
+#define PRESSURELIMIT 5E9			// maximum "pressure" (temp*content) before a pipe takes pressure damage
+
 #define NORMPIPERATE 40					//pipe-insulation rate divisor
 #define HEATPIPERATE 8					//heat-exch pipe insulation
 
@@ -434,7 +436,7 @@
 /obj
 	var/throwspeed = 0.0
 	var/throwing = null
-	var/datum/module/mod
+	//var/datum/module/mod
 
 /obj/mark
 		var/mark = ""
@@ -1854,15 +1856,6 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	desc = "<B>Sleeping Pills</B>\nAdminister as required to calm person.\nCauses 10 minutes of drowsyness. MAY induce immediate sleep.\n<B>WARNING</B>: Neurodepressant! Do not overdose!\n<B>Warning</B>: Causes drowsiness!If drowsyness persists for over 15 minutes contact medical professional."
 	name = "Pill Canister- 'Sleeping Pills'"
 
-/obj/item/weapon/pipe
-	name = "pipe"
-	icon = 'pipe-item.dmi'
-	icon_state = "straight"
-	var/ptype = 0
-	flags = TABLEPASS|DRIVABLE|FPRINT
-	w_class = 4
-	s_istate = "pipe"
-	level = 2
 
 /obj/item/weapon/prox_sensor
 	name = "Proximity Sensor"

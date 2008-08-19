@@ -42,16 +42,11 @@ obj/machinery/inlet
 
 	buildnodes()
 
-		var/turf/T = get_step(src.loc, src.dir)
-		var/fdir = turn(src.p_dir, 180)
-
-		for(var/obj/machinery/M in T)
-			if(M.p_dir & fdir)
-				src.node = M
-				break
+		node = get_machine(level, src.loc, dir )
 
 		if(node) vnode = node.getline()
-
+		else
+			vnode = null
 		return
 
 
@@ -101,3 +96,13 @@ obj/machinery/inlet
 			flow_to_turf(gas, ngas, T)
 
 
+	// Attack by item
+	// If welder, make a fitting and delete self
+
+	attackby(obj/item/weapon/W, mob/user)
+
+		if(istype(W, /obj/item/weapon/weldingtool))
+			if(attack_welder(W, user))
+				del(src)
+		else
+			..()

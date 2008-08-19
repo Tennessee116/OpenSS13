@@ -70,7 +70,11 @@ obj/machinery/valve
 		node2 = get_machine(level, T , turn(dir, 180) )	// the regular pipe
 
 		if(node1) vnode1 = node1.getline()
+		else
+			vnode1 = null
 		if(node2) vnode2 = node2.getline()
+		else
+			vnode2 = null
 
 		return
 

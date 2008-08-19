@@ -172,17 +172,22 @@
 		step(user.pulling, get_dir(user.pulling.loc, src))
 	return
 
-/turf/space/attackby(obj/item/weapon/tile/T as obj, mob/user as mob)
+/turf/space/attackby(obj/item/weapon/W, mob/user)
 
-	if (istype(T, /obj/item/weapon/tile))
+	if (istype(W, /obj/item/weapon/tile))
+		var/obj/item/weapon/tile/T = W
 		T.build(src)
 		T.amount--
 		T.add_fingerprint(user)
 		if (T.amount < 1)
 			user.u_equip(T)
-			//SN src = null
 			del(T)
 			return
+	else if (istype(W, /obj/item/weapon/pipe) )
+		var/obj/item/weapon/pipe/pipe = W
+		if(locate(/obj/lattice) in src)
+			pipe.turf_place(src, user)
+
 	return
 
 /turf/space/updatecell()

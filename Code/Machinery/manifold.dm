@@ -75,8 +75,14 @@ obj/machinery/manifold
 
 
 		if(node1) vnode1 = node1.getline()
+		else
+			vnode1 = null
 		if(node2) vnode2 = node2.getline()
+		else
+			vnode2 = null
 		if(node3) vnode3 = node3.getline()
+		else
+			vnode3 = null
 
 		return
 
@@ -145,4 +151,13 @@ obj/machinery/manifold
 		flow_to_turf(gas, ngas, T)
 
 
+	// Attack by item
+	// If welder, make a fitting and delete self
 
+	attackby(obj/item/weapon/W, mob/user)
+
+		if(istype(W, /obj/item/weapon/weldingtool))
+			if(attack_welder(W, user))
+				del(src)
+		else
+			..()
