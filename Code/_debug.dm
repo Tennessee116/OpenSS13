@@ -83,12 +83,12 @@
 
 	var/image/I = image('mark.dmi', "blank")
 
-	if(lentext(tn)>8)
+	if(length(tn)>8)
 		tn = "*"
 
-	var/len = lentext(tn)
+	var/len = length(tn)
 
-	for(var/d = 1 to lentext(tn))
+	for(var/d = 1 to length(tn))
 
 
 		var/char = copytext(tn, len-d+1, len-d+2)
