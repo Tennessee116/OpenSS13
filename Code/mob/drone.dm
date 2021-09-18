@@ -8,14 +8,14 @@
 	Take-off dialog for taking things off others should work, except humans controlling a drone should have a high chance of failure and harming the person instead.
 	should lose drone control upon going unconscious (it's already lost upon death), and also if the user is pulled/moves away from the control station
 	re-test: can drone push canisters now?
-	
+
 	test: hit monkey as drone, as person
 	test: hit drone as monkey
 	more testing: drone vs drone fight, and another human vs drone fight.
 	Try out the grip/heal/disarm/harm intents from drone to human and from human to drone. (Once the intent buttons are added for drones.)
-		
+
 	Held jetpack with flight system turned on doesn't work for drone - appears to be due to lack of internal air
-	
+
 	(Before these are implemented, the AI just has a damage bonus applied when it is controlling a drone)
 	Implement AI-controlled drone precision attacks:
 		when using screwdriver, auto-aim for heart? protected by armor (may break screwdriver tool permanently), reduced damage from other suits.
@@ -25,7 +25,7 @@
 		wirecutters don't have a precision attack or even work well for attacking at all (one would think), and are likely to break if used.
 		If drone gets ahold of a laser gun or loaded revolver, an AI controller will be able to precision aim it as well.
 	Note to be very clear: If a human is controlling the drone, they do not get any of those precision bonus attacks. Those are only applied if the AI is controlling the drone.
-	
+
 	Todo: When attempting to speak while controlling a drone, it should send the speech from the controller, unless you use [d], in which case the drone should say it.
 */
 
@@ -60,7 +60,7 @@
 	var/obj/item/weapon/aiInterface
 	var/image/grippedItemImage = null
 	var/list/tools
-	
+
 	var/obj/item/weapon/selectedTool = null
 
 	New()
@@ -69,7 +69,7 @@
 				sleep(10)
 			if (!config.enable_drones)
 				del(src)
-				
+
 		src.gripperIcon = new /obj/screen( null )
 		src.wirecuttersIcon = new /obj/screen( null )
 		src.crowbarIcon = new /obj/screen( null )
@@ -80,9 +80,9 @@
 		src.selector = new /obj/screen( null )
 		src.dropButton = new /obj/screen( null )
 		src.throwButton = new /obj/screen( null )
-		
+
 		var/inventorySlotImageName = "inv"
-		
+
 		src.gripperIcon.icon_state = inventorySlotImageName
 		src.wirecuttersIcon.icon_state = inventorySlotImageName
 		src.crowbarIcon.icon_state = inventorySlotImageName
@@ -115,7 +115,7 @@
 		src.aiIcon.screen_loc = "7,1"
 		src.selector.screen_loc = "1,1"
 		src.dropButton.screen_loc = "8,1"
-		src.throwButton.screen_loc = "9,1"	
+		src.throwButton.screen_loc = "9,1"
 
 		src.grippers = new /obj/item/weapon/drone/grippers(src)
 		src.wirecutters = new /obj/item/weapon/wirecutters(src)
@@ -330,15 +330,15 @@
 					user.client_mob() << "That drone is a wreck. It's mostly destroyed."
 				else
 					user << "That drone is not responding to signals at this time."
-	
+
 
 	attack_ai(var/mob/user)
 		if (user.client)
 			use_via_drone_control(user)
-	
+
 	attack_paw(var/mob/user)
 		user.client_mob() << "You can't figure it out, and slapping the shiny metal with your paws doesn't seem to harm it."
-	
+
 	attack_hand(var/mob/user)
 		if (src == user)
 			src.releaseControl(1)
@@ -396,10 +396,10 @@
 						for(var/mob/M in hearers(src, null))
 							var/msg = text("<FONT size=[]>KLANG!</FONT>", max(0, 5 - get_dist(src, M)))
 							M.client_mob() << msg
-						
+
 	abiotic()
 		return 1
-	
+
 	say(message as text)
 		if (src.controlledBy)
 			if (istype(src.controlledBy, /mob/human) || istype(src.controlledBy, /mob/monkey) || istype(src.controlledBy, /mob/ai))
@@ -411,7 +411,7 @@
 			if (istype(user, /mob/human) || istype(user, /mob/ai))
 				if (src.stat==0)
 					user << "You have taken control of the drone. <b>To release control later, use/attack (click or double click) the drone with your empty gripper-hand</b>."
-					
+
 					src.controlledBy = user
 					user.currentDrone = src
 					user:reset_view(src)
@@ -426,13 +426,13 @@
 					for (var/atom/item in src.screenIcons)
 						item.icon = screenFile
 					user.client.screen -= user.client.screen
-					
+
 					user.droneTransitioning = 1
 					src.droneTransitioning = 1
 					src.client = user.client
 					user.droneTransitioning = 0
 					src.droneTransitioning = 0
-					
+
 					src.client.screen += src.screenIcons
 					if (!istype(user, /mob/ai))
 						src.client.screen -= src.aiIcon
@@ -450,13 +450,13 @@
 				src.controlledBy = null
 				//world.log << text("releaseControl begin. src.savedDroneIcons are [], src.screenIcons are [], user.client.screen is []", listToString(src.savedDroneIcons), listToString(src.screenIcons), listToString(user.client.screen))
 				src.client.screen -= src.client.screen
-				
+
 				user.droneTransitioning = 1
 				src.droneTransitioning = 1
 				user.client = src.client
 				user.droneTransitioning = 0
 				src.droneTransitioning = 0
-				
+
 				user.client.screen += src.savedDroneIcons
 				user:cancel_camera()
 				src.savedDroneIcons = list()
@@ -466,7 +466,7 @@
 					user << "You have released control of the drone."
 				else
 					user << "You have lost control of the drone!"
-				
+
 
 	drop_item_v()
 		src.drop_item()
@@ -555,7 +555,7 @@
 
 
 		return
-	
+
 	proc/firecheck(turf/T as turf)
 		if (T.firelevel < config.min_gas_for_fire)
 			return 0
@@ -591,7 +591,7 @@
 		else
 			item.layer = initial(item.layer)
 			grip(item)
-	
+
 	client_mob()
 		if (src.client!=null)
 			return src
@@ -668,7 +668,7 @@
 		if ((src.s_active && !( s_active in src.contents ) ))
 			src.s_active.close(src)
 		return
-	
+
 	Bump(atom/movable/AM as mob|obj, yes)
 		spawn( 0 )
 			if ((!( yes ) || src.now_pushing))
@@ -676,7 +676,7 @@
 			..()
 			src.PushingBump(AM, yes)
 		return
-	
+
 	//block the take-off/put-on dialog
 	show_inv(mob/user as mob)
 		return
@@ -710,21 +710,21 @@
 				if (prob(25))
 					src.stunned = 1
 		return
-	
+
 	Logout()
 		if (src.droneTransitioning==1)
 			..()
 			return
 		src.releaseControl(0)
-		
+
 	Login()
 		if (src.droneTransitioning==1)
 			..()
 			return
-		
+
 		src.releaseControl(0)
-		
-	
+
+
 	ex_act(severity)
 		flick("flash", src.flash)
 
@@ -765,7 +765,7 @@
 /proc/listToString(var/list/L)
 	var/output = "{"
 	for (var/entry in L)
-		if (lentext(output)==1)
+		if (length(output)==1)
 			output += "[entry]"
 		else
 			output += ", [entry]"

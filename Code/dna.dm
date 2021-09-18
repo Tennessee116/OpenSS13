@@ -252,7 +252,7 @@
 	if (result==0)
 		usr.client_mob() << "You can't reach [src]."
 		return
-	
+
 	if (usr.stat != 0)
 		return
 	if (src.occupant)
@@ -730,7 +730,7 @@
 	if (result==0)
 		usr.client_mob() << "You can't reach [src]."
 		return
-	
+
 	src.add_fingerprint(usr)
 	if ((src.occupant && src.occupant.primary))
 		switch(src.occupant.primary.spec_identity)
@@ -887,7 +887,7 @@
 	if (result==0)
 		usr.client_mob() << "You can't reach [src]."
 		return
-	
+
 	if (usr.stat != 0)
 		return
 	if (src.occupant)
