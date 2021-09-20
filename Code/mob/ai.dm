@@ -150,7 +150,7 @@
 		src.stat = 2
 		src.canmove = 0
 		if (src.blind)
-			src.blind.layer = 0
+			src.blind.alpha = 0
 		src.sight |= SEE_TURFS
 		src.sight |= SEE_MOBS
 		src.sight |= SEE_INFRA
@@ -244,8 +244,8 @@
 
 					if (!blind)
 						//stage = 4.5
-						if (src.blind.layer!=0)
-							src.blind.layer = 0
+						if (src.blind.alpha!=0)
+							src.blind.alpha = 0
 						src.sight |= SEE_TURFS
 						src.sight |= SEE_MOBS
 						src.sight |= SEE_INFRA
@@ -278,8 +278,8 @@
 
 						//stage = 6
 						src.blind.screen_loc = "1,1 to 15,15"
-						if (src.blind.layer!=18)
-							src.blind.layer = 18
+						if (src.blind.alpha!=255)
+							src.blind.alpha = 255
 						src.sight = src.sight&~SEE_TURFS
 						src.sight = src.sight&~SEE_MOBS
 						src.sight = src.sight&~SEE_INFRA
@@ -513,6 +513,7 @@
 		src.blind.name = " "
 		src.blind.screen_loc = "1,1 to 15,15"
 		src.blind.layer = 0
+		src.blind.mouse_opacity = 0
 		src.client.screen += src.blind
 		//src << browse('help.htm', "window=help")
 		src << text("\blue <B>[]</B>", world_message)
