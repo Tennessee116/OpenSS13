@@ -3,29 +3,10 @@
 // New source code should be placed in .dm files: choose File/New --> Code File.
 
 // BEGIN_INTERNALS
-/*
-FILE: Code\Item\Weapon\weldingtool.dm
-DIR: Code Code\Item Code\Item\Weapon
-MAP_ICON_TYPE: 0
-AUTO_FILE_DIR: ON
-*/
 // END_INTERNALS
 // BEGIN_FILE_DIR
 #define FILE_DIR .
-#define FILE_DIR "Code"
-#define FILE_DIR "Code/CTF"
-#define FILE_DIR "Code/Effects"
-#define FILE_DIR "Code/Item"
-#define FILE_DIR "Code/Item/Weapon"
-#define FILE_DIR "Code/Machinery"
-#define FILE_DIR "Code/Machinery/Atmoalter"
-#define FILE_DIR "Code/Machinery/Computer"
-#define FILE_DIR "Code/Machinery/Door"
-#define FILE_DIR "Code/Machinery/Power"
-#define FILE_DIR "Code/mob"
-#define FILE_DIR "Code/Object"
 #define FILE_DIR "Icons"
-#define FILE_DIR "Interface"
 // END_FILE_DIR
 
 // BEGIN_PREFERENCES
